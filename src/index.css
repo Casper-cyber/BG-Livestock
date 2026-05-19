@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Homemade+Apple&family=Dancing+Script:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-farm-brown: #4A2E1F;
+  --color-farm-cream: #F5E9D3;
+  --color-farm-beige: #D9C4A1;
+  --color-farm-green: #556B2F;
+  --color-farm-white: #FFFDF8;
+
+  --font-serif: "Libre Baskerville", serif;
+  --font-display: "Cormorant Garamond", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Homemade Apple", cursive;
+  --font-script: "Dancing Script", cursive;
+}
+
+@layer base {
+  body {
+    @apply bg-farm-white text-farm-brown font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-medium;
+  }
+}
+
+.rustic-border {
+  border: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+.wood-texture {
+  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+}
+
+.paper-texture {
+  background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+  background-color: #F5E9D3;
+}
+
+.glass-card {
+  background: rgba(255, 253, 248, 0.8);
+  backdrop-filter: blur(8px);
+}

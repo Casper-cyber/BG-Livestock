@@ -1,0 +1,8 @@
+{
+  "name": "Beechgrove Livestock",
+  "description": "Premium rustic farm website for Beechgrove Livestock, featuring fresh dairy and family-owned heritage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
