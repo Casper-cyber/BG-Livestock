@@ -24,7 +24,7 @@ export const PRODUCTS: Product[] = [
     price: '$11',
     numericPrice: 11,
     unit: 'gallon',
-    image: './a2a2milkwithcream.png', // Removed the leading slash, added ./
+    image: '/images/a2a2milkwithcream.png', 
     category: 'dairy'
   },
   {
@@ -36,7 +36,7 @@ export const PRODUCTS: Product[] = [
     price: '$8',
     numericPrice: 8,
     unit: 'gallon',
-    image: './a2a2milknocream.png',
+    image: '/images/a2a2milknocream.png',
     category: 'dairy'
   },
   {
@@ -48,7 +48,7 @@ export const PRODUCTS: Product[] = [
     price: '$10',
     numericPrice: 10,
     unit: 'gallon',
-    image: './tradmilkwithcream.png',
+    image: '/images/tradmilkwithcream.png',
     category: 'dairy'
   },
   {
@@ -60,7 +60,7 @@ export const PRODUCTS: Product[] = [
     price: '$6',
     numericPrice: 6,
     unit: 'lb',
-    image: './farmbutter.png',
+    image: '/images/farmbutter.png',
     category: 'dairy'
   },
   {
@@ -72,7 +72,7 @@ export const PRODUCTS: Product[] = [
     price: '$7',
     numericPrice: 7,
     unit: 'pint',
-    image: './heavycream.png',
+    image: '/images/heavycream.png',
     category: 'dairy'
   },
   {
@@ -84,7 +84,7 @@ export const PRODUCTS: Product[] = [
     price: '$5',
     numericPrice: 5,
     unit: 'dozen',
-    image: './pastureeggs.png',
+    image: '/images/pastureeggs.png',
     category: 'dairy'
   }
 ];
