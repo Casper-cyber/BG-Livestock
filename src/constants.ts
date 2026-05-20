@@ -24,7 +24,7 @@ export const PRODUCTS: Product[] = [
     price: '$11',
     numericPrice: 11,
     unit: 'gallon',
-    image: '/src/assets/images/a2a2_milk_with_cream_v2_1779111209106.png',
+    image: '/src/assets/images/a2a2milkwithcream.png',
     category: 'dairy'
   },
   {
@@ -36,7 +36,7 @@ export const PRODUCTS: Product[] = [
     price: '$8',
     numericPrice: 8,
     unit: 'gallon',
-    image: '/src/assets/images/a2a2_milk_no_cream_v2_1779111227828.png',
+    image: '/src/assets/images/a2a2milknocream.png',
     category: 'dairy'
   },
   {
@@ -48,7 +48,7 @@ export const PRODUCTS: Product[] = [
     price: '$10',
     numericPrice: 10,
     unit: 'gallon',
-    image: '/src/assets/images/trad_milk_with_cream_v2_1779111244806.png',
+    image: '/src/assets/images/tradmilkwithcream.png',
     category: 'dairy'
   },
   {
@@ -60,7 +60,7 @@ export const PRODUCTS: Product[] = [
     price: '$7',
     numericPrice: 7,
     unit: 'gallon',
-    image: '/src/assets/images/trad_milk_no_cream_v2_1779111261103.png',
+    image: '/src/assets/images/tradmilknocream.png',
     category: 'dairy'
   },
   {
@@ -71,7 +71,7 @@ export const PRODUCTS: Product[] = [
     price: '$10',
     numericPrice: 10,
     unit: 'quart',
-    image: '/src/assets/images/heavy_cream_v2_1779111277669.png',
+    image: '/src/assets/images/heavycream.png',
     category: 'dairy'
   },
   {
@@ -82,7 +82,7 @@ export const PRODUCTS: Product[] = [
     price: '$8',
     numericPrice: 8,
     unit: 'pound',
-    image: '/src/assets/images/farm_butter_v2_1779111294625.png',
+    image: '/src/assets/images/farmbutter.png',
     category: 'dairy'
   },
   {
@@ -93,7 +93,7 @@ export const PRODUCTS: Product[] = [
     price: '$4',
     numericPrice: 4,
     unit: 'dozen',
-    image: '/src/assets/images/pasture_eggs_v2_final_1779111337671.png',
+    image: '/src/assets/images/pastureeggs.png',
     category: 'eggs'
   }
 ];
