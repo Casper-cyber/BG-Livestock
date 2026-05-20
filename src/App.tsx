@@ -25,7 +25,7 @@ import { useState, useEffect, MouseEvent } from "react";
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import { PRODUCTS, Product, VENMO_USER, PAYPAL_EMAIL } from "./constants";
 import ProductDetailsPage from "./components/ProductDetailsPage";
-const bgLogo = "/images/bg-logo1.png";
+import bgLogo from "./assets/images/bg-logo1.png";
 
 const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, isOpen: boolean, onClose: () => void }) => {
   const [quantity, setQuantity] = useState(1);
