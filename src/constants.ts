@@ -1,3 +1,11 @@
+import a2a2MilkWithCream from './assets/images/a2a2_milk_with_cream_v2_1779111209106.png';
+import a2a2MilkNoCream from './assets/images/a2a2_milk_no_cream_v2_1779111227828.png';
+import tradMilkWithCream from './assets/images/trad_milk_with_cream_v2_1779111244806.png';
+import tradMilkNoCream from './assets/images/trad_milk_no_cream_v2_1779111261103.png';
+import heavyCream from './assets/images/heavy_cream_v2_1779111277669.png';
+import farmButter from './assets/images/farm_butter_v2_1779111294625.png';
+import pastureEggs from './assets/images/pasture_eggs_v2_final_1779111337671.png';
+
 export interface Product {
   id: string;
   name: string;
@@ -24,7 +32,7 @@ export const PRODUCTS: Product[] = [
     price: '$11',
     numericPrice: 11,
     unit: 'gallon',
-    image: '/src/assets/images/a2a2_milk_with_cream_v2_1779111209106.png',
+    image: a2a2MilkWithCream,
     category: 'dairy'
   },
   {
@@ -36,7 +44,7 @@ export const PRODUCTS: Product[] = [
     price: '$8',
     numericPrice: 8,
     unit: 'gallon',
-    image: '/src/assets/images/a2a2_milk_no_cream_v2_1779111227828.png',
+    image: a2a2MilkNoCream,
     category: 'dairy'
   },
   {
@@ -48,7 +56,7 @@ export const PRODUCTS: Product[] = [
     price: '$10',
     numericPrice: 10,
     unit: 'gallon',
-    image: '/src/assets/images/trad_milk_with_cream_v2_1779111244806.png',
+    image: tradMilkWithCream,
     category: 'dairy'
   },
   {
@@ -60,7 +68,7 @@ export const PRODUCTS: Product[] = [
     price: '$7',
     numericPrice: 7,
     unit: 'gallon',
-    image: '/src/assets/images/trad_milk_no_cream_v2_1779111261103.png',
+    image: tradMilkNoCream,
     category: 'dairy'
   },
   {
@@ -71,7 +79,7 @@ export const PRODUCTS: Product[] = [
     price: '$10',
     numericPrice: 10,
     unit: 'quart',
-    image: '/src/assets/images/heavy_cream_v2_1779111277669.png',
+    image: heavyCream,
     category: 'dairy'
   },
   {
@@ -82,7 +90,7 @@ export const PRODUCTS: Product[] = [
     price: '$8',
     numericPrice: 8,
     unit: 'pound',
-    image: '/src/assets/images/farm_butter_v2_1779111294625.png',
+    image: farmButter,
     category: 'dairy'
   },
   {
@@ -93,7 +101,7 @@ export const PRODUCTS: Product[] = [
     price: '$4',
     numericPrice: 4,
     unit: 'dozen',
-    image: '/src/assets/images/pasture_eggs_v2_final_1779111337671.png',
+    image: pastureEggs,
     category: 'eggs'
   }
 ];
