@@ -1,3 +1,11 @@
+import a2a2MilkWithCream from './assets/images/a2a2_milk_with_cream_v2_1779111209106.png';
+import a2a2MilkNoCream from './assets/images/a2a2_milk_no_cream_v2_1779111227828.png';
+import tradMilkWithCream from './assets/images/trad_milk_with_cream_v2_1779111244806.png';
+import tradMilkNoCream from './assets/images/trad_milk_no_cream_v2_1779111261103.png';
+import heavyCream from './assets/images/heavy_cream_v2_1779111277669.png';
+import farmButter from './assets/images/farm_butter_v2_1779111294625.png';
+import pastureEggs from './assets/images/pasture_eggs_v2_final_1779111337671.png';
+
 export interface Product {
   id: string;
   name: string;
@@ -24,11 +32,11 @@ export const PRODUCTS: Product[] = [
     price: '$11',
     numericPrice: 11,
     unit: 'gallon',
-    image: '/images/a2a2milkwithcream.png', 
+    image: a2a2MilkWithCream,
     category: 'dairy'
   },
   {
-    id: 'a2a2-milk-nocream',
+    id: 'a2a2-milk-no-cream',
     name: 'A2A2 Milk without Cream',
     baseName: 'A2A2 Milk',
     variation: 'without cream',
@@ -36,11 +44,11 @@ export const PRODUCTS: Product[] = [
     price: '$8',
     numericPrice: 8,
     unit: 'gallon',
-    image: '/images/a2a2milknocream.png',
+    image: a2a2MilkNoCream,
     category: 'dairy'
   },
   {
-    id: 'traditional-milk',
+    id: 'traditional-milk-cream',
     name: 'Traditional Milk with Cream',
     baseName: 'Traditional Milk',
     variation: 'with cream',
@@ -48,43 +56,52 @@ export const PRODUCTS: Product[] = [
     price: '$10',
     numericPrice: 10,
     unit: 'gallon',
-    image: '/images/tradmilkwithcream.png',
+    image: tradMilkWithCream,
     category: 'dairy'
   },
   {
-    id: 'farm-butter',
-    name: 'Farm Butter',
-    baseName: 'Farm Butter',
-    variation: 'fresh',
-    description: 'Freshly churned, rich farm butter made from our premium Jersey cream.',
-    price: '$6',
-    numericPrice: 6,
-    unit: 'lb',
-    image: '/images/farmbutter.png',
+    id: 'traditional-milk-no-cream',
+    name: 'Traditional Milk without Cream',
+    baseName: 'Traditional Milk',
+    variation: 'without cream',
+    description: 'Clean traditional raw Jersey milk with cream removed. For non-herdshare members, this product is sold as pet milk.',
+    price: '$7',
+    numericPrice: 7,
+    unit: 'gallon',
+    image: tradMilkNoCream,
     category: 'dairy'
   },
   {
     id: 'heavy-cream',
     name: 'Heavy Cream',
     baseName: 'Heavy Cream',
-    variation: 'pure',
-    description: 'Thick, luscious heavy cream perfect for whipping, cooking, or adding to coffee.',
-    price: '$7',
-    numericPrice: 7,
-    unit: 'pint',
-    image: '/images/heavycream.png',
+    description: 'Thick, ultra-rich heavy cream, perfect for whipping or baking.',
+    price: '$10',
+    numericPrice: 10,
+    unit: 'quart',
+    image: heavyCream,
     category: 'dairy'
   },
   {
-    id: 'pasture-eggs',
-    name: 'Pasture Raised Eggs',
-    baseName: 'Eggs',
-    variation: 'free-range',
-    description: 'Fresh farm eggs from chickens raised freely on our organic pastures.',
-    price: '$5',
-    numericPrice: 5,
-    unit: 'dozen',
-    image: '/images/pastureeggs.png',
+    id: 'butter',
+    name: 'Butter',
+    baseName: 'Butter',
+    description: 'Handmade farm-fresh butter from our Jersey cows.',
+    price: '$8',
+    numericPrice: 8,
+    unit: 'pound',
+    image: farmButter,
     category: 'dairy'
+  },
+  {
+    id: 'free-range-eggs',
+    name: 'Free-Range Eggs',
+    baseName: 'Free-Range Eggs',
+    description: 'Fresh pasture-raised eggs collected daily from our happy hens.',
+    price: '$4',
+    numericPrice: 4,
+    unit: 'dozen',
+    image: pastureEggs,
+    category: 'eggs'
   }
 ];
