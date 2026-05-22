@@ -2,7 +2,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   
   return {
-    base: '/', 
+    base: '/app/',  // Replace 'app' with your chosen subfolder name 
     plugins: [react(), tailwindcss()],
     // ADD THIS BUILD BLOCK BELOW YOUR PLUGINS
     build: {
