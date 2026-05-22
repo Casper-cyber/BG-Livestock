@@ -7,11 +7,11 @@ import { defineConfig, loadEnv } from 'vite';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
+  // Load env file based on `mode` in the current working directory.
+  const env = loadEnv(mode, process.cwd(), '');
   
   return {
     // If your repository is named "my-app", change this to "/my-app/"
-    // If you are deploying straight to a custom domain root, "/" is fine.
     base: '/', 
     plugins: [react(), tailwindcss()],
     define: {
@@ -19,12 +19,14 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        // Changed from '.' to './src' to avoid root resolution bugs
+        '@': path.resolve(__dirname, './src'),
       },
     },
     server: {
-      hmr: process.env.DISABLE_HMR !== 'true',
-      watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      // Fixed: Using the safely loaded 'env' variable instead of raw 'process.env'
+      hmr: env.DISABLE_HMR !== 'true',
+      watch: env.DISABLE_HMR === 'true' ? { ignored: ['**/*'] } : {},
     },
   };
 });
