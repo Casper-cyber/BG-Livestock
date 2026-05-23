@@ -19,7 +19,8 @@ import {
   Plus,
   Minus,
   Quote,
-  Star
+  Star,
+  Tractor
 } from "lucide-react";
 import { useState, useEffect, MouseEvent } from "react";
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
@@ -256,6 +257,19 @@ const Navbar = () => {
 };
 
 const Hero = () => {
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxScroll = 600;
+      const progress = Math.min(window.scrollY / maxScroll, 1);
+      setScrollOffset(progress);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <section className="relative w-full h-[85vh] min-h-[600px] overflow-hidden flex items-center justify-center border-b border-farm-brown/20" id="home">
       {/* Video Background */}
@@ -278,11 +292,24 @@ const Hero = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-20 text-center px-6 max-w-4xl"
+        className="relative z-20 text-center px-6 max-w-4xl flex flex-col items-center"
       >
-        <div className="flex flex-col items-center gap-4 mb-2">
-          <p className="text-farm-cream uppercase text-[12px] font-bold tracking-[0.4em] drop-shadow-lg">Jeff & Tacey Anderson</p>
-          <div className="w-12 h-px bg-farm-cream/40" />
+        <div className="flex flex-col items-center mb-4 select-none w-full">
+          <p className="text-farm-cream uppercase text-[12px] font-bold tracking-[0.4em] drop-shadow-lg mb-2">Jeff & Tacey Anderson</p>
+          
+          {/* Subtle horizontal line */}
+          <div className="w-56 md:w-72 h-px bg-farm-cream/30 relative">
+            {/* Small tractor icon position on the line, moves right to left as user scrolls down */}
+            <div 
+              className="absolute -top-3.5 left-0 text-farm-cream flex items-center justify-center"
+              style={{ 
+                transform: `translateX(${((1 - scrollOffset) * (window.innerWidth < 768 ? 200 : 260))}px)`,
+                transition: "transform 0.05s ease-out"
+              }}
+            >
+              <Tractor size={16} className="text-farm-cream drop-shadow-lg" />
+            </div>
+          </div>
         </div>
         
         <h1 className="text-6xl md:text-8xl font-bold font-serif text-white mb-6 drop-shadow-2xl leading-tight">

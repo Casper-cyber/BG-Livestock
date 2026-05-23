@@ -179,7 +179,7 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05 }}
-      className={`relative p-8 rounded-xl border flex flex-col justify-between h-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] border-farm-brown/10 hover:border-farm-brown/25 transition-all ${isAvail ? 'ring-2 ring-farm-green/20' : ''}`}
+      className={`glove-cursor-target relative p-8 rounded-xl border flex flex-col justify-between h-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] border-farm-brown/10 hover:border-farm-brown/25 transition-all ${isAvail ? 'ring-2 ring-farm-green/20' : ''}`}
     >
       <div>
         {/* Status Badge */}
@@ -323,7 +323,7 @@ const VegetablesOrderInquiry = () => {
   };
 
   return (
-    <div id="vegetable-order-inquiry" className="mt-24 max-w-4xl mx-auto relative">
+    <div id="vegetable-order-inquiry" className="glove-cursor-target mt-24 max-w-4xl mx-auto relative">
       {/* Wood Frame Overlay */}
       <div className="absolute inset-0 border-[10px] border-farm-brown/10 rounded-3xl -m-3 pointer-events-none wood-texture opacity-50" />
       
