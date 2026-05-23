@@ -25,6 +25,8 @@ import { useState, useEffect, MouseEvent } from "react";
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import { PRODUCTS, Product, VENMO_USER, PAYPAL_EMAIL } from "./constants";
 import ProductDetailsPage from "./components/ProductDetailsPage";
+import AboutUsPage from "./components/AboutUsPage";
+import VegetablesPage from "./components/VegetablesPage";
 import bgLogo from "./assets/images/bg-logo1.png";
 
 const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, isOpen: boolean, onClose: () => void }) => {
@@ -171,10 +173,11 @@ const Navbar = () => {
   const isHomePage = location.pathname === "/";
 
   const navLinks = [
-    { name: "Products", href: isHomePage ? "#products" : "/#products" },
-    { name: "Herdshare", href: isHomePage ? "#herdshare" : "/#herdshare" },
-    { name: "Delivery", href: isHomePage ? "#logistics" : "/#logistics" },
-    { name: "Contact", href: isHomePage ? "#contact" : "/#contact", color: "text-farm-green" },
+    { name: "Products", href: isHomePage ? "#products" : "/#products", isRoute: false },
+    { name: "Herdshare", href: isHomePage ? "#herdshare" : "/#herdshare", isRoute: false },
+    { name: "Delivery", href: isHomePage ? "#logistics" : "/#logistics", isRoute: false },
+    { name: "About Us", href: "/about", isRoute: true },
+    { name: "Contact", href: isHomePage ? "#contact" : "/#contact", color: "text-farm-green", isRoute: false },
   ];
 
   return (
@@ -191,15 +194,25 @@ const Navbar = () => {
         </div>
       </Link>
       
-      <div className="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em]">
+      <div className="hidden md:flex gap-8 items-center text-[10px] font-bold uppercase tracking-[0.2em]">
         {navLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.href}
-            className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors`}
-          >
-            {link.name}
-          </a>
+          link.isRoute ? (
+            <Link
+              key={link.name}
+              to={link.href}
+              className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors ${location.pathname === link.href ? 'border-b-2 border-farm-green pb-1 font-extrabold' : ''}`}
+            >
+              {link.name}
+            </Link>
+          ) : (
+            <a
+              key={link.name}
+              href={link.href}
+              className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors`}
+            >
+              {link.name}
+            </a>
+          )
         ))}
       </div>
 
@@ -216,14 +229,25 @@ const Navbar = () => {
           className="absolute top-full left-0 w-full bg-farm-white border-b border-farm-brown/20 flex flex-col p-6 gap-4 text-[10px] font-bold uppercase tracking-widest shadow-xl"
         >
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className={link.color || 'text-farm-brown'}
-            >
-              {link.name}
-            </a>
+            link.isRoute ? (
+              <Link
+                key={link.name}
+                to={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`${link.color || 'text-farm-brown'} ${location.pathname === link.href ? 'text-farm-green font-extrabold' : ''}`}
+              >
+                {link.name}
+              </Link>
+            ) : (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={link.color || 'text-farm-brown'}
+              >
+                {link.name}
+              </a>
+            )
           ))}
         </motion.div>
       )}
@@ -415,28 +439,129 @@ const ProductCard = ({ product, onOrder }: ProductCardProps) => {
   );
 };
 
-const ProductsSection = ({ onOrder }: { onOrder: (p: Product) => void }) => {
+const ProductsSection = ({ 
+  onOrder,
+  activeTab,
+  setActiveTab
+}: { 
+  onOrder: (p: Product) => void;
+  activeTab: 'dairy' | 'poultry' | 'vegetables';
+  setActiveTab: (tab: 'dairy' | 'poultry' | 'vegetables') => void;
+}) => {
   return (
     <section className="py-24 border-b border-farm-brown/20 bg-farm-white" id="products">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
-          <div className="max-w-xl">
+        
+        {/* Marketplace Headers */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+          <div className="max-w-2xl">
             <p className="text-farm-green uppercase text-[10px] font-bold tracking-[0.3em] mb-3 underline decoration-farm-green/30 underline-offset-8">Marketplace</p>
-            <h2 className="text-5xl font-bold font-serif mb-4">Dairy & Poultry</h2>
-            <p className="text-farm-brown/60 font-serif italic italic">Premium raw milk, artisanal butter and farm fresh eggs from our happy herd.</p>
+            <h2 className="text-5xl font-bold font-serif mb-4">
+              {activeTab === 'dairy' && "Dairy Herdshare & Public Sales"}
+              {activeTab === 'poultry' && "Pasture-Raised Poultry"}
+              {activeTab === 'vegetables' && "Our Kitchen Garden"}
+            </h2>
+            <p className="text-farm-brown/60 font-serif italic">
+              {activeTab === 'dairy' && "Premium raw milk, heavy cream, and artisanal butter from our happy Jersey dairy herd."}
+              {activeTab === 'poultry' && "Farm-fresh eggs collected daily from our happy, pasture-raised chickens."}
+              {activeTab === 'vegetables' && "Crisp seasonal greens and kitchen-garden harvests grown in healthy, fertile soil."}
+            </p>
           </div>
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-farm-green px-6 py-3 border border-farm-green/20 rounded-full bg-farm-green/5 flex items-center gap-3">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-farm-green px-6 py-3 border border-farm-green/20 rounded-full bg-farm-green/5 flex items-center gap-3 shrink-0">
             <Clock size={14} /> Daily Farm Replenishments
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
-          {PRODUCTS.map((product) => (
-            <div key={product.id}>
-              <ProductCard product={product} onOrder={onOrder} />
-            </div>
-          ))}
+        {/* Marketplace Sub-Navigation Tab Menu - Vegetable tab placed directly after Poultry */}
+        <div className="flex border-b border-farm-brown/10 mb-12 gap-8 justify-start overflow-x-auto scrollbar-none">
+          <button
+            onClick={() => setActiveTab('dairy')}
+            id="tab-dairy"
+            className={`pb-4 text-xs font-bold uppercase tracking-[0.22em] relative transition-all duration-300 shrink-0 ${
+              activeTab === 'dairy' ? 'text-farm-green font-extrabold scale-105' : 'text-farm-brown/50 hover:text-farm-brown'
+            }`}
+          >
+            Dairy
+            {activeTab === 'dairy' && (
+              <motion.div layoutId="activeCategoryBorder" className="absolute bottom-0 left-0 right-0 h-1 bg-farm-green" />
+            )}
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('poultry')}
+            id="tab-poultry"
+            className={`pb-4 text-xs font-bold uppercase tracking-[0.22em] relative transition-all duration-300 shrink-0 ${
+              activeTab === 'poultry' ? 'text-farm-green font-extrabold scale-105' : 'text-farm-brown/50 hover:text-farm-brown'
+            }`}
+          >
+            Poultry
+            {activeTab === 'poultry' && (
+              <motion.div layoutId="activeCategoryBorder" className="absolute bottom-0 left-0 right-0 h-1 bg-farm-green" />
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab('vegetables')}
+            id="tab-vegetables"
+            className={`pb-4 text-xs font-bold uppercase tracking-[0.22em] relative transition-all duration-300 shrink-0 ${
+              activeTab === 'vegetables' ? 'text-farm-green font-extrabold scale-105' : 'text-farm-brown/50 hover:text-farm-brown'
+            }`}
+          >
+            Vegetables
+            {activeTab === 'vegetables' && (
+              <motion.div layoutId="activeCategoryBorder" className="absolute bottom-0 left-0 right-0 h-1 bg-farm-green" />
+            )}
+          </button>
         </div>
+
+        {/* Dynamic Section Contents */}
+        {activeTab === 'dairy' && (
+          <>
+            {/* Notice of container policy */}
+            <div className="mb-16 bg-farm-cream/30 border border-farm-brown/10 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-farm-green/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+              <div className="space-y-1">
+                <p className="text-[9px] uppercase font-bold tracking-[0.25em] text-farm-green">Container Policy Notice</p>
+                <p className="text-base font-serif text-farm-brown/90 italic leading-relaxed">
+                  "To help us keep things sustainable, please bring a clean glass jar to swap when picking up your dairy, or you can purchase a reusable jar from us for $5."
+                </p>
+              </div>
+              <div className="text-[8px] font-bold uppercase tracking-widest bg-farm-green text-white px-3 py-1.5 rounded-full shrink-0">
+                Eco-Friendly swap
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+              {PRODUCTS.filter(product => product.category === 'dairy').map((product) => (
+                <div key={product.id}>
+                  <ProductCard product={product} onOrder={onOrder} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {activeTab === 'poultry' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+            {PRODUCTS.filter(product => product.category === 'eggs').map((product) => (
+              <div key={product.id}>
+                <ProductCard product={product} onOrder={onOrder} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'vegetables' && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="rounded-2xl border border-farm-brown/10 overflow-hidden"
+          >
+            <VegetablesPage />
+          </motion.div>
+        )}
+
       </div>
     </section>
   );
@@ -451,7 +576,7 @@ const Herdshare = () => {
         <ul className="space-y-2 mb-6 overflow-hidden">
           {[
             "Set amount of milk each week",
-            "Bring clean glass jars to swap at pickup",
+            "To help us keep things sustainable, please bring a clean glass jar to swap when picking up your dairy, or you can purchase a reusable jar from us for $5.",
             "Simple and sustainable process",
             "Guaranteed weekly fresh supply",
             "Legal access to unpasteurized milk as a partial owner of the herd"
@@ -616,9 +741,13 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="mt-16 pt-8 border-t border-farm-cream/10 flex gap-4">
-              <a href="#" className="hover:text-farm-cream transition-colors"><Instagram size={24} /></a>
-              <a href="#" className="hover:text-farm-cream transition-colors"><Facebook size={24} /></a>
+            <div className="mt-16 pt-8 border-t border-farm-cream/10 flex gap-4 items-center">
+              <span className="text-farm-cream/40 cursor-not-allowed flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider" title="Coming Soon!">
+                <Instagram size={24} className="text-farm-cream/40" /> (Coming Soon!)
+              </span>
+              <a href="https://www.facebook.com/BeechgroveLivestock/" target="_blank" rel="noopener noreferrer" className="hover:text-farm-cream transition-colors" title="Visit us on Facebook">
+                <Facebook size={24} />
+              </a>
             </div>
           </div>
 
@@ -672,9 +801,9 @@ const Footer = () => {
       <div>© {new Date().getFullYear()} Beechgrove Livestock</div>
       <div className="hidden sm:flex gap-10">
         <span>931-212-0287</span>
-        <div className="flex gap-4">
-          <a href="#" className="hover:text-farm-green transition-all">Facebook</a>
-          <a href="#" className="hover:text-farm-green transition-all">Instagram</a>
+        <div className="flex gap-4 items-center">
+          <a href="https://www.facebook.com/BeechgroveLivestock/" target="_blank" rel="noopener noreferrer" className="hover:text-farm-green transition-all">Facebook</a>
+          <span className="text-farm-brown/40 cursor-not-allowed select-none" title="Coming Soon!">Instagram (Coming Soon!)</span>
         </div>
       </div>
     </footer>
@@ -751,12 +880,23 @@ const Testimonials = () => {
 
 const HomePage = ({ onOrder }: { onOrder: (p: Product) => void }) => {
   const location = useLocation();
+  const [activeTab, setActiveTab] = useState<'dairy' | 'poultry' | 'vegetables'>('dairy');
 
   useEffect(() => {
     if (location.hash) {
-      const element = document.getElementById(location.hash.substring(1));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      const hash = location.hash.substring(1);
+      
+      if (hash === 'products' || hash === 'vegetables') {
+        const productsElement = document.getElementById('products');
+        if (productsElement) {
+          productsElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        setActiveTab(hash === 'vegetables' ? 'vegetables' : 'dairy');
+      } else {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     } else {
       window.scrollTo(0, 0);
@@ -773,7 +913,7 @@ const HomePage = ({ onOrder }: { onOrder: (p: Product) => void }) => {
         </p>
       </div>
 
-      <ProductsSection onOrder={onOrder} />
+      <ProductsSection onOrder={onOrder} activeTab={activeTab} setActiveTab={setActiveTab} />
       <Testimonials />
       <Herdshare />
       <PetMilk />
@@ -844,6 +984,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage onOrder={(p) => setSelectedProduct(p)} />} />
             <Route path="/marketplace/:productId" element={<ProductDetailsPage />} />
+            <Route path="/about" element={<AboutUsPage />} />
+            <Route path="/vegetables" element={<VegetablesPage />} />
           </Routes>
         </main>
 
