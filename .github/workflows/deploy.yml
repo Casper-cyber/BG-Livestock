@@ -25,10 +25,10 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
           cache: 'npm'
       - name: Install dependencies
-        run: npm install --include-workspace-root # 🌟 FIXED: Allows installation inside Google AI Studio workspace frameworks
+        run: npm ci
       - name: Build project
         run: npm run build
       - name: Upload artifact

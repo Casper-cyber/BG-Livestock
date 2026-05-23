@@ -20,7 +20,8 @@ export interface Product {
 }
 
 export const VENMO_USER = "@BeechgroveLivestock";
-export const PAYPAL_EMAIL = "payments@beechgrovelivestock.com";
+export const VENMO_PROFILE_URL = "https://account.venmo.com/u/Theresia-Anderson-2";
+export const PAYPAL_EMAIL = "Info@beechgrovelivestock.com";
 
 export const PRODUCTS: Product[] = [
   {

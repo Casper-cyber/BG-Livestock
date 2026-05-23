@@ -1,52 +1,147 @@
 import { motion } from "motion/react";
-import { Sprout, Star, Clock, AlertCircle } from "lucide-react";
+import { Sprout, Star, Clock, AlertCircle, Leaf } from "lucide-react";
+import { useState } from "react";
 
 export interface GardenItem {
+  id: string;
   name: string;
   status: "available" | "coming_soon";
+  price?: string;
+  unit?: string;
   description: string;
   season: string;
+  imageNames?: string[]; // Easily supports placeholders Spinach 1, Spinach 2, Lettuce
 }
 
-// Easily editable garden inventory list
+// Easily editable garden inventory list containing the requested live Spinach and Lettuce structures
 const GARDEN_INVENTORY: GardenItem[] = [
   {
-    name: "Crisp Garden Lettuce",
+    id: "spinach-bag",
+    name: "Fresh Spinach",
     status: "available",
-    description: "Freshly harvested, pesticide-free mixed field greens, handpicked daily at peak tenderness.",
-    season: "Available Now"
+    price: "$2.50",
+    unit: "gallon bag",
+    description: "Tender, high-nutrient garden spinach leaves, pesticide-free and handpicked daily at peak tenderness.",
+    season: "Available Now",
+    imageNames: ["Spinach 1", "Spinach 2"]
   },
   {
+    id: "lettuce-bag",
+    name: "Crisp Lettuce (Bag)",
+    status: "available",
+    price: "$2.00",
+    unit: "gallon bag",
+    description: "Freshly harvested romaine and butterhead lettuce leaves, washed, dried, and packed in gallon bags.",
+    season: "Available Now",
+    imageNames: ["Lettuce"]
+  },
+  {
+    id: "lettuce-head",
+    name: "Crisp Lettuce (Head)",
+    status: "available",
+    price: "$5.00",
+    unit: "head",
+    description: "Magnificent whole heads of crunchy, sweet garden lettuce picked fresh each morning.",
+    season: "Available Now",
+    imageNames: ["Lettuce"]
+  },
+  {
+    id: "heirloom-tomatoes",
     name: "Heirloom Tomatoes",
     status: "coming_soon",
     description: "Juicy, sun-ripened vine varieties including Brandywine and Cherokee Purple.",
     season: "Coming Mid-Summer"
   },
   {
+    id: "cucumbers",
     name: "Crispy Slicing Cucumbers",
     status: "coming_soon",
     description: "Sweet and crisp field-grown cucumbers, ideal for fresh summer salads.",
     season: "Coming Early Summer"
   },
   {
+    id: "squash",
     name: "Summer Squash & Zucchini",
     status: "coming_soon",
     description: "Tender, thin-skinned yellow squash and zucchini harvested at perfect size.",
     season: "Coming Early Summer"
   },
   {
+    id: "peppers",
     name: "Sweet Bell Peppers",
     status: "coming_soon",
     description: "Thick-walled, crunchy green, red, and yellow peppers grown in fertile soils.",
     season: "Coming Mid-Summer"
   },
   {
+    id: "radishes",
     name: "Early Spring Radishes",
     status: "coming_soon",
     description: "Peppery, crisp red radishes ready for the first spring harvests.",
     season: "Coming Late Spring"
   }
 ];
+
+const CropImageContainer = ({ item }: { item: GardenItem }) => {
+  const [imageError, setImageError] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  if (!item.imageNames || item.imageNames.length === 0) {
+    return null;
+  }
+
+  const currentImageName = item.imageNames[activeImageIndex];
+  const urlSafeName = currentImageName.toLowerCase().replace(/\s+/g, '_');
+  const src = `/src/assets/images/${urlSafeName}.png`;
+
+  return (
+    <div className="relative aspect-[16/10] bg-farm-cream/30 rounded-lg overflow-hidden border border-farm-brown/10 mb-5 group">
+      {!imageError ? (
+        <img
+          src={src}
+          alt={item.name}
+          onError={() => setImageError(true)}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          referrerPolicy="no-referrer"
+        />
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-farm-cream/60 to-farm-beige/20 text-farm-brown/60">
+          <div className="p-3 bg-white/85 rounded-full shadow-sm mb-2 border border-farm-brown/5 text-farm-green">
+            <Leaf size={20} className="animate-pulse" />
+          </div>
+          <p className="text-xs font-serif font-semibold text-farm-brown">{item.name}</p>
+          <span className="text-[8px] uppercase tracking-widest text-farm-brown/40 mt-1 bg-farm-cream px-2 py-0.5 rounded-full border border-farm-brown/5">
+            Photograph Placeholder
+          </span>
+          <p className="text-[8px] text-farm-green/70 font-sans mt-2 max-w-[85%] leading-normal">
+            To display: Upload <code className="bg-white/95 px-1.5 py-0.5 rounded text-farm-brown font-mono font-bold">{urlSafeName}.png</code> into <code className="bg-white/95 px-1.5 py-0.5 rounded text-farm-brown font-mono font-bold">/src/assets/images/</code>
+          </p>
+        </div>
+      )}
+
+      {/* Slide dots if there are multiple images */}
+      {item.imageNames.length > 1 && (
+        <div className="absolute bottom-2 right-2 flex gap-1 z-10 bg-farm-brown/60 px-2 py-1 rounded-full backdrop-blur-[2px]">
+          {item.imageNames.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setImageError(false);
+                setActiveImageIndex(idx);
+              }}
+              className={`w-1.5 h-1.5 rounded-full transition-all ${
+                activeImageIndex === idx ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/75'
+              }`}
+              title={`View ${item.imageNames?.[idx]}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function VegetablesPage() {
   return (
@@ -69,7 +164,7 @@ export default function VegetablesPage() {
           <div className="bg-farm-cream/40 border border-farm-brown/10 p-6 md:p-8 rounded-2xl relative overflow-hidden shadow-sm">
             <div className="absolute top-0 right-0 w-24 h-24 bg-farm-green/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
             <p className="font-serif text-lg md:text-xl italic text-farm-brown/90 leading-relaxed">
-              "Our garden is waking up! Right now we have crisp lettuce available, with a wide variety of fresh seasonal vegetables arriving in the coming weeks."
+              "Our garden is waking up! Right now we have crisp lettuce and fresh spinach available, with a wide variety of fresh seasonal vegetables arriving in the coming weeks."
             </p>
           </div>
         </div>
@@ -111,7 +206,7 @@ export default function VegetablesPage() {
             const isAvail = item.status === "available";
             return (
               <motion.div
-                key={item.name}
+                key={item.id}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -129,9 +224,24 @@ export default function VegetablesPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-serif text-farm-brown font-semibold tracking-tight mb-2">
-                    {item.name}
-                  </h3>
+                  {/* Crop Image Slot with Placeholder State */}
+                  <CropImageContainer item={item} />
+
+                  <div className="flex justify-between items-start gap-4 mb-2">
+                    <h3 className="text-2xl font-serif text-farm-brown font-semibold tracking-tight leading-tight">
+                      {item.name}
+                    </h3>
+                    {item.price && (
+                      <div className="text-right shrink-0">
+                        <span className="text-xl font-serif font-extrabold text-farm-green block leading-none">
+                          {item.price}
+                        </span>
+                        <span className="text-[8px] text-farm-brown/50 font-sans font-bold uppercase tracking-wider block mt-1">
+                          per {item.unit}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   
                   <p className="text-sm font-serif italic text-farm-brown/70 leading-relaxed mb-6">
                     {item.description}

@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, MouseEvent } from "react";
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
-import { PRODUCTS, Product, VENMO_USER, PAYPAL_EMAIL } from "./constants";
+import { PRODUCTS, Product, VENMO_USER, VENMO_PROFILE_URL, PAYPAL_EMAIL } from "./constants";
 import ProductDetailsPage from "./components/ProductDetailsPage";
 import AboutUsPage from "./components/AboutUsPage";
 import VegetablesPage from "./components/VegetablesPage";
@@ -40,7 +40,7 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
   const total = product.numericPrice * quantity;
 
   const handleVenmo = () => {
-    window.open(`https://venmo.com/${VENMO_USER.replace('@', '')}?txn=pay&amount=${total}&note=Order: ${quantity}x ${product.name}`, "_blank");
+    window.open(VENMO_PROFILE_URL, "_blank");
   };
 
   const handlePayPal = () => {

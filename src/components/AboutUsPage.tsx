@@ -90,8 +90,11 @@ export default function AboutUsPage() {
                 <div className="flex gap-4 p-4 rounded-xl border border-farm-brown/10 hover:border-farm-brown/20 bg-white transition-all hover:shadow-sm">
                   <div className="w-12 h-12 rounded-full bg-farm-brown/5 flex items-center justify-center shrink-0 border border-farm-brown/15">
                     {/* Beautiful Cow Flat Vector Icon */}
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-farm-brown/85">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm2-5c0 1.1-.9 2-2 2h-2c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v3zM8 8V6h1v2H8zm7 0V6h1v2h-1z" />
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-farm-brown/80 fill-none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 10c0-3 2-5 7-5s7 2 7 5a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z" />
+                      <path d="M7 13v4a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-4" />
+                      <path d="M10 16h.01M14 16h.01" />
+                      <path d="M4 6c0 0 2 2 3 0M20 6c0 0-2 2-3 0" />
                     </svg>
                   </div>
                   <div>
@@ -106,8 +109,11 @@ export default function AboutUsPage() {
                 <div className="flex gap-4 p-4 rounded-xl border border-farm-brown/10 hover:border-farm-brown/20 bg-white transition-all hover:shadow-sm">
                   <div className="w-12 h-12 rounded-full bg-farm-brown/5 flex items-center justify-center shrink-0 border border-farm-brown/15">
                     {/* Beautiful Poultry/Chicken Vector Icon */}
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-farm-brown/85">
-                      <path d="M12 2a4 4 0 0 0-4 4c0 3.31 2.69 6 6 6s6-2.69 6-6a4 4 0 0 0-4-4zm-1.5 5.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm4.5 9c-.5 0-.9-.3-1.1-.7l-1-2.2a2 2 0 0 0-3.6 0l-1 2.2c-.3.4-.7.7-1.1.7A2.1 2.1 0 0 0 4 18.9v2.1c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-2.1c0-1.1-.9-2.1-2.1-2.1z" />
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-farm-brown/80 fill-none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22a8 8 0 0 0 8-8c0-3.3-2.5-6-6-6h-3.5" />
+                      <path d="M10.5 8c0-1.5 1-3.5 3-4" />
+                      <path d="M9 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                      <path d="M16 11h.01M12 22l-2-3H6M3 10V6l2 2" />
                     </svg>
                   </div>
                   <div>
@@ -122,8 +128,11 @@ export default function AboutUsPage() {
                 <div className="flex gap-4 p-4 rounded-xl border border-farm-brown/10 hover:border-farm-brown/20 bg-white transition-all hover:shadow-sm">
                   <div className="w-12 h-12 rounded-full bg-farm-brown/5 flex items-center justify-center shrink-0 border border-farm-brown/15">
                     {/* Beautiful Sheep/Lamb Vector Icon */}
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 fill-farm-brown/85">
-                      <path d="M19 13c.3 0 .5-.1.7-.3l1.6-1.6c.4-.4.4-1 0-1.4l-1.6-1.6C19.5 8.1 19.3 8 19 8h-3c0-2.2-1.8-4-4-4S8 5.8 8 8H5c-.3 0-.5.1-.7.3L2.7 9.9c-.4.4-.4 1 0 1.4l1.6 1.6c.2.2.4.3.7.3h1v4H5v2h14v-2h-1v-4h1z" />
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 stroke-farm-brown/80 fill-none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M8 8a3.5 3.5 0 0 1 6 0 3.5 3.5 0 0 1 5.5 4 3.5 3.5 0 0 1-3.5 5.5h-8A3.5 3.5 0 0 1 4 12c0-1.2.6-2.3 1.5-3A3.5 3.5 0 0 1 8 8z" />
+                      <path d="M8 17.5v2.5M16 17.5v2.5" />
+                      <path d="M4 11h-.5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H4" />
+                      <path d="M20 11h.5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-.5" />
                     </svg>
                   </div>
                   <div>
