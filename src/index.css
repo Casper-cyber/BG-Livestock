@@ -43,32 +43,8 @@
   backdrop-filter: blur(8px);
 }
 
-/* Custom Farm Glove Grab Hover Cursor */
-.glove-cursor-target,
-.glove-cursor-target button,
-.glove-cursor-target select,
-.glove-cursor-target a,
-.glove-cursor-target input[type="button"],
-.glove-cursor-target .button {
-  cursor: url('/src/assets/images/farm_glove_pointer.png') 16 16, url('/src/assets/farm_glove_pointer.png') 16 16, pointer !important;
-}
 
-.glove-cursor-target:hover,
-.glove-cursor-target button:hover,
-.glove-cursor-target select:hover,
-.glove-cursor-target a:hover,
-.glove-cursor-target input[type="button"]:hover,
-.glove-cursor-target .button:hover {
-  cursor: url('/src/assets/images/farm_glove_pointer.png') 16 16, url('/src/assets/farm_glove_pointer.png') 16 16, pointer !important;
-}
 
-.glove-cursor-target:active,
-.glove-cursor-target button:active,
-.glove-cursor-target select:active,
-.glove-cursor-target a:active,
-.glove-cursor-target input[type="button"]:active,
-.glove-cursor-target .button:active,
-.glove-cursor-target:active * {
-  cursor: url('/src/assets/images/farm_glove_grab.png') 16 16, url('/src/assets/farm_glove_grab.png') 16 16, grabbing !important;
-}
+
+
 

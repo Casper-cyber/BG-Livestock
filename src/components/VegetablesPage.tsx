@@ -327,15 +327,15 @@ const VegetablesOrderInquiry = () => {
       {/* Wood Frame Overlay */}
       <div className="absolute inset-0 border-[10px] border-farm-brown/10 rounded-3xl -m-3 pointer-events-none wood-texture opacity-50" />
       
-      <div className="bg-white paper-texture rounded-2xl border border-farm-brown/10 shadow-xl overflow-hidden relative p-8 md:p-12">
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+      <div className="bg-white paper-texture rounded-2xl border border-farm-brown/10 shadow-xl overflow-hidden relative p-5 md:p-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-start">
           
           {/* Left panel: Info */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             <div>
               <span className="text-farm-green text-[10px] font-bold uppercase tracking-[0.3em] mb-2 block">Direct Access</span>
-              <h3 className="text-4xl font-bold font-serif text-farm-brown leading-tight">Order Inquiry</h3>
-              <p className="font-script text-2xl text-farm-green mt-1">Kitchen Garden Harvest</p>
+              <h3 className="text-2xl xs:text-3xl md:text-4xl font-bold font-serif text-farm-brown leading-tight">Order Inquiry</h3>
+              <p className="font-script text-xl md:text-2xl text-farm-green mt-1">Kitchen Garden Harvest</p>
             </div>
 
             <p className="text-sm font-serif italic text-farm-brown/80 leading-relaxed">
@@ -369,7 +369,7 @@ const VegetablesOrderInquiry = () => {
           </div>
 
           {/* Right panel: Active Form Area */}
-          <div className="p-6 md:p-8 bg-farm-cream/15 rounded-2xl border border-farm-brown/10 space-y-6 relative">
+          <div className="p-5 md:p-8 bg-farm-cream/15 rounded-2xl border border-farm-brown/10 space-y-4 md:space-y-6 relative">
             <div className="absolute top-0 right-0 w-24 h-24 bg-farm-green/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
             
             {/* Step 1: Select Crop */}
@@ -527,26 +527,26 @@ export default function VegetablesPage() {
       exit={{ opacity: 0 }}
       className="bg-farm-white py-12 md:py-20 paper-texture"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-10">
         
         {/* Header Block */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <div className="text-center mb-10 md:mb-16 max-w-3xl mx-auto">
           <p className="text-farm-green uppercase text-[10px] font-bold tracking-[0.4em] mb-3">Fresh Harvest</p>
-          <h1 className="text-5xl md:text-6xl font-serif text-farm-brown tracking-tight mb-4">
+          <h1 className="text-3xl xs:text-4xl md:text-6xl font-serif text-farm-brown tracking-tight mb-4">
             Our Kitchen Garden
           </h1>
-          <div className="w-16 h-1 bg-farm-green mx-auto mb-8" />
+          <div className="w-16 h-1 bg-farm-green mx-auto mb-6 md:mb-8" />
           
-          <div className="bg-farm-cream/40 border border-farm-brown/10 p-6 md:p-8 rounded-2xl relative overflow-hidden shadow-sm">
+          <div className="bg-farm-cream/40 border border-farm-brown/10 p-5 md:p-8 rounded-2xl relative overflow-hidden shadow-sm">
             <div className="absolute top-0 right-0 w-24 h-24 bg-farm-green/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-            <p className="font-serif text-lg md:text-xl italic text-farm-brown/90 leading-relaxed">
+            <p className="font-serif text-base md:text-xl italic text-farm-brown/90 leading-relaxed">
               "Our garden is waking up! Right now we have crisp lettuce and fresh spinach available, with a wide variety of fresh seasonal vegetables arriving in the coming weeks."
             </p>
           </div>
         </div>
 
         {/* Dairy Glass Jar Policy Notice (Highly visible Alert Box) */}
-        <div className="mb-16 max-w-4xl mx-auto bg-[#FFF] border-2 border-dashed border-farm-green/30 p-6 md:p-8 rounded-2xl shadow-sm relative overflow-hidden">
+        <div className="mb-10 md:mb-16 max-w-4xl mx-auto bg-[#FFF] border-2 border-dashed border-farm-green/30 p-5 md:p-8 rounded-2xl shadow-sm relative overflow-hidden">
           <div className="absolute -top-12 -right-12 w-24 h-24 bg-farm-green/10 rounded-full flex items-center justify-center rotate-12">
             <Sprout size={32} className="text-farm-green opacity-20" />
           </div>
@@ -569,9 +569,9 @@ export default function VegetablesPage() {
         </div>
 
         {/* Inventory Header */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-farm-brown/10">
-          <h2 className="text-3xl font-serif text-farm-brown">Garden Status & Inventory</h2>
-          <div className="text-[9px] font-bold uppercase tracking-widest text-farm-brown/60 flex items-center gap-1.5">
+        <div className="flex items-center justify-between mb-6 md:mb-8 pb-3 md:pb-4 border-b border-farm-brown/10">
+          <h2 className="text-xl xs:text-2xl md:text-3xl font-serif text-farm-brown">Garden Status & Inventory</h2>
+          <div className="text-[9px] font-bold uppercase tracking-widest text-farm-brown/60 flex items-center gap-1.5 shrink-0">
             <Clock size={12} className="text-farm-green" /> Updated Weekly
           </div>
         </div>

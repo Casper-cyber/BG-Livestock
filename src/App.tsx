@@ -168,6 +168,8 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
   );
 };
 
+const LottiePlayer = "dotlottie-wc" as any;
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -182,96 +184,107 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="h-28 border-b border-farm-brown/20 flex items-center justify-between px-6 md:px-10 bg-farm-cream/30 sticky top-0 z-50 backdrop-blur-sm">
-      <Link to="/" className="flex items-center gap-4 relative">
-        <img 
-          src={bgLogo} 
-          alt="Beechgrove Livestock" 
-          className="h-24 md:h-28 w-auto object-contain block z-50 drop-shadow-xl transition-transform hover:scale-105 duration-300" 
-        />
-        <div className="flex flex-col">
-          <span className="text-xl md:text-4xl font-bold tracking-tight uppercase font-serif leading-tight">Beechgrove Livestock</span>
-          <span className="text-sm uppercase tracking-[0.3em] text-farm-brown/70 font-sans hidden md:block mt-1">Farm • Fresh • Local</span>
+    <>
+      {/* Standalone frozen top Lottie animation strip - Tight & cleanly framed, acting as solid screen */}
+      <div className="fixed top-0 left-0 w-full z-[9999] h-[55px] max-[480px]:h-[45px] bg-farm-white border-b border-farm-brown/10 shadow-sm flex items-center justify-center overflow-hidden select-none pointer-events-none">
+        <div className="absolute flex items-center justify-center w-[200px] h-[200px] max-[480px]:w-[140px] max-[480px]:h-[140px] md:w-[450px] md:h-[450px] pointer-events-none">
+          <LottiePlayer
+            src="https://lottie.host/32fecbb2-b9dc-4848-9ef3-4b380d454395/IjOIgMjTTg.lottie"
+            style={{ width: "100%", height: "100%" }}
+            autoplay
+            loop
+          ></LottiePlayer>
         </div>
-      </Link>
-      
-      <div className="hidden md:flex gap-8 items-center text-[10px] font-bold uppercase tracking-[0.2em]">
-        {navLinks.map((link) => (
-          link.isRoute ? (
-            <Link
-              key={link.name}
-              to={link.href}
-              className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors ${location.pathname === link.href ? 'border-b-2 border-farm-green pb-1 font-extrabold' : ''}`}
-            >
-              {link.name}
+      </div>
+
+      {/* Unlinked Branding & Navigation Row in natural flow - Scrolls up and away naturally */}
+      <div className="w-full bg-farm-white border-b border-farm-brown/10 relative z-40 mt-[55px] max-[480px]:mt-[45px]">
+        <div className="max-w-7xl mx-auto px-4 md:px-10 flex flex-row items-center justify-between py-3 md:py-3 relative h-auto bg-farm-white">
+          
+          <div className="flex items-center justify-between w-full md:w-auto">
+            {/* Company Logo & Title block */}
+            <Link to="/" className="flex items-center gap-3 relative z-50">
+              <img 
+                src={bgLogo} 
+                alt="Beechgrove Livestock" 
+                className="h-12 max-[480px]:h-10 md:h-24 w-auto object-contain block drop-shadow-md transition-transform hover:scale-105 duration-300" 
+              />
+              <div className="flex flex-col">
+                <span className="text-base max-[480px]:text-[13px] md:text-3xl font-bold tracking-tight uppercase font-serif leading-none md:leading-tight">Beechgrove Livestock</span>
+                <span className="text-[9px] uppercase tracking-[0.3em] text-farm-brown/70 font-sans hidden md:block mt-1">Farm • Fresh • Local</span>
+                <span className="text-[8px] uppercase tracking-[0.15em] text-farm-brown/60 font-sans md:hidden mt-0.5 font-bold">Farm Fresh Local</span>
+              </div>
             </Link>
-          ) : (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors`}
+
+            {/* Mobile menu navigation toggles - inline in the flex flow to prevent absolute overlaps */}
+            <div className="md:hidden">
+              <button onClick={() => setIsOpen(!isOpen)} className="text-farm-brown p-2 hover:bg-farm-brown/5 rounded-full transition-colors" aria-label="Toggle Navigation">
+                {isOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Navigation Link assembly */}
+          <div className="hidden md:flex gap-8 items-center text-[10px] font-bold uppercase tracking-[0.2em] relative z-50">
+            {navLinks.map((link) => (
+              link.isRoute ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors ${location.pathname === link.href ? 'border-b-2 border-farm-green pb-1 font-extrabold' : ''}`}
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors`}
+                >
+                  {link.name}
+                </a>
+              )
+            ))}
+          </div>
+
+          {isOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute top-full left-0 w-full bg-farm-white border-b border-farm-brown/20 flex flex-col p-6 gap-4 text-[10px] font-bold uppercase tracking-widest shadow-xl z-50"
             >
-              {link.name}
-            </a>
-          )
-        ))}
+              {navLinks.map((link) => (
+                link.isRoute ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`${link.color || 'text-farm-brown'} ${location.pathname === link.href ? 'text-farm-green font-extrabold' : ''}`}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={link.color || 'text-farm-brown'}
+                  >
+                    {link.name}
+                  </a>
+                )
+              ))}
+            </motion.div>
+          )}
+        </div>
       </div>
-
-      <div className="md:hidden">
-        <button onClick={() => setIsOpen(!isOpen)} className="text-farm-brown p-2">
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {isOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full left-0 w-full bg-farm-white border-b border-farm-brown/20 flex flex-col p-6 gap-4 text-[10px] font-bold uppercase tracking-widest shadow-xl"
-        >
-          {navLinks.map((link) => (
-            link.isRoute ? (
-              <Link
-                key={link.name}
-                to={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`${link.color || 'text-farm-brown'} ${location.pathname === link.href ? 'text-farm-green font-extrabold' : ''}`}
-              >
-                {link.name}
-              </Link>
-            ) : (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={link.color || 'text-farm-brown'}
-              >
-                {link.name}
-              </a>
-            )
-          ))}
-        </motion.div>
-      )}
-    </nav>
+    </>
   );
 };
 
 const Hero = () => {
-  const [scrollOffset, setScrollOffset] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const maxScroll = 600;
-      const progress = Math.min(window.scrollY / maxScroll, 1);
-      setScrollOffset(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <section className="relative w-full h-[85vh] min-h-[600px] overflow-hidden flex items-center justify-center border-b border-farm-brown/20" id="home">
+    <section className="relative w-full h-[85vh] min-h-[550px] max-[480px]:min-h-[460px] overflow-hidden flex items-center justify-center border-b border-farm-brown/20" id="home">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
         <video 
@@ -292,54 +305,41 @@ const Hero = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-20 text-center px-6 max-w-4xl flex flex-col items-center"
+        className="relative z-20 text-center px-4 md:px-6 max-w-4xl flex flex-col items-center"
       >
-        <div className="flex flex-col items-center mb-4 select-none w-full">
-          <p className="text-farm-cream uppercase text-[12px] font-bold tracking-[0.4em] drop-shadow-lg mb-2">Jeff & Tacey Anderson</p>
-          
-          {/* Subtle horizontal line */}
-          <div className="w-56 md:w-72 h-px bg-farm-cream/30 relative">
-            {/* Small tractor icon position on the line, moves right to left as user scrolls down */}
-            <div 
-              className="absolute -top-3.5 left-0 text-farm-cream flex items-center justify-center"
-              style={{ 
-                transform: `translateX(${((1 - scrollOffset) * (window.innerWidth < 768 ? 200 : 260))}px)`,
-                transition: "transform 0.05s ease-out"
-              }}
-            >
-              <Tractor size={16} className="text-farm-cream drop-shadow-lg" />
-            </div>
-          </div>
+        <div className="flex flex-col items-center gap-2 md:gap-4 mb-2 select-none w-full">
+          <p className="text-farm-cream uppercase text-[10px] md:text-[12px] font-bold tracking-[0.4em] drop-shadow-lg">Jeff & Tacey Anderson</p>
+          <div className="w-12 h-px bg-farm-cream/40" />
         </div>
         
-        <h1 className="text-6xl md:text-8xl font-bold font-serif text-white mb-6 drop-shadow-2xl leading-tight">
+        <h1 className="text-3xl min-[380px]:text-4xl xs:text-5xl md:text-8xl font-bold font-serif text-white mb-4 md:mb-6 drop-shadow-2xl leading-tight">
           Beechgrove <br className="md:hidden" /> Livestock
         </h1>
         
-        <p className="font-script text-3xl md:text-4xl text-farm-cream mb-8 drop-shadow-md">
+        <p className="font-script text-2xl min-[380px]:text-3xl md:text-4xl text-farm-cream mb-6 md:mb-8 drop-shadow-md">
           Farm • Fresh • Local
         </p>
-
-        <p className="text-lg md:text-xl text-white/90 font-serif italic mb-10 max-w-2xl mx-auto drop-shadow-md">
+ 
+        <p className="text-sm sm:text-base md:text-xl text-white/90 font-serif italic mb-8 md:mb-10 max-w-2xl mx-auto drop-shadow-md px-2">
           Premium Raw Jersey Milk, Farm Fresh Eggs, Butter & Dairy Products
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-sm sm:max-w-none px-4 sm:px-0">
           <a 
             href="#products"
-            className="w-full sm:w-auto px-10 py-5 bg-farm-cream text-farm-brown font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-white transition-all transform hover:-translate-y-1 shadow-xl"
+            className="w-full sm:w-auto px-6 py-3.5 md:px-10 md:py-5 bg-farm-cream text-farm-brown font-bold uppercase tracking-[0.2em] text-[9px] md:text-[10px] hover:bg-white transition-all transform hover:-translate-y-1 shadow-xl text-center"
           >
             Order Now
           </a>
           <a 
             href="#herdshare"
-            className="w-full sm:w-auto px-10 py-5 bg-transparent border-2 border-white text-white font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-farm-brown transition-all transform hover:-translate-y-1 backdrop-blur-sm"
+            className="w-full sm:w-auto px-6 py-3.5 md:px-10 md:py-5 bg-transparent border-2 border-white text-white font-bold uppercase tracking-[0.2em] text-[9px] md:text-[10px] hover:bg-white hover:text-farm-brown transition-all transform hover:-translate-y-1 backdrop-blur-sm text-center"
           >
             Join Herdshare Program
           </a>
           <a 
             href="#contact"
-            className="w-full sm:w-auto px-10 py-5 bg-transparent text-white font-bold uppercase tracking-[0.2em] text-[10px] hover:underline underline-offset-8 transition-all"
+            className="w-full sm:w-auto px-6 py-3.5 md:px-10 md:py-5 bg-transparent text-white font-bold uppercase tracking-[0.2em] text-[9px] md:text-[10px] hover:underline underline-offset-8 transition-all text-center"
           >
             Contact Us
           </a>
@@ -476,31 +476,31 @@ const ProductsSection = ({
   setActiveTab: (tab: 'dairy' | 'poultry' | 'vegetables') => void;
 }) => {
   return (
-    <section className="py-24 border-b border-farm-brown/20 bg-farm-white" id="products">
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
+    <section className="py-12 md:py-24 border-b border-farm-brown/20 bg-farm-white" id="products">
+      <div className="max-w-7xl mx-auto px-4 md:px-10">
         
         {/* Marketplace Headers */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-4 md:gap-6">
           <div className="max-w-2xl">
-            <p className="text-farm-green uppercase text-[10px] font-bold tracking-[0.3em] mb-3 underline decoration-farm-green/30 underline-offset-8">Marketplace</p>
-            <h2 className="text-5xl font-bold font-serif mb-4">
+            <p className="text-farm-green uppercase text-[10px] font-bold tracking-[0.3em] mb-2 md:mb-3 underline decoration-farm-green/30 underline-offset-8">Marketplace</p>
+            <h2 className="text-2xl xs:text-3xl md:text-5xl font-bold font-serif mb-3 md:mb-4">
               {activeTab === 'dairy' && "Dairy Herdshare & Public Sales"}
               {activeTab === 'poultry' && "Pasture-Raised Poultry"}
               {activeTab === 'vegetables' && "Our Kitchen Garden"}
             </h2>
-            <p className="text-farm-brown/60 font-serif italic">
+            <p className="text-sm md:text-base text-farm-brown/60 font-serif italic">
               {activeTab === 'dairy' && "Premium raw milk, heavy cream, and artisanal butter from our happy Jersey dairy herd."}
               {activeTab === 'poultry' && "Farm-fresh eggs collected daily from our happy, pasture-raised chickens."}
               {activeTab === 'vegetables' && "Crisp seasonal greens and kitchen-garden harvests grown in healthy, fertile soil."}
             </p>
           </div>
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-farm-green px-6 py-3 border border-farm-green/20 rounded-full bg-farm-green/5 flex items-center gap-3 shrink-0">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-farm-green px-4 py-2.5 md:px-6 md:py-3 border border-farm-green/20 rounded-full bg-farm-green/5 flex items-center justify-center gap-3 w-full sm:w-auto shrink-0">
             <Clock size={14} /> Daily Farm Replenishments
           </div>
         </div>
 
         {/* Marketplace Sub-Navigation Tab Menu - Vegetable tab placed directly after Poultry */}
-        <div className="flex border-b border-farm-brown/10 mb-12 gap-8 justify-start overflow-x-auto scrollbar-none">
+        <div className="flex border-b border-farm-brown/10 mb-8 md:mb-12 gap-4 sm:gap-8 justify-start overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveTab('dairy')}
             id="tab-dairy"
@@ -545,11 +545,11 @@ const ProductsSection = ({
         {activeTab === 'dairy' && (
           <>
             {/* Notice of container policy */}
-            <div className="mb-16 bg-farm-cream/30 border border-farm-brown/10 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+            <div className="mb-8 md:mb-16 bg-farm-cream/30 border border-farm-brown/10 p-5 md:p-8 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-farm-green/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
               <div className="space-y-1">
                 <p className="text-[9px] uppercase font-bold tracking-[0.25em] text-farm-green">Container Policy Notice</p>
-                <p className="text-base font-serif text-farm-brown/90 italic leading-relaxed">
+                <p className="text-sm md:text-base font-serif text-farm-brown/90 italic leading-relaxed">
                   "To help us keep things sustainable, please bring a clean glass jar to swap when picking up your dairy, or you can purchase a reusable jar from us for $5."
                 </p>
               </div>
@@ -558,7 +558,7 @@ const ProductsSection = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-10 gap-y-10 md:gap-y-16">
               {PRODUCTS.filter(product => product.category === 'dairy').map((product) => (
                 <div key={product.id}>
                   <ProductCard product={product} onOrder={onOrder} />
@@ -569,7 +569,7 @@ const ProductsSection = ({
         )}
 
         {activeTab === 'poultry' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-10 gap-y-10 md:gap-y-16">
             {PRODUCTS.filter(product => product.category === 'eggs').map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} onOrder={onOrder} />
@@ -597,10 +597,10 @@ const ProductsSection = ({
 const Herdshare = () => {
   return (
     <section className="flex flex-col lg:flex-row border-b border-farm-brown/20" id="herdshare">
-      <div className="w-full lg:w-1/2 px-8 py-10 md:px-16 md:py-12 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-farm-brown/20">
+      <div className="w-full lg:w-1/2 px-5 py-8 md:px-16 md:py-12 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-farm-brown/20">
         <p className="text-farm-green uppercase text-[10px] font-bold tracking-[0.3em] mb-2">Sustainability First</p>
-        <h2 className="text-4xl md:text-5xl font-bold font-serif mb-4 leading-tight">Join Our Herdshare Program</h2>
-        <ul className="space-y-2 mb-6 overflow-hidden">
+        <h2 className="text-2xl min-[380px]:text-3xl md:text-5xl font-bold font-serif mb-4 leading-tight">Join Our Herdshare Program</h2>
+        <ul className="space-y-3 mb-6 overflow-hidden">
           {[
             "Set amount of milk each week",
             "To help us keep things sustainable, please bring a clean glass jar to swap when picking up your dairy, or you can purchase a reusable jar from us for $5.",
@@ -610,13 +610,13 @@ const Herdshare = () => {
           ].map((item, i) => (
             <motion.li 
               key={i} 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -25 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="flex items-start gap-3 text-sm md:text-base font-serif"
+              transition={{ delay: i * 0.08 }}
+              className="flex items-start gap-3 text-xs min-[380px]:text-sm md:text-base font-serif"
             >
-              <span className="text-farm-green font-bold">✔</span>
-              {item}
+              <span className="text-farm-green font-bold shrink-0">✔</span>
+              <span>{item}</span>
             </motion.li>
           ))}
         </ul>
@@ -626,26 +626,26 @@ const Herdshare = () => {
           </button>
         </div>
       </div>
-      <div className="w-full lg:w-1/2 bg-farm-brown px-8 py-10 md:px-16 md:py-12 text-farm-cream flex flex-col justify-center gap-6" id="logistics">
-        <h2 className="text-4xl font-bold font-serif mb-2">Pickup & Delivery</h2>
+      <div className="w-full lg:w-1/2 bg-farm-brown px-5 py-8 md:px-16 md:py-12 text-farm-cream flex flex-col justify-center gap-6" id="logistics">
+        <h2 className="text-2xl min-[380px]:text-3xl md:text-4xl font-bold font-serif mb-2">Pickup & Delivery</h2>
         <div className="grid sm:grid-cols-2 gap-6">
           <div className="space-y-1">
             <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-farm-beige">Farm Address</p>
-            <p className="text-base font-serif leading-relaxed">
+            <p className="text-sm md:text-base font-serif leading-relaxed text-farm-cream/90">
               1605 McBrides Branch Road<br />
               Beechgrove, TN
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-farm-beige">Farm Pickup Hours</p>
-            <p className="text-base font-serif leading-relaxed">
+            <p className="text-sm md:text-base font-serif leading-relaxed text-farm-cream/90">
               Monday – Friday<br />
               7:00 AM – 3:30 PM
             </p>
           </div>
           <div className="sm:col-span-2 space-y-1">
             <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-farm-beige">Weekly Deliveries To:</p>
-            <p className="text-base font-serif text-farm-cream/70 leading-relaxed max-w-md">
+            <p className="text-sm md:text-base font-serif text-farm-cream/70 leading-relaxed max-w-md">
               Murfreesboro, Shelbyville, Manchester, and Wartrace.
             </p>
           </div>
@@ -660,21 +660,21 @@ const Herdshare = () => {
 
 const PetMilk = () => {
   return (
-    <section className="py-20 bg-farm-brown text-farm-cream overflow-hidden relative">
+    <section className="py-12 md:py-20 bg-farm-brown text-farm-cream overflow-hidden relative">
       <div className="absolute inset-0 wood-texture opacity-10 pointer-events-none" />
-      <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
+      <div className="max-w-5xl mx-auto px-5 md:px-6 text-center relative z-10">
         <div className="flex flex-col items-center gap-6">
           <div className="w-16 h-16 rounded-full bg-farm-cream/10 flex items-center justify-center border border-farm-cream/20">
             <Milk size={32} className="text-farm-beige" />
           </div>
-          <h2 className="text-4xl font-bold font-serif">Legal Notice & Disclosure</h2>
-          <div className="max-w-3xl mx-auto space-y-6">
-            <p className="text-xl font-serif italic text-farm-beige">
+          <h2 className="text-2xl xs:text-3xl md:text-4xl font-bold font-serif">Legal Notice & Disclosure</h2>
+          <div className="max-w-3xl mx-auto space-y-4 md:space-y-6">
+            <p className="text-base md:text-xl font-serif italic text-farm-beige leading-relaxed">
               "Milk is not pasteurized. In accordance with local regulations, unless you are an active member of our herdshare program, all raw milk products are sold strictly as pet milk."
             </p>
-            <div className="pt-6 border-t border-white/10">
+            <div className="pt-4 md:pt-6 border-t border-white/10">
               <p className="text-[10px] uppercase font-bold tracking-[0.3em] opacity-60">Transparency & Safety</p>
-              <p className="text-sm mt-2 text-farm-cream/80">
+              <p className="text-xs md:text-sm mt-2 text-farm-cream/80">
                 We maintain the highest standards of cleanliness and herd health, but we must adhere to specific labeling requirements for non-members.
               </p>
             </div>
@@ -687,16 +687,16 @@ const PetMilk = () => {
 
 const Logistics = () => {
   return (
-    <section className="py-24 bg-farm-white" id="logistics">
+    <section className="py-12 md:py-24 bg-farm-white" id="logistics">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-12">
           <motion.div 
             whileHover={{ y: -5 }}
-            className="p-10 rounded-3xl bg-farm-cream/30 border border-farm-brown/5"
+            className="p-6 md:p-10 rounded-2xl md:rounded-3xl bg-farm-cream/30 border border-farm-brown/5"
           >
-            <MapPin className="text-farm-green mb-6" size={40} />
-            <h3 className="text-2xl font-bold mb-4">Farm Address</h3>
-            <p className="text-lg text-farm-brown/80 font-serif">
+            <MapPin className="text-farm-green mb-4 md:mb-6" size={32} />
+            <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Farm Address</h3>
+            <p className="text-base md:text-lg text-farm-brown/80 font-serif">
               1605 McBrides Branch Road<br />
               Beechgrove, TN
             </p>
@@ -704,27 +704,27 @@ const Logistics = () => {
 
           <motion.div 
             whileHover={{ y: -5 }}
-            className="p-10 rounded-3xl bg-farm-cream/30 border border-farm-brown/5"
+            className="p-6 md:p-10 rounded-2xl md:rounded-3xl bg-farm-cream/30 border border-farm-brown/5"
           >
-            <Clock className="text-farm-green mb-6" size={40} />
-            <h3 className="text-2xl font-bold mb-4">Farm Pickup Hours</h3>
-            <p className="text-lg text-farm-brown/80 font-serif leading-relaxed">
-              <span className="font-bold flex justify-between">Monday – Friday: <span>7:00 AM – 3:30 PM</span></span>
-              <span className="text-sm opacity-60 italic mt-2 block">Weekend pickup by appointment.</span>
+            <Clock className="text-farm-green mb-4 md:mb-6" size={32} />
+            <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Farm Pickup Hours</h3>
+            <p className="text-base md:text-lg text-farm-brown/80 font-serif leading-relaxed">
+              <span className="font-bold flex flex-col sm:flex-row justify-between sm:items-center">Monday – Friday: <span className="text-sm sm:text-base opacity-90">7:00 AM – 3:30 PM</span></span>
+              <span className="text-xs opacity-60 italic mt-2 block">Weekend pickup by appointment.</span>
             </p>
           </motion.div>
 
           <motion.div 
             whileHover={{ y: -5 }}
-            className="p-10 rounded-3xl bg-farm-cream/30 border border-farm-brown/5"
+            className="p-6 md:p-10 rounded-2xl md:rounded-3xl bg-farm-cream/30 border border-farm-brown/5"
           >
-            <Milk className="text-farm-green mb-6" size={40} />
-            <h3 className="text-2xl font-bold mb-4">Weekly Delivery</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <Milk className="text-farm-green mb-4 md:mb-6" size={32} />
+            <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Weekly Delivery</h3>
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               {["Wartrace", "Murfreesboro", "Shelbyville", "Manchester"].map(city => (
-                <div key={city} className="flex items-center gap-2 text-farm-brown/80 font-serif">
-                  <div className="w-1.5 h-1.5 rounded-full bg-farm-green" />
-                  {city}
+                <div key={city} className="flex items-center gap-2 text-sm md:text-base text-farm-brown/80 font-serif">
+                  <div className="w-1.5 h-1.5 rounded-full bg-farm-green shrink-0" />
+                  <span>{city}</span>
                 </div>
               ))}
             </div>
@@ -946,9 +946,9 @@ const HomePage = ({ onOrder }: { onOrder: (p: Product) => void }) => {
       <PetMilk />
       {/* Contact section integrated into the Natural Tones grid */}
       <section className="flex flex-col lg:flex-row border-b border-farm-brown/20" id="contact">
-        <div className="w-full lg:w-[420px] border-r border-farm-brown/20 p-8 md:p-12 bg-farm-cream/10">
+        <div className="w-full lg:w-[420px] lg:border-r border-farm-brown/20 p-5 md:p-12 bg-farm-cream/10 border-b lg:border-b-0">
           <p className="text-farm-green uppercase text-[10px] font-bold tracking-[0.3em] mb-4">Direct Inquiry</p>
-          <h2 className="text-4xl font-bold font-serif mb-8">Reach Out Today</h2>
+          <h2 className="text-2xl xs:text-3xl lg:text-4xl font-bold font-serif mb-6 md:mb-8">Reach Out Today</h2>
           <form className="space-y-6">
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest mb-1 opacity-50">Name</label>
@@ -971,7 +971,7 @@ const HomePage = ({ onOrder }: { onOrder: (p: Product) => void }) => {
             </button>
           </form>
         </div>
-        <div className="flex-1 p-8 md:p-12 flex flex-col justify-end items-end italic bg-farm-white wood-texture opacity-80 relative min-h-[400px]">
+        <div className="flex-1 p-5 md:p-12 flex flex-col justify-end items-end italic bg-farm-white wood-texture opacity-80 relative min-h-[320px] md:min-h-[400px]">
           {/* Logo integration in the contact panel */}
           <div className="absolute inset-0 flex items-start justify-start pt-2 pl-6 md:pl-8 pointer-events-none">
             <img 
@@ -982,7 +982,7 @@ const HomePage = ({ onOrder }: { onOrder: (p: Product) => void }) => {
           </div>
 
           <div className="max-w-md text-right relative z-10">
-            <p className="text-lg leading-relaxed font-serif text-farm-brown/70 mb-8">
+            <p className="text-base md:text-lg leading-relaxed font-serif text-farm-brown/70 mb-6 md:mb-8">
               "We don't just sell milk; we share the fruits of our labor, the health of our heritage, and the taste of Tennessee's finest pastures." 
             </p>
             <div className="flex items-center justify-end gap-6">
