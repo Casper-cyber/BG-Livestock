@@ -103,11 +103,12 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
 
   const currentImageName = item.imageNames[activeImageIndex];
   const urlSafeName = currentImageName.toLowerCase().replace(/\s+/g, '_');
-  const src = STATIC_IMAGES[urlSafeName] || `/src/assets/images/${urlSafeName}.png`;
+  const src = STATIC_IMAGES[urlSafeName];
+  const hasValidImage = !!src;
 
   return (
     <div className="relative aspect-[16/10] bg-farm-cream/30 rounded-lg overflow-hidden border border-farm-brown/10 mb-5 group">
-      {!imageError ? (
+      {hasValidImage && !imageError ? (
         <img
           src={src}
           alt={item.name}

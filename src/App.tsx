@@ -194,23 +194,22 @@ const Navbar = () => {
     <>
       {/* Standalone frozen top Lottie animation strip - SOLID opaque white background in separate minimal bar */}
       <div 
-        className="fixed top-0 left-0 w-full z-[9999] h-[75px] bg-white border-b border-farm-brown/10 shadow-sm flex items-center justify-center overflow-hidden select-none pointer-events-none"
-        style={{ backgroundColor: "#ffffff" }}
+        className="fixed top-0 left-0 w-full z-[9999] h-[85px] bg-white border-b border-farm-brown/10 shadow-sm flex items-center justify-center overflow-visible select-none pointer-events-none"
+        style={{ backgroundColor: "#ffffff", paddingBottom: "8px" }}
       >
-        <div className="w-full h-full flex items-center justify-center px-4">
-          <div className="w-[85%] sm:w-[70%] md:w-[55%] max-w-[800px] flex items-center justify-center">
-            <LottiePlayer
-              src="https://lottie.host/32fecbb2-b9dc-4848-9ef3-4b380d454395/IjOIgMjTTg.lottie"
-              style={{ 
-                width: "100%", 
-                height: "auto", 
-                objectFit: "contain", 
-                display: "block" 
-              }}
-              autoplay
-              loop
-            ></LottiePlayer>
-          </div>
+        <div className="w-full max-w-[1400px] h-full flex items-center justify-center px-4">
+          <LottiePlayer
+            src="https://lottie.host/32fecbb2-b9dc-4848-9ef3-4b380d454395/IjOIgMjTTg.lottie"
+            style={{ 
+              height: "65px", 
+              width: "650px", 
+              maxWidth: "90%",
+              objectFit: "contain", 
+              display: "block" 
+            }}
+            autoplay
+            loop
+          ></LottiePlayer>
         </div>
       </div>
 
@@ -218,8 +217,8 @@ const Navbar = () => {
       <div 
         className={`w-full z-45 transition-all duration-300 ${
           isHomePage 
-            ? "absolute left-0 w-full top-[75px] border-none shadow-none" 
-            : "relative bg-farm-white border-b border-farm-brown/10 mt-[75px]"
+            ? "absolute left-0 w-full top-[85px] border-none shadow-none" 
+            : "relative bg-farm-white border-b border-farm-brown/10 mt-[85px]"
         }`}
         style={isHomePage ? { background: "transparent" } : undefined}
       >
@@ -371,7 +370,7 @@ const Hero = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-20 text-center px-4 md:px-6 max-w-4xl flex flex-col items-center pt-[180px] min-[480px]:pt-[200px] md:pt-[235px] pb-6 w-full"
+        className="relative z-20 text-center px-4 md:px-6 max-w-4xl flex flex-col items-center pt-[190px] min-[480px]:pt-[210px] md:pt-[245px] pb-6 w-full"
       >
         <div className="flex flex-col items-center gap-1.5 md:gap-2 mb-1.5 select-none w-full">
           <p className="text-farm-cream uppercase text-[9px] md:text-[11px] font-bold tracking-[0.4em] drop-shadow-lg">Jeff & Tacey Anderson</p>
