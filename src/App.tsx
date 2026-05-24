@@ -175,55 +175,109 @@ const Navbar = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
-  const navLinks = [
+  interface NavLink {
+    name: string;
+    href: string;
+    isRoute: boolean;
+    color?: string;
+  }
+
+  const navLinks: NavLink[] = [
     { name: "Products", href: isHomePage ? "#products" : "/#products", isRoute: false },
     { name: "Herdshare", href: isHomePage ? "#herdshare" : "/#herdshare", isRoute: false },
     { name: "Delivery", href: isHomePage ? "#logistics" : "/#logistics", isRoute: false },
     { name: "About Us", href: "/about", isRoute: true },
-    { name: "Contact", href: isHomePage ? "#contact" : "/#contact", color: "text-farm-green", isRoute: false },
+    { name: "Contact", href: isHomePage ? "#contact" : "/#contact", isRoute: false },
   ];
 
   return (
     <>
-      {/* Standalone frozen top Lottie animation strip - Tight & cleanly framed, acting as solid screen */}
-      <div className="fixed top-0 left-0 w-full z-[9999] h-[55px] max-[480px]:h-[45px] bg-farm-white border-b border-farm-brown/10 shadow-sm flex items-center justify-center overflow-hidden select-none pointer-events-none">
-        <div className="absolute flex items-center justify-center w-[200px] h-[200px] max-[480px]:w-[140px] max-[480px]:h-[140px] md:w-[450px] md:h-[450px] pointer-events-none">
-          <LottiePlayer
-            src="https://lottie.host/32fecbb2-b9dc-4848-9ef3-4b380d454395/IjOIgMjTTg.lottie"
-            style={{ width: "100%", height: "100%" }}
-            autoplay
-            loop
-          ></LottiePlayer>
+      {/* Standalone frozen top Lottie animation strip - SOLID opaque white background in separate minimal bar */}
+      <div 
+        className="fixed top-0 left-0 w-full z-[9999] h-[75px] bg-white border-b border-farm-brown/10 shadow-sm flex items-center justify-center overflow-hidden select-none pointer-events-none"
+        style={{ backgroundColor: "#ffffff" }}
+      >
+        <div className="w-full h-full flex items-center justify-center px-4">
+          <div className="w-[85%] sm:w-[70%] md:w-[55%] max-w-[800px] flex items-center justify-center">
+            <LottiePlayer
+              src="https://lottie.host/32fecbb2-b9dc-4848-9ef3-4b380d454395/IjOIgMjTTg.lottie"
+              style={{ 
+                width: "100%", 
+                height: "auto", 
+                objectFit: "contain", 
+                display: "block" 
+              }}
+              autoplay
+              loop
+            ></LottiePlayer>
+          </div>
         </div>
       </div>
 
-      {/* Unlinked Branding & Navigation Row in natural flow - Scrolls up and away naturally */}
-      <div className="w-full bg-farm-white border-b border-farm-brown/10 relative z-40 mt-[55px] max-[480px]:mt-[45px]">
-        <div className="max-w-7xl mx-auto px-4 md:px-10 flex flex-row items-center justify-between py-3 md:py-3 relative h-auto bg-farm-white">
+      {/* Integrated Branding & Navigation Row - Floating transparently under the white animation strip */}
+      <div 
+        className={`w-full z-45 transition-all duration-300 ${
+          isHomePage 
+            ? "absolute left-0 w-full top-[75px] border-none shadow-none" 
+            : "relative bg-farm-white border-b border-farm-brown/10 mt-[75px]"
+        }`}
+        style={isHomePage ? { background: "transparent" } : undefined}
+      >
+        <div className={`max-w-7xl mx-auto px-4 md:px-10 flex flex-row items-center justify-between py-3 md:py-3 relative h-auto ${
+          isHomePage ? "bg-transparent" : "bg-farm-white"
+        }`}>
           
           <div className="flex items-center justify-between w-full md:w-auto">
-            {/* Company Logo & Title block */}
-            <Link to="/" className="flex items-center gap-3 relative z-50">
+            {/* Company Logo and Title block */}
+            <Link to="/" className="flex items-center gap-3 md:gap-4 relative z-50">
               <img 
                 src={bgLogo} 
                 alt="Beechgrove Livestock" 
-                className="h-12 max-[480px]:h-10 md:h-24 w-auto object-contain block drop-shadow-md transition-transform hover:scale-105 duration-300" 
+                className="h-20 max-[480px]:h-16 md:h-28 w-auto object-contain block drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-transform hover:scale-105 duration-300" 
               />
               <div className="flex flex-col">
-                <span className="text-base max-[480px]:text-[13px] md:text-3xl font-bold tracking-tight uppercase font-serif leading-none md:leading-tight">Beechgrove Livestock</span>
-                <span className="text-[9px] uppercase tracking-[0.3em] text-farm-brown/70 font-sans hidden md:block mt-1">Farm • Fresh • Local</span>
-                <span className="text-[8px] uppercase tracking-[0.15em] text-farm-brown/60 font-sans md:hidden mt-0.5 font-bold">Farm Fresh Local</span>
+                <span 
+                  className={`text-base max-[480px]:text-[13px] md:text-3xl font-bold tracking-tight uppercase font-serif leading-none md:leading-tight ${
+                    isHomePage ? "text-white" : "text-farm-brown"
+                  }`}
+                  style={isHomePage ? { textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8), 0px 2px 5px rgba(0, 0, 0, 0.4)" } : undefined}
+                >
+                  Beechgrove Livestock
+                </span>
+                <span 
+                  className={`text-[9px] uppercase tracking-[0.3em] font-sans hidden md:block mt-2 ${
+                    isHomePage ? "text-farm-cream font-semibold" : "text-farm-brown/70"
+                  }`}
+                  style={isHomePage ? { textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.3)" } : undefined}
+                >
+                  Farm • Fresh • Local
+                </span>
+                <span 
+                  className={`text-[8px] uppercase tracking-[0.15em] font-sans md:hidden mt-0.5 font-bold ${
+                    isHomePage ? "text-farm-cream" : "text-farm-brown/60"
+                  }`}
+                  style={isHomePage ? { textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8), 0px 2px 4px rgba(0, 0, 0, 0.3)" } : undefined}
+                >
+                  Farm Fresh Local
+                </span>
               </div>
             </Link>
-
+ 
             {/* Mobile menu navigation toggles - inline in the flex flow to prevent absolute overlaps */}
             <div className="md:hidden">
-              <button onClick={() => setIsOpen(!isOpen)} className="text-farm-brown p-2 hover:bg-farm-brown/5 rounded-full transition-colors" aria-label="Toggle Navigation">
+              <button 
+                onClick={() => setIsOpen(!isOpen)} 
+                className={`p-2 rounded-full transition-colors ${
+                  isHomePage ? 'text-white hover:bg-white/10' : 'text-farm-brown hover:bg-farm-brown/5'
+                }`}
+                style={isHomePage ? { filter: "drop-shadow(1px 1px 2px rgba(0,0,0,0.8))" } : undefined}
+                aria-label="Toggle Navigation"
+              >
                 {isOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
           </div>
-
+ 
           {/* Desktop Navigation Link assembly */}
           <div className="hidden md:flex gap-8 items-center text-[10px] font-bold uppercase tracking-[0.2em] relative z-50">
             {navLinks.map((link) => (
@@ -231,7 +285,14 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors ${location.pathname === link.href ? 'border-b-2 border-farm-green pb-1 font-extrabold' : ''}`}
+                  className={`${
+                    isHomePage 
+                      ? link.color || 'text-white hover:text-farm-cream' 
+                      : link.color || 'text-farm-brown hover:text-farm-green'
+                  } transition-colors whitespace-nowrap ${
+                    location.pathname === link.href ? 'border-b-2 border-farm-green pb-1 font-extrabold' : ''
+                  }`}
+                  style={isHomePage ? { textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8), 0px 1px 4px rgba(0, 0, 0, 0.4)" } : undefined}
                 >
                   {link.name}
                 </Link>
@@ -239,14 +300,19 @@ const Navbar = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className={`${link.color || 'text-farm-brown'} hover:text-farm-green transition-colors`}
+                  className={`${
+                    isHomePage 
+                      ? link.color || 'text-white hover:text-farm-cream' 
+                      : link.color || 'text-farm-brown hover:text-farm-green'
+                  } transition-colors whitespace-nowrap`}
+                  style={isHomePage ? { textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8), 0px 1px 4px rgba(0, 0, 0, 0.4)" } : undefined}
                 >
                   {link.name}
                 </a>
               )
             ))}
           </div>
-
+ 
           {isOpen && (
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
@@ -284,7 +350,7 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section className="relative w-full h-[85vh] min-h-[550px] max-[480px]:min-h-[460px] overflow-hidden flex items-center justify-center border-b border-farm-brown/20" id="home">
+    <section className="relative w-full h-[68vh] md:h-[62vh] min-h-[520px] max-[480px]:min-h-[440px] max-h-[640px] overflow-hidden flex flex-col items-center justify-start border-b border-farm-brown/20" id="home">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
         <video 
@@ -300,46 +366,46 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/35 z-10" />
       </div>
 
-      {/* Hero Content */}
+      {/* Hero Content Area - Shifted downwards to perfectly utilize lower canvas space and clear transparent header row */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-20 text-center px-4 md:px-6 max-w-4xl flex flex-col items-center"
+        className="relative z-20 text-center px-4 md:px-6 max-w-4xl flex flex-col items-center pt-[180px] min-[480px]:pt-[200px] md:pt-[235px] pb-6 w-full"
       >
-        <div className="flex flex-col items-center gap-2 md:gap-4 mb-2 select-none w-full">
-          <p className="text-farm-cream uppercase text-[10px] md:text-[12px] font-bold tracking-[0.4em] drop-shadow-lg">Jeff & Tacey Anderson</p>
-          <div className="w-12 h-px bg-farm-cream/40" />
+        <div className="flex flex-col items-center gap-1.5 md:gap-2 mb-1.5 select-none w-full">
+          <p className="text-farm-cream uppercase text-[9px] md:text-[11px] font-bold tracking-[0.4em] drop-shadow-lg">Jeff & Tacey Anderson</p>
+          <div className="w-10 h-px bg-farm-cream/40" />
         </div>
         
-        <h1 className="text-3xl min-[380px]:text-4xl xs:text-5xl md:text-8xl font-bold font-serif text-white mb-4 md:mb-6 drop-shadow-2xl leading-tight">
+        <h1 className="text-3xl min-[380px]:text-4xl xs:text-5xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-2 md:mb-3 drop-shadow-2xl leading-[1.1] tracking-tight">
           Beechgrove <br className="md:hidden" /> Livestock
         </h1>
         
-        <p className="font-script text-2xl min-[380px]:text-3xl md:text-4xl text-farm-cream mb-6 md:mb-8 drop-shadow-md">
+        <p className="font-script text-xl min-[380px]:text-2xl md:text-3xl text-farm-cream mb-2 md:mb-3.5 drop-shadow-md">
           Farm • Fresh • Local
         </p>
  
-        <p className="text-sm sm:text-base md:text-xl text-white/90 font-serif italic mb-8 md:mb-10 max-w-2xl mx-auto drop-shadow-md px-2">
+        <p className="text-xs sm:text-xs md:text-sm lg:text-base text-white/95 font-serif italic mb-4 md:mb-5 max-w-xl mx-auto drop-shadow-md px-2 leading-relaxed">
           Premium Raw Jersey Milk, Farm Fresh Eggs, Butter & Dairy Products
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-sm sm:max-w-none px-4 sm:px-0">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-sm sm:max-w-none px-4 sm:px-0">
           <a 
             href="#products"
-            className="w-full sm:w-auto px-6 py-3.5 md:px-10 md:py-5 bg-farm-cream text-farm-brown font-bold uppercase tracking-[0.2em] text-[9px] md:text-[10px] hover:bg-white transition-all transform hover:-translate-y-1 shadow-xl text-center"
+            className="w-full sm:w-auto px-5 py-3 md:px-8 md:py-4 bg-farm-cream text-farm-brown font-bold uppercase tracking-[0.2em] text-[8px] md:text-[9.5px] hover:bg-white transition-all transform hover:-translate-y-0.5 shadow-lg text-center"
           >
             Order Now
           </a>
           <a 
             href="#herdshare"
-            className="w-full sm:w-auto px-6 py-3.5 md:px-10 md:py-5 bg-transparent border-2 border-white text-white font-bold uppercase tracking-[0.2em] text-[9px] md:text-[10px] hover:bg-white hover:text-farm-brown transition-all transform hover:-translate-y-1 backdrop-blur-sm text-center"
+            className="w-full sm:w-auto px-5 py-3 md:px-8 md:py-4 bg-transparent border-2 border-white text-white font-bold uppercase tracking-[0.2em] text-[8px] md:text-[9.5px] hover:bg-white hover:text-farm-brown transition-all transform hover:-translate-y-0.5 backdrop-blur-sm text-center"
           >
             Join Herdshare Program
           </a>
           <a 
             href="#contact"
-            className="w-full sm:w-auto px-6 py-3.5 md:px-10 md:py-5 bg-transparent text-white font-bold uppercase tracking-[0.2em] text-[9px] md:text-[10px] hover:underline underline-offset-8 transition-all text-center"
+            className="w-full sm:w-auto px-5 py-3 md:px-8 md:py-4 bg-transparent text-white font-bold uppercase tracking-[0.2em] text-[8px] md:text-[9.5px] hover:underline underline-offset-4 transition-all text-center"
           >
             Contact Us
           </a>
@@ -347,10 +413,10 @@ const Hero = () => {
       </motion.div>
 
       {/* Pet Milk Notice - Subtle Overlay */}
-      <div className="absolute bottom-10 left-10 hidden lg:block z-20">
-        <div className="p-4 bg-black/20 backdrop-blur-md border border-white/10 rounded-sm max-w-[240px]">
-          <p className="text-[9px] uppercase font-bold tracking-widest mb-1 text-farm-cream">Pet Milk Notice</p>
-          <p className="text-[10px] text-white/80 leading-snug italic font-serif">
+      <div className="absolute bottom-6 left-6 hidden lg:block z-20">
+        <div className="p-3 bg-black/20 backdrop-blur-md border border-white/10 rounded-sm max-w-[220px]">
+          <p className="text-[8px] uppercase font-bold tracking-widest mb-0.5 text-farm-cream">Pet Milk Notice</p>
+          <p className="text-[9px] text-white/80 leading-snug italic font-serif">
             Individually labeled as pet milk. Customers must bring clean glass jugs for each purchase.
           </p>
         </div>
