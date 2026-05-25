@@ -1,0 +1,17 @@
+{
+  "name": "Tractor Simple Loop",
+  "theme": "Beechgrove Livestock",
+  "primaryColor": "#2D3156",
+  "secondaryColor": "#4A2E1F",
+  "tractor": {
+    "speed": "12s",
+    "rumbleSpeed": "0.15s",
+    "hasSmoke": true
+  },
+  "trees": [
+    { "x": 120, "scale": 1.1, "type": "pine" },
+    { "x": 220, "scale": 0.8, "type": "round" },
+    { "x": 420, "scale": 1.0, "type": "pine" },
+    { "x": 520, "scale": 1.2, "type": "round" }
+  ]
+}

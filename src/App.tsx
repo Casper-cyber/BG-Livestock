@@ -29,6 +29,7 @@ import ProductDetailsPage from "./components/ProductDetailsPage";
 import AboutUsPage from "./components/AboutUsPage";
 import VegetablesPage from "./components/VegetablesPage";
 import bgLogo from "./assets/images/bg-logo1.png";
+import tractorAnimation from "./assets/animations/tractor_simple.json";
 
 const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, isOpen: boolean, onClose: () => void }) => {
   const [quantity, setQuantity] = useState(1);
@@ -168,7 +169,184 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
   );
 };
 
-const LottiePlayer = "dotlottie-wc" as any;
+const TractorAnimation = () => {
+  const { primaryColor, tractor, trees } = tractorAnimation;
+  const speed = tractor?.speed || "12s";
+  const rumbleSpeed = tractor?.rumbleSpeed || "0.15s";
+
+  return (
+    <div 
+      className="w-full h-full flex items-center justify-center overflow-visible"
+      style={{ minHeight: "65px" }}
+    >
+      <svg
+        viewBox="0 0 800 65"
+        className="w-full max-w-[650px] h-[65px] overflow-visible"
+        style={{ display: "block" }}
+      >
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes drive-loop {
+            0% { transform: translateX(-120px); }
+            100% { transform: translateX(820px); }
+          }
+          @keyframes wheel-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          @keyframes tractor-rumble {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-1px) rotate(-0.3deg); }
+          }
+          @keyframes smoke-puff-1 {
+            0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+            40% { opacity: 0.6; }
+            100% { transform: translate(-8px, -18px) scale(1.4); opacity: 0; }
+          }
+          @keyframes smoke-puff-2 {
+            0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+            40% { opacity: 0.6; }
+            100% { transform: translate(-5px, -22px) scale(1.6); opacity: 0; }
+          }
+          .smoke-1 {
+            animation: smoke-puff-1 1.2s infinite ease-out;
+            transform-origin: 39px 24px;
+          }
+          .smoke-2 {
+            animation: smoke-puff-2 1.2s infinite ease-out;
+            animation-delay: 0.6s;
+            transform-origin: 39px 24px;
+          }
+          .tractor-element {
+            animation: drive-loop ${speed} linear infinite;
+          }
+          .tractor-body {
+            animation: tractor-rumble ${rumbleSpeed} infinite ease-in-out;
+            transform-origin: center bottom;
+          }
+          .spinning-wheel {
+            animation: wheel-spin 2s linear infinite;
+          }
+        `}} />
+
+        {/* Flat Horizon Ground Line */}
+        <line 
+          x1="-50" 
+          y1="56" 
+          x2="850" 
+          y2="56" 
+          stroke={primaryColor} 
+          strokeWidth="1.5" 
+          strokeDasharray="4 4"
+          opacity="0.2"
+        />
+
+        {/* Dynamic Static Trees styled flat vector fashion as in the config */}
+        {trees.map((tree: any, i: number) => {
+          const type = tree.type || "pine";
+          const scale = tree.scale || 1.0;
+          const x = tree.x;
+          const y = 56; // ground anchor
+
+          return (
+            <g key={i} transform={`translate(${x}, ${y}) scale(${scale})`} opacity="0.3">
+              {type === "pine" ? (
+                <g>
+                  {/* Pine Tree */}
+                  <rect x="-1.5" y="-12" width="3" height="12" fill={primaryColor} />
+                  <polygon points="0,-30 -8,-12 8,-12" fill={primaryColor} />
+                  <polygon points="0,-22 -6,-8 6,-8" fill={primaryColor} />
+                </g>
+              ) : (
+                <g>
+                  {/* Round Tree */}
+                  <rect x="-1" y="-10" width="2" height="10" fill={primaryColor} />
+                  <circle cx="0" cy="-15" r="8" fill={primaryColor} />
+                  <circle cx="4" cy="-13" r="5" fill={primaryColor} opacity="0.85" />
+                  <circle cx="-4" cy="-14" r="6" fill={primaryColor} opacity="0.9" />
+                </g>
+              )}
+            </g>
+          );
+        })}
+
+        {/* Moving Tractor - Loop driving across path */}
+        <g className="tractor-element">
+          {/* Group containing rumble-animated body + spinning wheels placed appropriately */}
+          <g className="tractor-body">
+            
+            {/* Smoke stack puffs */}
+            {tractor?.hasSmoke && (
+              <g>
+                <circle cx="39" cy="24" r="2.5" fill={primaryColor} opacity="0" className="smoke-1" />
+                <circle cx="39" cy="24" r="3.5" fill={primaryColor} opacity="0" className="smoke-2" />
+              </g>
+            )}
+
+            {/* Tractor Frame / Body */}
+            {/* Cab roof */}
+            <path d="M 0 25 L 18 25 L 14 38 L -3 38 Z" fill={primaryColor} opacity="0.9" />
+            
+            {/* Roof supports (thin lines) */}
+            <line x1="3" y1="25" x2="1" y2="38" stroke={primaryColor} strokeWidth="1.5" />
+            <line x1="15" y1="25" x2="13" y2="38" stroke={primaryColor} strokeWidth="1.5" />
+
+            {/* Hood and engine block */}
+            <path d="M 17 38 L 40 38 L 40 48 L 17 48 Z" fill={primaryColor} />
+            <path d="M 12 38 L 17 38 L 17 48 L 5 48 L 5 44 Z" fill={primaryColor} />
+
+            {/* Steering wheel */}
+            <line x1="16" y1="34" x2="19" y2="38" stroke={primaryColor} strokeWidth="1.5" />
+            <ellipse cx="15" cy="34" rx="4" ry="1.2" fill="none" stroke={primaryColor} strokeWidth="1.2" transform="rotate(-15 15 34)" />
+
+            {/* Smoke stack */}
+            <line x1="38" y1="38" x2="38" y2="25" stroke={primaryColor} strokeWidth="2" />
+            <polygon points="36,25 40,25 41,23 35,23" fill={primaryColor} />
+
+            {/* Seat */}
+            <path d="M 1 42 C 1 39 4 39 5 41" stroke={primaryColor} strokeWidth="1.5" fill="none" />
+
+            {/* Front Grill texture lines */}
+            <line x1="39" y1="40" x2="39" y2="46" stroke="#ffffff" strokeWidth="1" opacity="0.6" />
+            <line x1="36" y1="40" x2="36" y2="46" stroke="#ffffff" strokeWidth="1" opacity="0.3" />
+
+          </g>
+
+          {/* BACK WHEEL (Larger) - Centered at x=8 y=48 */}
+          <g transform="translate(8, 48)">
+            <g className="spinning-wheel" style={{ transformOrigin: "0 0" }}>
+              {/* Outer Tyre */}
+              <circle cx="0" cy="0" r="10.5" fill={primaryColor} stroke={primaryColor} strokeWidth="2.5" />
+              {/* Tread Pattern / Spokes */}
+              <circle cx="0" cy="0" r="8" fill="none" stroke="#ffffff" strokeWidth="1" opacity="0.3" />
+              <line x1="-10.5" y1="0" x2="10.5" y2="0" stroke="#ffffff" strokeWidth="1.5" opacity="0.9" />
+              <line x1="0" y1="-10.5" x2="0" y2="10.5" stroke="#ffffff" strokeWidth="1.5" opacity="0.9" />
+              <line x1="-7.5" y1="-7.5" x2="7.5" y2="7.5" stroke="#ffffff" strokeWidth="1.2" opacity="0.8" />
+              <line x1="7.5" y1="-7.5" x2="-7.5" y2="7.5" stroke="#ffffff" strokeWidth="1.2" opacity="0.8" />
+              {/* Hub / Center Pin */}
+              <circle cx="0" cy="0" r="3.5" fill="#ffffff" stroke={primaryColor} strokeWidth="1.5" />
+            </g>
+          </g>
+
+          {/* FRONT WHEEL (Smaller) - Centered at x=34 y=51 */}
+          <g transform="translate(34, 51)">
+            <g className="spinning-wheel" style={{ transformOrigin: "0 0" }}>
+              {/* Outer Tyre */}
+              <circle cx="0" cy="0" r="7.5" fill={primaryColor} stroke={primaryColor} strokeWidth="1.8" />
+              {/* Spokes */}
+              <line x1="-7.5" y1="0" x2="7.5" y2="0" stroke="#ffffff" strokeWidth="1.2" opacity="0.9" />
+              <line x1="0" y1="-7.5" x2="0" y2="7.5" stroke="#ffffff" strokeWidth="1.2" opacity="0.9" />
+              <line x1="-5.3" y1="-5.3" x2="5.3" y2="5.3" stroke="#ffffff" strokeWidth="1" opacity="0.7" />
+              <line x1="5.3" y1="-5.3" x2="-5.3" y2="5.3" stroke="#ffffff" strokeWidth="1" opacity="0.7" />
+              {/* Hub / Center Pin */}
+              <circle cx="0" cy="0" r="2.5" fill="#ffffff" stroke={primaryColor} strokeWidth="1.2" />
+            </g>
+          </g>
+
+        </g>
+      </svg>
+    </div>
+  );
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -198,18 +376,7 @@ const Navbar = () => {
         style={{ backgroundColor: "#ffffff", paddingBottom: "8px" }}
       >
         <div className="w-full max-w-[1400px] h-full flex items-center justify-center px-4">
-          <LottiePlayer
-            src="https://lottie.host/32fecbb2-b9dc-4848-9ef3-4b380d454395/IjOIgMjTTg.lottie"
-            style={{ 
-              height: "65px", 
-              width: "650px", 
-              maxWidth: "90%",
-              objectFit: "contain", 
-              display: "block" 
-            }}
-            autoplay
-            loop
-          ></LottiePlayer>
+          <TractorAnimation />
         </div>
       </div>
 
