@@ -6,11 +6,15 @@ import { useState } from "react";
 import spinach1 from "../assets/images/spinach_1.png";
 import spinach2 from "../assets/images/spinach_2.png";
 import lettuceImg from "../assets/images/lettuce.png";
+import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
+import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
   spinach_2: spinach2,
   lettuce: lettuceImg,
+  napa_cabbage: napaCabbageImg,
+  bok_choy: bokChoyImg,
 };
 
 export interface GardenItem {
@@ -22,6 +26,7 @@ export interface GardenItem {
   description: string;
   season: string;
   imageNames?: string[]; // Easily supports placeholders Spinach 1, Spinach 2, Lettuce
+  isOrganic?: boolean;
 }
 
 // Easily editable garden inventory list containing the requested live Spinach and Lettuce structures
@@ -34,7 +39,8 @@ const GARDEN_INVENTORY: GardenItem[] = [
     unit: "gallon bag",
     description: "Tender, high-nutrient garden spinach leaves, pesticide-free and handpicked daily at peak tenderness.",
     season: "Available Now",
-    imageNames: ["Spinach 1", "Spinach 2"]
+    imageNames: ["Spinach 1", "Spinach 2"],
+    isOrganic: true
   },
   {
     id: "lettuce-bag",
@@ -44,17 +50,30 @@ const GARDEN_INVENTORY: GardenItem[] = [
     unit: "gallon bag",
     description: "Freshly harvested romaine and butterhead lettuce leaves, washed, dried, and packed in gallon bags.",
     season: "Available Now",
-    imageNames: ["Lettuce"]
+    imageNames: ["Lettuce"],
+    isOrganic: true
   },
   {
-    id: "lettuce-head",
-    name: "Crisp Lettuce (Head)",
+    id: "napa-cabbage",
+    name: "Napa Cabbage",
     status: "available",
-    price: "$5.00",
+    price: "$4.50",
     unit: "head",
-    description: "Magnificent whole heads of crunchy, sweet garden lettuce picked fresh each morning.",
+    description: "Crisp and sweet Napa Cabbage, legendary for kimchi, stir-fries, and family recipes.",
     season: "Available Now",
-    imageNames: ["Lettuce"]
+    imageNames: ["Napa Cabbage"],
+    isOrganic: false
+  },
+  {
+    id: "bok-choy",
+    name: "Bok Choy",
+    status: "available",
+    price: "$4.00",
+    unit: "head",
+    description: "Fresh Bok Choy, another one of my favorites. Limited quantity. $4 per head. Happily pick for you!",
+    season: "Available Now",
+    imageNames: ["Bok Choy"],
+    isOrganic: false
   },
   {
     id: "heirloom-tomatoes",
@@ -158,6 +177,7 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
 const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index: number }) => {
   const [quantity, setQuantity] = useState(1);
   const isAvail = item.status === "available";
+  const isOrganic = item.isOrganic !== false;
 
   const priceVal = item.price ? parseFloat(item.price.replace('$', '')) : 0;
   const total = (priceVal * quantity).toFixed(2);
@@ -283,9 +303,15 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
 
         <div className="pt-6 mt-6 border-t border-dotted border-farm-brown/10 flex justify-between items-center">
           <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-farm-brown/50">Grow Method</span>
-          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-farm-green flex items-center gap-1">
-            <Star size={10} className="fill-farm-beige text-farm-beige" /> Certified Natural
-          </span>
+          {isOrganic ? (
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-farm-green flex items-center gap-1">
+              <Leaf size={10} className="fill-farm-green/10 text-farm-green shrink-0" /> ORGANIC
+            </span>
+          ) : (
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-farm-brown/50">
+              TRADITIONAL
+            </span>
+          )}
         </div>
       </div>
     </motion.div>
@@ -340,7 +366,7 @@ const VegetablesOrderInquiry = () => {
             </div>
 
             <p className="text-sm font-serif italic text-farm-brown/80 leading-relaxed">
-              "Our vegetables are grown right here on our family farm utilizing certified natural organic practices. To secure your harvest bag or whole heads of lettuce, place an inquiry directly below. We will coordinate details with you immediately."
+              "Our vegetables are grown right here on our family farm utilizing organic practices. To secure your harvest bag or whole heads of lettuce, place an inquiry directly below. We will coordinate details with you immediately."
             </p>
 
             <div className="space-y-4 pt-6 border-t border-dotted border-farm-brown/25 text-xs">
