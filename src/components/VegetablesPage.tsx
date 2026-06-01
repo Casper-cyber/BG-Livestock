@@ -8,6 +8,8 @@ import spinach2 from "../assets/images/spinach_2.png";
 import lettuceImg from "../assets/images/lettuce.png";
 import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
+import cabbageImg from "../assets/images/cabbagehead.jpeg";
+import broccoliImg from "../assets/images/broccolihead.jpeg";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
@@ -15,6 +17,8 @@ const STATIC_IMAGES: Record<string, string> = {
   lettuce: lettuceImg,
   napa_cabbage: napaCabbageImg,
   bok_choy: bokChoyImg,
+  cabbage_head: cabbageImg,
+  broccoli_head: broccoliImg,
 };
 
 export interface GardenItem {
@@ -73,6 +77,28 @@ const GARDEN_INVENTORY: GardenItem[] = [
     description: "Fresh Bok Choy, another one of my favorites. Limited quantity. $4 per head. Happily pick for you!",
     season: "Available Now",
     imageNames: ["Bok Choy"],
+    isOrganic: false
+  },
+  {
+    id: "cabbage-head",
+    name: "Cabbage (Head)",
+    status: "available",
+    price: "$4.00",
+    unit: "head",
+    description: "Crisp and firm green cabbage head, harvested fresh at peak maturity.",
+    season: "Available Now",
+    imageNames: ["Cabbage Head"],
+    isOrganic: false
+  },
+  {
+    id: "broccoli-head",
+    name: "Broccoli (Head)",
+    status: "available",
+    price: "$4.00",
+    unit: "head",
+    description: "Compact and fresh head of green broccoli, packed with vitamins and harvested daily.",
+    season: "Available Now",
+    imageNames: ["Broccoli Head"],
     isOrganic: false
   },
   {
@@ -569,29 +595,6 @@ export default function VegetablesPage() {
             <p className="font-serif text-base md:text-xl italic text-farm-brown/90 leading-relaxed">
               "Our garden is waking up! Right now we have crisp lettuce and fresh spinach available, with a wide variety of fresh seasonal vegetables arriving in the coming weeks."
             </p>
-          </div>
-        </div>
-
-        {/* Dairy Glass Jar Policy Notice (Highly visible Alert Box) */}
-        <div className="mb-10 md:mb-16 max-w-4xl mx-auto bg-[#FFF] border-2 border-dashed border-farm-green/30 p-5 md:p-8 rounded-2xl shadow-sm relative overflow-hidden">
-          <div className="absolute -top-12 -right-12 w-24 h-24 bg-farm-green/10 rounded-full flex items-center justify-center rotate-12">
-            <Sprout size={32} className="text-farm-green opacity-20" />
-          </div>
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            <div className="p-3 bg-farm-green/10 rounded-full text-farm-green shrink-0 mt-1">
-              <AlertCircle size={22} />
-            </div>
-            <div>
-              <p className="text-xs uppercase font-bold tracking-[0.25em] text-farm-green mb-1.5 flex items-center gap-2">
-                Dairy Jar Exchange Policy
-              </p>
-              <p className="text-base font-serif text-farm-brown underline decoration-farm-beige/50 underline-offset-4 decoration-wavy font-semibold leading-relaxed">
-                "To help us keep things sustainable, please bring a clean glass jar to swap when picking up your dairy, or you can purchase a reusable jar from us for $5."
-              </p>
-              <p className="text-xs text-farm-brown/60 mt-2 font-sans">
-                This simple cycle helps us reduce single-use container waste and supports clean, green local agriculture.
-              </p>
-            </div>
           </div>
         </div>
 

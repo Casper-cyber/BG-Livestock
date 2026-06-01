@@ -77,7 +77,7 @@ export default function AboutUsPage() {
                   </div>
                   <div>
                     <h4 className="font-serif font-bold text-farm-brown text-base flex items-center gap-2">
-                      Our Guardian Dog
+                      Our 5 Guardian Dogs
                       <span className="text-[8px] bg-farm-green text-white font-sans uppercase tracking-[0.1em] font-bold px-2 py-0.5 rounded-full">Always On Duty</span>
                     </h4>
                     <p className="text-xs text-farm-brown/70 font-serif italic mt-1 leading-relaxed">

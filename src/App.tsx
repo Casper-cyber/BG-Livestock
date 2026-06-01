@@ -5,7 +5,6 @@ import {
   MapPin, 
   Phone, 
   Clock, 
-  Instagram, 
   Facebook, 
   Mail,
   ChevronRight,
@@ -852,8 +851,15 @@ const Herdshare = () => {
             </motion.li>
           ))}
         </ul>
-        <div className="pt-2">
-          <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-farm-green underline underline-offset-8 decoration-farm-green/30 hover:decoration-farm-green transition-all">
+        <div className="pt-4 flex flex-col xs:flex-row gap-3 items-start xs:items-center mt-2 flex-wrap">
+          <a 
+            href="/forms/herdshare-agreement.pdf"
+            download="Herd_Share_Agreement_Beechgrove_Livestock.pdf"
+            className="bg-farm-green text-white px-6 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-farm-green/95 transition-all shadow-md inline-flex items-center gap-2 hover:scale-[1.01] active:scale-[0.98]"
+          >
+            📄 Download Herdshare Agreement Form (PDF)
+          </a>
+          <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-farm-green underline underline-offset-8 decoration-farm-green/30 hover:decoration-farm-green transition-all pl-2 xs:pl-0">
             Learn More about Membership
           </button>
         </div>
@@ -1001,9 +1007,6 @@ const Contact = () => {
             </div>
 
             <div className="mt-16 pt-8 border-t border-farm-cream/10 flex gap-4 items-center">
-              <span className="text-farm-cream/40 cursor-not-allowed flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider" title="Coming Soon!">
-                <Instagram size={24} className="text-farm-cream/40" /> (Coming Soon!)
-              </span>
               <a href="https://www.facebook.com/BeechgroveLivestock/" target="_blank" rel="noopener noreferrer" className="hover:text-farm-cream transition-colors" title="Visit us on Facebook">
                 <Facebook size={24} />
               </a>
@@ -1062,7 +1065,6 @@ const Footer = () => {
         <span>931-212-0287</span>
         <div className="flex gap-4 items-center">
           <a href="https://www.facebook.com/BeechgroveLivestock/" target="_blank" rel="noopener noreferrer" className="hover:text-farm-green transition-all">Facebook</a>
-          <span className="text-farm-brown/40 cursor-not-allowed select-none" title="Coming Soon!">Instagram (Coming Soon!)</span>
         </div>
       </div>
     </footer>
