@@ -29,6 +29,7 @@ import AboutUsPage from "./components/AboutUsPage";
 import VegetablesPage from "./components/VegetablesPage";
 import bgLogo from "./assets/images/bg-logo1.png";
 import tractorAnimation from "./assets/animations/tractor_simple.json";
+import taceyPmVideo from "./assets/images/Tacey PM.mp4";
 
 const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, isOpen: boolean, onClose: () => void }) => {
   const [quantity, setQuantity] = useState(1);
@@ -525,7 +526,7 @@ const Hero = () => {
           playsInline 
           className="w-full h-full object-cover"
         >
-          <source src="https://www.pexels.com/download/video/34197936/" type="video/mp4" />
+          <source src={taceyPmVideo} type="video/mp4" />
         </video>
         {/* Dark Overlay (35% opacity) */}
         <div className="absolute inset-0 bg-black/35 z-10" />
