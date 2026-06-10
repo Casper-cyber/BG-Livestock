@@ -52,7 +52,7 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -64,17 +64,17 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative bg-farm-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border-4 border-farm-brown"
+            className="relative bg-farm-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border-4 border-farm-brown max-h-[90vh] flex flex-col"
           >
-            <div className="paper-texture p-8 md:p-10">
-              <button 
-                onClick={onClose}
-                className="absolute top-4 right-4 text-farm-brown/40 hover:text-farm-brown transition-colors"
-              >
-                <X size={24} />
-              </button>
+            <button 
+              onClick={onClose}
+              className="absolute top-4 right-4 z-50 text-farm-brown/40 hover:text-farm-brown transition-colors"
+            >
+              <X size={24} />
+            </button>
 
-              <div className="mb-8">
+            <div className="paper-texture p-8 md:p-10 overflow-y-auto flex-1">
+              <div className="mb-8 pr-8">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-farm-green mb-1 block">Order Inquiry</span>
                 <h3 className="text-3xl font-bold font-serif">{product.baseName}</h3>
                 {product.variation && (
@@ -143,17 +143,17 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
                       onClick={handleVenmo}
                       className="bg-[#008CFF] text-white py-4 rounded-full font-bold uppercase tracking-[0.1em] text-[10px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                      <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                        <path d="M19.14 4.5h-11.4l-1.4 5.3h1.4l.7-2.7h8.4l-.7 2.7h1.4l1.4-5.3zm-3.4 8.7h-6.7l-.4 1.4h5l-.3 1.1h-5l-.4 1.4h5.3l1.1-4.2z" />
+                      <svg viewBox="0 0 516 516" className="w-4 h-4 fill-current shrink-0">
+                        <path d="M385.16 105c11.1 18.3 16.08 37.17 16.08 61 0 76-64.87 174.7-117.52 244H163.5l-48.2-288.35 105.3-10 25.6 205.17c23.8-139 53.23-200 53.23-241.56 0-22.77-3.9-38.25-10-51z" />
                       </svg>
                       Pay with Venmo
                     </button>
                     <button 
                       onClick={handlePayPal}
-                      className="bg-[#FFC439] text-[#003087] py-4 rounded-full font-bold uppercase tracking-[0.1em] text-[10px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                      className="bg-[#FFC439] text-[#003087] py-4 rounded-full font-bold uppercase tracking-[0.1em] text-[10px] shadow-lg hover:shadow-xl hover:bg-[#F2b82e] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                      <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                        <path d="M7 21h4c1.1 0 2-0.9 2-2V7c0-1.1-0.9-2-2-2H7v16zm8-18H5v18h2v-2h4c2.2 0 4-1.8 4-4V7c0-2.2-1.8-4-4-4L15 3z" />
+                      <svg viewBox="0 0 16 16" className="w-4 h-4 fill-current shrink-0">
+                        <path d="M14.06 3.713c.12-1.071-.093-1.832-.702-2.526C12.628.356 11.312 0 9.626 0H4.734a.7.7 0 0 0-.691.59L2.005 13.509a.42.42 0 0 0 .415.486h2.756l-.202 1.28a.628.628 0 0 0 .62.726H8.14c.429 0 .793-.31.862-.731l.025-.13.48-3.043.03-.164.001-.007a.35.35 0 0 1 .348-.297h.38c1.266 0 2.425-.256 3.345-.91q.57-.403.993-1.005a4.94 4.94 0 0 0 .88-2.195c.242-1.246.13-2.356-.57-3.154a2.7 2.7 0 0 0-.76-.59l-.094-.061ZM6.543 8.82a.7.7 0 0 1 .321-.079H8.3c2.82 0 5.027-1.144 5.672-4.456l.003-.016q.326.186.548.438c.546.623.679 1.535.45 2.71-.272 1.397-.866 2.307-1.663 2.874-.802.57-1.842.815-3.043.815h-.38a.87.87 0 0 0-.863.734l-.03.164-.48 3.043-.024.13-.001.004a.35.35 0 0 1-.348.296H5.595a.106.106 0 0 1-.105-.123l.208-1.32z" />
                       </svg>
                       Buy with PayPal
                     </button>
@@ -671,14 +671,20 @@ const ProductCard = ({ product, onOrder }: ProductCardProps) => {
                   className="bg-[#008CFF] text-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[#0074D4] transition-all shadow-md active:scale-95 flex items-center gap-1.5"
                   title="Pay with Venmo"
                 >
-                  <span className="text-[10px] transform -skew-x-12">V</span> Venmo
+                  <svg viewBox="0 0 516 516" className="w-3 h-3 fill-current shrink-0">
+                    <path d="M385.16 105c11.1 18.3 16.08 37.17 16.08 61 0 76-64.87 174.7-117.52 244H163.5l-48.2-288.35 105.3-10 25.6 205.17c23.8-139 53.23-200 53.23-241.56 0-22.77-3.9-38.25-10-51z" />
+                  </svg>
+                  Venmo
                 </button>
                 <button 
                   onClick={handleOrder}
-                  className="bg-[#FFC439] text-[#003087] px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[#e6b033] transition-all shadow-md active:scale-95 flex items-center gap-1.5"
+                  className="bg-[#FFC439] text-[#003087] px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[#F2b82e] transition-all shadow-md active:scale-95 flex items-center gap-1.5"
                   title="Pay with PayPal"
                 >
-                  <span className="italic font-black">P</span> PayPal
+                  <svg viewBox="0 0 16 16" className="w-3 h-3 fill-current shrink-0">
+                    <path d="M14.06 3.713c.12-1.071-.093-1.832-.702-2.526C12.628.356 11.312 0 9.626 0H4.734a.7.7 0 0 0-.691.59L2.005 13.509a.42.42 0 0 0 .415.486h2.756l-.202 1.28a.628.628 0 0 0 .62.726H8.14c.429 0 .793-.31.862-.731l.025-.13.48-3.043.03-.164.001-.007a.35.35 0 0 1 .348-.297h.38c1.266 0 2.425-.256 3.345-.91q.57-.403.993-1.005a4.94 4.94 0 0 0 .88-2.195c.242-1.246.13-2.356-.57-3.154a2.7 2.7 0 0 0-.76-.59l-.094-.061ZM6.543 8.82a.7.7 0 0 1 .321-.079H8.3c2.82 0 5.027-1.144 5.672-4.456l.003-.016q.326.186.548.438c.546.623.679 1.535.45 2.71-.272 1.397-.866 2.307-1.663 2.874-.802.57-1.842.815-3.043.815h-.38a.87.87 0 0 0-.863.734l-.03.164-.48 3.043-.024.13-.001.004a.35.35 0 0 1-.348.296H5.595a.106.106 0 0 1-.105-.123l.208-1.32z" />
+                  </svg>
+                  PayPal
                 </button>
               </div>
             </div>
