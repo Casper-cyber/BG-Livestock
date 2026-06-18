@@ -27,6 +27,7 @@ import { PRODUCTS, Product, VENMO_USER, VENMO_PROFILE_URL, PAYPAL_EMAIL } from "
 import ProductDetailsPage from "./components/ProductDetailsPage";
 import AboutUsPage from "./components/AboutUsPage";
 import VegetablesPage from "./components/VegetablesPage";
+import AllProductsPage from "./components/AllProductsPage";
 import bgLogo from "./assets/images/bg-logo1.png";
 import { CartProvider, useCart } from "./context/CartContext";
 import CartSidebar from "./components/CartSidebar";
@@ -1251,6 +1252,7 @@ export default function App() {
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<HomePage onOrder={(p) => setSelectedProduct(p)} />} />
+              <Route path="/marketplace" element={<AllProductsPage />} />
               <Route path="/marketplace/:productId" element={<ProductDetailsPage />} />
               <Route path="/about" element={<AboutUsPage />} />
               <Route path="/vegetables" element={<VegetablesPage />} />

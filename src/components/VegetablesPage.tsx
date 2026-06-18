@@ -37,7 +37,7 @@ export interface GardenItem {
 }
 
 // Easily editable garden inventory list containing the requested live Spinach and Lettuce structures
-const GARDEN_INVENTORY: GardenItem[] = [
+export const GARDEN_INVENTORY: GardenItem[] = [
   {
     id: "yellow-squash",
     name: "Yellow Straight Neck Squash",

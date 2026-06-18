@@ -14,6 +14,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { VENMO_PROFILE_URL, PAYPAL_EMAIL } from '../constants';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartSidebar() {
   const { 
@@ -28,11 +29,14 @@ export default function CartSidebar() {
     clearCart
   } = useCart();
 
+  const navigate = useNavigate();
+
   const [logistics, setLogistics] = useState<'pickup' | 'delivery'>('pickup');
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [selectedPaymentType, setSelectedPaymentType] = useState<'venmo' | 'paypal' | null>(null);
 
   if (!isCartOpen) return null;
 
@@ -44,26 +48,31 @@ export default function CartSidebar() {
     
     setIsSending(false);
     if (success) {
+      setSelectedPaymentType(paymentType);
       setIsSuccess(true);
-      
-      // Delay opening the payment link slightly so they can see the success state
-      setTimeout(() => {
-        setIsSuccess(false);
-        setIsCartOpen(false);
-        
-        // 2. Clear the cart since the order is drafted and forwarded
-        clearCart();
-        
-        // 3. Smooth external handoff to the payment system
-        if (paymentType === 'venmo') {
-          window.open(VENMO_PROFILE_URL, '_blank');
-        } else {
-          const itemDescription = cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ');
-          const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(PAYPAL_EMAIL)}&item_name=${encodeURIComponent(itemDescription)}&amount=${cartTotal.toFixed(2)}&currency_code=USD`;
-          window.open(paypalUrl, '_blank');
-        }
-      }, 1500);
+      // Cart cache remains active and clearing/handoff is deferred to step 2 click!
     }
+  };
+
+  const executeFinalPayment = () => {
+    if (!selectedPaymentType) return;
+    
+    // 1. Direct secure handoff to the payment endpoint on click
+    if (selectedPaymentType === 'venmo') {
+      window.open(VENMO_PROFILE_URL, '_blank');
+    } else {
+      const itemDescription = cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ');
+      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(PAYPAL_EMAIL)}&item_name=${encodeURIComponent(itemDescription)}&amount=${cartTotal.toFixed(2)}&currency_code=USD`;
+      window.open(paypalUrl, '_blank');
+    }
+
+    // 2. Safely wipe the cart from state and localStorage now that handoff succeeded
+    clearCart();
+
+    // 3. Close the panels and reset state
+    setIsSuccess(false);
+    setSelectedPaymentType(null);
+    setIsCartOpen(false);
   };
 
   return (
@@ -109,12 +118,53 @@ export default function CartSidebar() {
           </div>
 
           {/* Success Overlay state */}
-          {isSuccess && (
-            <div className="absolute inset-0 z-50 bg-farm-white/95 flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm">
-              <CheckCircle2 size={64} className="text-farm-green mb-4 animate-bounce" />
-              <h3 className="text-2xl font-serif font-bold text-farm-brown mb-2">Order Receipt Copies Sent!</h3>
-              <p className="text-sm font-serif italic text-farm-brown/60 max-w-xs">
-                An automatic copy has been registered and dispatched. Redirecting to payment screen...
+          {isSuccess && selectedPaymentType && (
+            <div className="absolute inset-0 z-50 bg-farm-white/98 flex flex-col items-center justify-center p-8 text-center backdrop-blur-md overflow-y-auto">
+              <CheckCircle2 size={56} className="text-farm-green mb-4 animate-bounce shrink-0" />
+              <h3 className="text-2xl font-serif font-bold text-farm-brown mb-2 leading-tight">Order Forwarded!</h3>
+              
+              <div className="bg-farm-cream/30 border border-farm-brown/10 rounded-xl p-5 my-4 w-full max-w-sm text-left shadow-xs space-y-3">
+                <span className="text-[8px] font-bold uppercase tracking-widest text-farm-green bg-farm-green/10 px-2.5 py-1 rounded-full inline-block">
+                  Step 1 of 2 Complete
+                </span>
+                <p className="text-xs text-farm-brown/80 leading-relaxed">
+                  Your order receipt copies have been registered and forwarded to Beechgrove Livestock successfully. 
+                </p>
+                <div className="border-t border-dotted border-farm-brown/20 pt-3">
+                  <div className="flex justify-between text-xs text-farm-brown mb-1">
+                    <span className="italic">Order Total:</span>
+                    <span className="font-bold text-farm-green">${cartTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-farm-brown">
+                    <span className="italic">Payment Via:</span>
+                    <span className="font-bold uppercase tracking-wider">{selectedPaymentType}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full max-w-sm space-y-3 shrink-0">
+                <button
+                  onClick={executeFinalPayment}
+                  className={`w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    selectedPaymentType === 'venmo' ? 'bg-[#008CFF] hover:bg-[#007cd6]' : 'bg-[#FFC439] hover:bg-[#F2b82e] text-[#003087]'
+                  }`}
+                >
+                  Proceed to Payment (${cartTotal.toFixed(2)})
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsSuccess(false);
+                    setSelectedPaymentType(null);
+                  }}
+                  className="w-full bg-white text-farm-brown hover:bg-farm-cream/30 border border-farm-brown/15 py-3 rounded-full font-bold uppercase tracking-widest text-[9px] transition-all cursor-pointer"
+                >
+                  Edit Order / Go Back
+                </button>
+              </div>
+
+              <p className="text-[7px] opacity-40 uppercase tracking-widest text-[#4A2E1F] mt-8 max-w-xs leading-normal">
+                Your cart is preserved. Redirection occurs safely upon clicking "Proceed to Payment". No auto-close triggers will fire.
               </p>
             </div>
           )}
@@ -131,7 +181,10 @@ export default function CartSidebar() {
                   Browse our marketplace to add premium Jersey dairy, pasture-raised eggs, and fresh kitchen garden vegetables to your order!
                 </p>
                 <button
-                  onClick={() => setIsCartOpen(false)}
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    navigate('/marketplace');
+                  }}
                   className="mt-6 bg-farm-brown text-farm-cream px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-farm-green transition-all"
                 >
                   Start Shopping
