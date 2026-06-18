@@ -120,22 +120,32 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
     return null;
   }
 
-  const currentImageName = item.imageNames && item.imageNames[activeImageIndex];
+  const product = item;
+  const currentImageName = product.imageNames && product.imageNames[activeImageIndex];
   const urlSafeName = currentImageName ? currentImageName.toLowerCase().replace(/\s+/g, '_') : '';
-  const src = item.image || item.imageUrl || STATIC_IMAGES[urlSafeName];
-  const isDirectImage = !!item.image;
+  const src = product.image || product.imageUrl || STATIC_IMAGES[urlSafeName];
+
+  // Directly render the image for the specified JPG assets without fallback checking or placeholder checks
+  if (product.image) {
+    return (
+      <div className="relative aspect-[16/10] bg-farm-cream/30 rounded-lg overflow-hidden border border-farm-brown/10 mb-5 group">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative aspect-[16/10] bg-farm-cream/30 rounded-lg overflow-hidden border border-farm-brown/10 mb-5 group">
-      {(src && !imageError) || (isDirectImage && src) ? (
+      {src && !imageError ? (
         <img
           src={src}
-          alt={item.name}
-          onError={() => {
-            if (!isDirectImage) {
-              setImageError(true);
-            }
-          }}
+          alt={product.name}
+          onError={() => setImageError(true)}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           referrerPolicy="no-referrer"
         />
@@ -144,7 +154,7 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
           <div className="p-3 bg-white/85 rounded-full shadow-sm mb-2 border border-farm-brown/5 text-farm-green">
             <Leaf size={20} className="animate-pulse" />
           </div>
-          <p className="text-xs font-serif font-semibold text-farm-brown">{item.name}</p>
+          <p className="text-xs font-serif font-semibold text-farm-brown">{product.name}</p>
           <span className="text-[8px] uppercase tracking-widest text-farm-brown/40 mt-1 bg-farm-cream px-2 py-0.5 rounded-full border border-farm-brown/5">
             Photograph Placeholder
           </span>
@@ -155,9 +165,9 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
       )}
 
       {/* Slide dots if there are multiple images */}
-      {item.imageNames && item.imageNames.length > 1 && (
+      {product.imageNames && product.imageNames.length > 1 && (
         <div className="absolute bottom-2 right-2 flex gap-1 z-10 bg-farm-brown/60 px-2 py-1 rounded-full backdrop-blur-[2px]">
-          {item.imageNames.map((_, idx) => (
+          {product.imageNames.map((_, idx) => (
             <button
               key={idx}
               onClick={(e) => {
@@ -169,7 +179,7 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
               className={`w-1.5 h-1.5 rounded-full transition-all ${
                 activeImageIndex === idx ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/75'
               }`}
-              title={`View ${item.imageNames?.[idx]}`}
+              title={`View ${product.imageNames?.[idx]}`}
             />
           ))}
         </div>
