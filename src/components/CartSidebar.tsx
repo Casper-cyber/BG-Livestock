@@ -40,7 +40,7 @@ export default function CartSidebar() {
     setIsSending(true);
     
     // 1. Send the email receipt copy in the background
-    const success = await sendOrderEmail(logistics, date, notes);
+    const success = await sendOrderEmail(logistics, date, notes, paymentType);
     
     setIsSending(false);
     if (success) {

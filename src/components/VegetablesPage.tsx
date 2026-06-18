@@ -11,6 +11,9 @@ import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
+import image0 from "../assets/images/image_0.png";
+import image1 from "../assets/images/image_1.png";
+import image2 from "../assets/images/image_2.png";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
@@ -32,6 +35,7 @@ export interface GardenItem {
   season: string;
   imageNames?: string[]; // Easily supports placeholders Spinach 1, Spinach 2, Lettuce
   isOrganic?: boolean;
+  imageUrl?: string;
 }
 
 // Easily editable garden inventory list containing the requested live Spinach and Lettuce structures
@@ -45,7 +49,8 @@ const GARDEN_INVENTORY: GardenItem[] = [
     description: "Tender, thin-skinned yellow summer squash harvested fresh in the morning.",
     season: "In Season Now",
     imageNames: ["Squash"],
-    isOrganic: false
+    isOrganic: false,
+    imageUrl: image0
   },
   {
     id: "baby-carrots",
@@ -56,7 +61,8 @@ const GARDEN_INVENTORY: GardenItem[] = [
     description: "Sweet, crunchy, and freshly washed baby carrots packed in quart bags.",
     season: "In Season Now",
     imageNames: ["Baby Carrots"],
-    isOrganic: false
+    isOrganic: false,
+    imageUrl: image1
   },
   {
     id: "bok-choy-large",
@@ -100,7 +106,8 @@ const GARDEN_INVENTORY: GardenItem[] = [
     description: "Young, tender dark green zucchini grown in fertile soils and harvested sweet.",
     season: "In Season Now",
     imageNames: ["Zucchini"],
-    isOrganic: false
+    isOrganic: false,
+    imageUrl: image2
   }
 ];
 
@@ -108,13 +115,13 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
   const [imageError, setImageError] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  if (!item.imageNames || item.imageNames.length === 0) {
+  if ((!item.imageNames || item.imageNames.length === 0) && !item.imageUrl) {
     return null;
   }
 
-  const currentImageName = item.imageNames[activeImageIndex];
-  const urlSafeName = currentImageName.toLowerCase().replace(/\s+/g, '_');
-  const src = STATIC_IMAGES[urlSafeName];
+  const currentImageName = item.imageNames && item.imageNames[activeImageIndex];
+  const urlSafeName = currentImageName ? currentImageName.toLowerCase().replace(/\s+/g, '_') : '';
+  const src = item.imageUrl || STATIC_IMAGES[urlSafeName];
   const hasValidImage = !!src;
 
   return (
@@ -252,7 +259,7 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
               <button
                 onClick={() => {
                   const imageKey = item.imageNames && item.imageNames[0] ? item.imageNames[0].toLowerCase().replace(/\s+/g, '_') : '';
-                  const itemImage = STATIC_IMAGES[imageKey];
+                  const itemImage = item.imageUrl || STATIC_IMAGES[imageKey];
                   addToCart({
                     id: item.id,
                     name: item.name,
