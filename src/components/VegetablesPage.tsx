@@ -11,9 +11,9 @@ import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
-import squashImg from '../assets/images/squash.jpg';
-import carrotsImg from '../assets/images/baby_carrots.jpg';
-import zucchiniImg from '../assets/images/zucchini.jpg';
+import squashImg from '../assets/images/squash.jpeg';
+import carrotsImg from '../assets/images/baby_carrots.jpeg';
+import zucchiniImg from '../assets/images/zucchini.jpeg';
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
@@ -210,9 +210,6 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
         <div className="flex justify-between items-start mb-4">
           <span className={`text-[8px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${isAvail ? 'bg-farm-green text-white shadow-sm' : 'bg-farm-brown/10 text-farm-brown/60'}`}>
             {isAvail ? "In Season Now" : "Planted"}
-          </span>
-          <span className="text-[10px] font-serif text-farm-brown/50 italic">
-            {item.season}
           </span>
         </div>
 
