@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
-import { Sprout, Star, Clock, AlertCircle, Leaf, Mail, Building, Truck, Calendar, Plus, Minus } from "lucide-react";
+import { Sprout, Star, Clock, AlertCircle, Leaf, Mail, Building, Truck, Calendar, Plus, Minus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 // Statically import images to guarantee Vite production bundler hashing
 import spinach1 from "../assets/images/spinach_1.png";
@@ -36,105 +37,70 @@ export interface GardenItem {
 // Easily editable garden inventory list containing the requested live Spinach and Lettuce structures
 const GARDEN_INVENTORY: GardenItem[] = [
   {
-    id: "spinach-bag",
-    name: "Fresh Spinach",
+    id: "yellow-squash",
+    name: "Yellow Straight Neck Squash",
     status: "available",
-    price: "$2.50",
-    unit: "gallon bag",
-    description: "Tender, high-nutrient garden spinach leaves, pesticide-free and handpicked daily at peak tenderness.",
-    season: "Available Now",
-    imageNames: ["Spinach 1", "Spinach 2"],
-    isOrganic: true
-  },
-  {
-    id: "lettuce-bag",
-    name: "Crisp Lettuce (Bag)",
-    status: "available",
-    price: "$2.00",
-    unit: "gallon bag",
-    description: "Freshly harvested romaine and butterhead lettuce leaves, washed, dried, and packed in gallon bags.",
-    season: "Available Now",
-    imageNames: ["Lettuce"],
-    isOrganic: true
-  },
-  {
-    id: "napa-cabbage",
-    name: "Napa Cabbage",
-    status: "available",
-    price: "$4.50",
-    unit: "head",
-    description: "Crisp and sweet Napa Cabbage, legendary for kimchi, stir-fries, and family recipes.",
-    season: "Available Now",
-    imageNames: ["Napa Cabbage"],
+    price: "$0.50",
+    unit: "each",
+    description: "Tender, thin-skinned yellow summer squash harvested fresh in the morning.",
+    season: "In Season Now",
+    imageNames: ["Squash"],
     isOrganic: false
   },
   {
-    id: "bok-choy",
-    name: "Bok Choy",
+    id: "baby-carrots",
+    name: "Baby Carrots",
+    status: "available",
+    price: "$1.00",
+    unit: "quart bag",
+    description: "Sweet, crunchy, and freshly washed baby carrots packed in quart bags.",
+    season: "In Season Now",
+    imageNames: ["Baby Carrots"],
+    isOrganic: false
+  },
+  {
+    id: "bok-choy-large",
+    name: "Bok Choy (Large)",
     status: "available",
     price: "$4.00",
     unit: "head",
-    description: "Fresh Bok Choy, another one of my favorites. Limited quantity. $4 per head. Happily pick for you!",
-    season: "Available Now",
+    description: "Large, sweet, and crisp Bok Choy heads, amazing for stir-fries and fresh salads.",
+    season: "In Season Now",
     imageNames: ["Bok Choy"],
     isOrganic: false
   },
   {
     id: "cabbage-head",
-    name: "Cabbage (Head)",
+    name: "Cabbage",
     status: "available",
-    price: "$4.00",
+    price: "$2.00",
     unit: "head",
-    description: "Crisp and firm green cabbage head, harvested fresh at peak maturity.",
-    season: "Available Now",
+    description: "Crisp and firm green cabbage, packed with fresh flavor and harvested daily.",
+    season: "In Season Now",
     imageNames: ["Cabbage Head"],
     isOrganic: false
   },
   {
     id: "broccoli-head",
-    name: "Broccoli (Head)",
+    name: "Broccoli",
     status: "available",
     price: "$4.00",
     unit: "head",
-    description: "Compact and fresh head of green broccoli, packed with vitamins and harvested daily.",
-    season: "Available Now",
+    description: "Compact, nutrient-packed fresh broccoli heads cut straight from our garden.",
+    season: "In Season Now",
     imageNames: ["Broccoli Head"],
     isOrganic: false
   },
   {
-    id: "heirloom-tomatoes",
-    name: "Heirloom Tomatoes",
-    status: "coming_soon",
-    description: "Juicy, sun-ripened vine varieties including Brandywine and Cherokee Purple.",
-    season: "Coming Mid-Summer"
-  },
-  {
-    id: "cucumbers",
-    name: "Crispy Slicing Cucumbers",
-    status: "coming_soon",
-    description: "Sweet and crisp field-grown cucumbers, ideal for fresh summer salads.",
-    season: "Coming Early Summer"
-  },
-  {
-    id: "squash",
-    name: "Summer Squash & Zucchini",
-    status: "coming_soon",
-    description: "Tender, thin-skinned yellow squash and zucchini harvested at perfect size.",
-    season: "Coming Early Summer"
-  },
-  {
-    id: "peppers",
-    name: "Sweet Bell Peppers",
-    status: "coming_soon",
-    description: "Thick-walled, crunchy green, red, and yellow peppers grown in fertile soils.",
-    season: "Coming Mid-Summer"
-  },
-  {
-    id: "radishes",
-    name: "Early Spring Radishes",
-    status: "coming_soon",
-    description: "Peppery, crisp red radishes ready for the first spring harvests.",
-    season: "Coming Late Spring"
+    id: "zucchini",
+    name: "Zucchini",
+    status: "available",
+    price: "$0.50",
+    unit: "each",
+    description: "Young, tender dark green zucchini grown in fertile soils and harvested sweet.",
+    season: "In Season Now",
+    imageNames: ["Zucchini"],
+    isOrganic: false
   }
 ];
 
@@ -201,24 +167,13 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
 };
 
 const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index: number }) => {
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const isAvail = item.status === "available";
   const isOrganic = item.isOrganic !== false;
 
   const priceVal = item.price ? parseFloat(item.price.replace('$', '')) : 0;
   const total = (priceVal * quantity).toFixed(2);
-
-  const handleVenmo = () => {
-    // Route to Venmo. As instructed: "Venmo Option: Route payments to our profile URL: https://venmo.com"
-    window.open("https://venmo.com", "_blank");
-  };
-
-  const handlePayPal = () => {
-    // Route to PayPal with linked email, item name, quantity, amount.
-    // PayPal: Info@beechgrovelivestock.com
-    const itemLabel = `${quantity}x ${item.name}`;
-    window.open(`https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=Info@beechgrovelivestock.com&item_name=${encodeURIComponent(itemLabel)}&amount=${total}&currency_code=USD`, "_blank");
-  };
 
   return (
     <motion.div
@@ -293,26 +248,25 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
               <span className="text-base font-serif font-extrabold text-farm-green">${total}</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-1">
+            <div className="pt-1">
               <button
-                onClick={handleVenmo}
-                className="bg-[#008CFF] text-white py-2.5 px-3 rounded-lg font-bold uppercase tracking-[0.05em] text-[10px] shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5"
-                title="Pay with Venmo"
+                onClick={() => {
+                  const imageKey = item.imageNames && item.imageNames[0] ? item.imageNames[0].toLowerCase().replace(/\s+/g, '_') : '';
+                  const itemImage = STATIC_IMAGES[imageKey];
+                  addToCart({
+                    id: item.id,
+                    name: item.name,
+                    price: priceVal,
+                    unit: item.unit || 'head',
+                    category: 'vegetables',
+                    image: itemImage
+                  }, quantity);
+                }}
+                className="w-full bg-farm-green text-white py-3 px-4 rounded-lg font-bold uppercase tracking-[0.1em] text-[10px] shadow-sm hover:shadow-md hover:bg-farm-green/90 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                title={`Add ${quantity} x ${item.name} to Cart`}
               >
-                <svg viewBox="0 0 516 516" className="w-3.5 h-3.5 fill-current shrink-0">
-                  <path d="M385.16 105c11.1 18.3 16.08 37.17 16.08 61 0 76-64.87 174.7-117.52 244H163.5l-48.2-288.35 105.3-10 25.6 205.17c23.8-139 53.23-200 53.23-241.56 0-22.77-3.9-38.25-10-51z" />
-                </svg>
-                Venmo
-              </button>
-              <button
-                onClick={handlePayPal}
-                className="bg-[#FFC439] text-[#003087] py-2.5 px-3 rounded-lg font-bold uppercase tracking-[0.05em] text-[10px] shadow-sm hover:shadow-md hover:bg-[#F2b82e] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5"
-                title="Pay with PayPal"
-              >
-                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current shrink-0">
-                  <path d="M14.06 3.713c.12-1.071-.093-1.832-.702-2.526C12.628.356 11.312 0 9.626 0H4.734a.7.7 0 0 0-.691.59L2.005 13.509a.42.42 0 0 0 .415.486h2.756l-.202 1.28a.628.628 0 0 0 .62.726H8.14c.429 0 .793-.31.862-.731l.025-.13.48-3.043.03-.164.001-.007a.35.35 0 0 1 .348-.297h.38c1.266 0 2.425-.256 3.345-.91q.57-.403.993-1.005a4.94 4.94 0 0 0 .88-2.195c.242-1.246.13-2.356-.57-3.154a2.7 2.7 0 0 0-.76-.59l-.094-.061ZM6.543 8.82a.7.7 0 0 1 .321-.079H8.3c2.82 0 5.027-1.144 5.672-4.456l.003-.016q.326.186.548.438c.546.623.679 1.535.45 2.71-.272 1.397-.866 2.307-1.663 2.874-.802.57-1.842.815-3.043.815h-.38a.87.87 0 0 0-.863.734l-.03.164-.48 3.043-.024.13-.001.004a.35.35 0 0 1-.348.296H5.595a.106.106 0 0 1-.105-.123l.208-1.32z" />
-                </svg>
-                PayPal
+                <ShoppingCart size={13} />
+                Add to Cart
               </button>
             </div>
           </div>
@@ -345,6 +299,7 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
 };
 
 const VegetablesOrderInquiry = () => {
+  const { addToCart } = useCart();
   const availableItems = GARDEN_INVENTORY.filter(item => item.status === "available");
   const [selectedItemId, setSelectedItemId] = useState(availableItems[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
@@ -355,25 +310,6 @@ const VegetablesOrderInquiry = () => {
   const currentItem = availableItems.find(item => item.id === selectedItemId);
   const priceVal = currentItem?.price ? parseFloat(currentItem.price.replace('$', '')) : 0;
   const total = (priceVal * quantity).toFixed(2);
-
-  const handleVenmo = () => {
-    window.open("https://account.venmo.com/u/Theresia-Anderson-2", "_blank");
-  };
-
-  const handleEmailInquiry = () => {
-    const subject = encodeURIComponent(`Garden Order Inquiry: ${currentItem?.name}`);
-    const body = encodeURIComponent(
-      `Hello Beechgrove Livestock,\n\nI would like to place an order inquiry for the following kitchen garden items:\n\n` +
-      `- Item: ${currentItem?.name} (${currentItem?.price} per ${currentItem?.unit})\n` +
-      `- Quantity: ${quantity}\n` +
-      `- Logistics Preference: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}\n` +
-      `- Preferred Date: ${date || 'Not specified'}\n` +
-      `- Special Instructions: ${notes || 'None'}\n\n` +
-      `Estimated Subtotal: $${total}\n\n` +
-      `Please let me know how to proceed with payment and fulfillment.\n\nThank you!`
-    );
-    window.open(`mailto:Info@beechgrovelivestock.com?subject=${subject}&body=${body}`, "_blank");
-  };
 
   return (
     <div id="vegetable-order-inquiry" className="glove-cursor-target mt-24 max-w-4xl mx-auto relative">
@@ -538,26 +474,26 @@ const VegetablesOrderInquiry = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="pt-1">
                 <button
                   type="button"
-                  onClick={handleVenmo}
-                  className="bg-[#008CFF] text-white py-3.5 rounded-xl font-bold uppercase tracking-[0.1em] text-[10px] shadow-md hover:shadow-lg hover:bg-[#007cd4] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                  title="Pay with Venmo"
+                  onClick={() => {
+                    const imageKey = currentItem?.imageNames && currentItem.imageNames[0] ? currentItem.imageNames[0].toLowerCase().replace(/\s+/g, '_') : '';
+                    const itemImage = STATIC_IMAGES[imageKey];
+                    addToCart({
+                      id: currentItem?.id || 'spinach-bag',
+                      name: currentItem?.name || 'Fresh Spinach',
+                      price: priceVal,
+                      unit: currentItem?.unit || 'bag',
+                      category: 'vegetables',
+                      image: itemImage
+                    }, quantity);
+                  }}
+                  className="w-full bg-farm-green text-white py-4 rounded-xl font-bold uppercase tracking-[0.1em] text-[11px] shadow-md hover:shadow-lg hover:bg-farm-green/90 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  title="Add selected garden item to cart"
                 >
-                  <svg viewBox="0 0 516 516" className="w-4 h-4 fill-current shrink-0">
-                    <path d="M385.16 105c11.1 18.3 16.08 37.17 16.08 61 0 76-64.87 174.7-117.52 244H163.5l-48.2-288.35 105.3-10 25.6 205.17c23.8-139 53.23-200 53.23-241.56 0-22.77-3.9-38.25-10-51z" />
-                  </svg>
-                  Pay Venmo
-                </button>
-                <button
-                  type="button"
-                  onClick={handleEmailInquiry}
-                  className="bg-[#FFC439] text-[#003087] py-3.5 rounded-xl font-bold uppercase tracking-[0.1em] text-[10px] shadow-md hover:shadow-lg hover:bg-[#ebae25] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                  title="Send Inquiry/PayPal"
-                >
-                  <Mail size={14} className="stroke-[3px]" />
-                  Email Inquiry
+                  <ShoppingCart size={14} />
+                  Add to Shopping Cart
                 </button>
               </div>
               <p className="text-[9px] text-center opacity-40 uppercase tracking-widest text-[#4A2E1F] font-bold">

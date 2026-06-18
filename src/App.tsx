@@ -28,31 +28,41 @@ import ProductDetailsPage from "./components/ProductDetailsPage";
 import AboutUsPage from "./components/AboutUsPage";
 import VegetablesPage from "./components/VegetablesPage";
 import bgLogo from "./assets/images/bg-logo1.png";
+import { CartProvider, useCart } from "./context/CartContext";
+import CartSidebar from "./components/CartSidebar";
 import tractorAnimation from "./assets/animations/tractor_simple.json";
 import taceyPmVideo from "./assets/images/Tacey PM.mp4";
 
 const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, isOpen: boolean, onClose: () => void }) => {
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [logistics, setLogistics] = useState<'pickup' | 'delivery'>('pickup');
-  const [date, setDate] = useState("");
-  const [notes, setNotes] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      setQuantity(1);
+    }
+  }, [product, isOpen]);
 
   if (!product) return null;
 
   const total = product.numericPrice * quantity;
 
-  const handleVenmo = () => {
-    window.open(VENMO_PROFILE_URL, "_blank");
-  };
-
-  const handlePayPal = () => {
-    window.open(`https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${PAYPAL_EMAIL}&item_name=${quantity}x ${product.name}&amount=${total}&currency_code=USD`, "_blank");
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.baseName + (product.variation ? ` (${product.variation})` : ''),
+      price: product.numericPrice,
+      unit: product.unit,
+      category: product.category,
+      image: product.image
+    }, quantity);
+    onClose();
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -64,7 +74,7 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative bg-farm-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border-4 border-farm-brown max-h-[90vh] flex flex-col"
+            className="relative bg-farm-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border-4 border-farm-brown flex flex-col"
           >
             <button 
               onClick={onClose}
@@ -73,10 +83,10 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
               <X size={24} />
             </button>
 
-            <div className="paper-texture p-8 md:p-10 overflow-y-auto flex-1">
-              <div className="mb-8 pr-8">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-farm-green mb-1 block">Order Inquiry</span>
-                <h3 className="text-3xl font-bold font-serif">{product.baseName}</h3>
+            <div className="paper-texture p-8 overflow-y-auto flex-1">
+              <div className="mb-6 pr-8">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-farm-green mb-1 block">Product Selection</span>
+                <h3 className="text-2xl font-bold font-serif text-farm-brown">{product.baseName}</h3>
                 {product.variation && (
                   <p className="font-script text-2xl text-farm-green -mt-1">{product.variation}</p>
                 )}
@@ -92,73 +102,21 @@ const PurchaseModal = ({ product, isOpen, onClose }: { product: Product | null, 
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <button 
-                    onClick={() => setLogistics('pickup')}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${logistics === 'pickup' ? 'border-farm-green bg-farm-green/5' : 'border-farm-brown/10 hover:border-farm-brown/30'}`}
-                  >
-                    <Building size={20} className={logistics === 'pickup' ? 'text-farm-green' : 'opacity-40'} />
-                    <span className="text-[10px] uppercase font-bold tracking-widest">Farm Pickup</span>
-                  </button>
-                  <button 
-                    onClick={() => setLogistics('delivery')}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${logistics === 'delivery' ? 'border-farm-green bg-farm-green/5' : 'border-farm-brown/10 hover:border-farm-brown/30'}`}
-                  >
-                    <Truck size={20} className={logistics === 'delivery' ? 'text-farm-green' : 'opacity-40'} />
-                    <span className="text-[10px] uppercase font-bold tracking-widest">Delivery</span>
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest opacity-60 flex items-center gap-2">
-                    <Calendar size={14} /> Preferred {logistics === 'pickup' ? 'Pickup' : 'Delivery'} Date
-                  </label>
-                  <input 
-                    type="date" 
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full bg-white/50 border border-farm-brown/10 rounded-lg p-3 outline-none focus:border-farm-green transition-colors font-serif text-sm" 
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest opacity-60">Additional Notes</label>
-                  <textarea 
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    className="w-full bg-white/50 border border-farm-brown/10 rounded-lg p-3 outline-none focus:border-farm-green transition-colors font-serif resize-none text-sm" 
-                    rows={2}
-                    placeholder="Any specific requests?"
-                  />
-                </div>
-
-                <div className="pt-4 border-t border-farm-brown/10">
+                <div className="pt-2">
                   <div className="flex justify-between items-end mb-6">
-                    <span className="text-sm font-serif italic text-farm-brown/60">Total Estimated Cost</span>
-                    <span className="text-3xl font-bold font-serif text-farm-green">${total}</span>
+                    <span className="text-sm font-serif italic text-farm-brown/60 text-xs">Estimated Cost</span>
+                    <span className="text-3xl font-bold font-serif text-farm-green">${total.toFixed(2)}</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <button 
-                      onClick={handleVenmo}
-                      className="bg-[#008CFF] text-white py-4 rounded-full font-bold uppercase tracking-[0.1em] text-[10px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                    >
-                      <svg viewBox="0 0 516 516" className="w-4 h-4 fill-current shrink-0">
-                        <path d="M385.16 105c11.1 18.3 16.08 37.17 16.08 61 0 76-64.87 174.7-117.52 244H163.5l-48.2-288.35 105.3-10 25.6 205.17c23.8-139 53.23-200 53.23-241.56 0-22.77-3.9-38.25-10-51z" />
-                      </svg>
-                      Pay with Venmo
-                    </button>
-                    <button 
-                      onClick={handlePayPal}
-                      className="bg-[#FFC439] text-[#003087] py-4 rounded-full font-bold uppercase tracking-[0.1em] text-[10px] shadow-lg hover:shadow-xl hover:bg-[#F2b82e] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                    >
-                      <svg viewBox="0 0 16 16" className="w-4 h-4 fill-current shrink-0">
-                        <path d="M14.06 3.713c.12-1.071-.093-1.832-.702-2.526C12.628.356 11.312 0 9.626 0H4.734a.7.7 0 0 0-.691.59L2.005 13.509a.42.42 0 0 0 .415.486h2.756l-.202 1.28a.628.628 0 0 0 .62.726H8.14c.429 0 .793-.31.862-.731l.025-.13.48-3.043.03-.164.001-.007a.35.35 0 0 1 .348-.297h.38c1.266 0 2.425-.256 3.345-.91q.57-.403.993-1.005a4.94 4.94 0 0 0 .88-2.195c.242-1.246.13-2.356-.57-3.154a2.7 2.7 0 0 0-.76-.59l-.094-.061ZM6.543 8.82a.7.7 0 0 1 .321-.079H8.3c2.82 0 5.027-1.144 5.672-4.456l.003-.016q.326.186.548.438c.546.623.679 1.535.45 2.71-.272 1.397-.866 2.307-1.663 2.874-.802.57-1.842.815-3.043.815h-.38a.87.87 0 0 0-.863.734l-.03.164-.48 3.043-.024.13-.001.004a.35.35 0 0 1-.348.296H5.595a.106.106 0 0 1-.105-.123l.208-1.32z" />
-                      </svg>
-                      Buy with PayPal
-                    </button>
-                  </div>
-                  <p className="text-[10px] text-center mt-4 opacity-40 uppercase tracking-widest text-[#4A2E1F]">Payments handled securely via external apps</p>
+                  <button 
+                    onClick={handleAddToCart}
+                    className="w-full bg-farm-green text-white py-4 rounded-full font-bold uppercase tracking-[0.1em] text-[10px] shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <ShoppingCart size={14} />
+                    Add selected quantity to Cart
+                  </button>
+                  
+                  <p className="text-[10px] text-center mt-4 opacity-40 uppercase tracking-widest text-[#4A2E1F]">Fulfillment and checkout are managed in your shopping cart</p>
                 </div>
               </div>
             </div>
@@ -349,6 +307,7 @@ const TractorAnimation = () => {
 };
 
 const Navbar = () => {
+  const { setIsCartOpen, cartCount } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
@@ -430,7 +389,25 @@ const Navbar = () => {
             </Link>
  
             {/* Mobile menu navigation toggles - inline in the flex flow to prevent absolute overlaps */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-2">
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className={`p-2 rounded-full transition-colors relative ${
+                  isHomePage ? 'text-white hover:bg-white/10' : 'text-farm-brown hover:bg-farm-brown/5'
+                }`}
+                style={isHomePage ? { filter: "drop-shadow(1px 1px 2px rgba(0,0,0,0.8))" } : undefined}
+                aria-label="Open Shopping Cart"
+              >
+                <div className="relative">
+                  <ShoppingCart size={20} />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 bg-farm-green text-white font-mono text-[8px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white animate-pulse">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+              </button>
+
               <button 
                 onClick={() => setIsOpen(!isOpen)} 
                 className={`p-2 rounded-full transition-colors ${
@@ -477,6 +454,28 @@ const Navbar = () => {
                 </a>
               )
             ))}
+
+            {/* Desktop Cart Selector */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className={`flex items-center gap-1.5 transition-colors relative z-50 py-1.5 px-3 rounded-full ${
+                isHomePage 
+                  ? "text-white hover:text-farm-cream hover:bg-white/10" 
+                  : "text-farm-brown hover:text-farm-green hover:bg-farm-brown/5"
+              }`}
+              style={isHomePage ? { textShadow: "1px 1px 3px rgba(0, 0, 0, 0.8), 0px 1px 4px rgba(0, 0, 0, 0.4)" } : undefined}
+              title="Open Shopping Cart"
+            >
+              <div className="relative">
+                <ShoppingCart size={16} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-farm-green text-white font-mono text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center border border-white">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+              <span>Cart</span>
+            </button>
           </div>
  
           {isOpen && (
@@ -786,13 +785,13 @@ const ProductsSection = ({
             <div className="mb-8 md:mb-16 bg-farm-cream/30 border border-farm-brown/10 p-5 md:p-8 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-farm-green/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
               <div className="space-y-1">
-                <p className="text-[9px] uppercase font-bold tracking-[0.25em] text-farm-green">Container Policy Notice</p>
+                <p className="text-[9px] uppercase font-bold tracking-[0.25em] text-farm-green">Herdshare & Policy Notice</p>
                 <p className="text-sm md:text-base font-serif text-farm-brown/90 italic leading-relaxed">
-                  "To help us keep things sustainable, please bring a clean glass jar to swap when picking up your dairy, or you can purchase a reusable jar from us for $5."
+                  "Non herd share products will be marked as Pet Use only. Must bring a clean glass jar to swap or a $5 fee will apply for a new jar. Herd share is available."
                 </p>
               </div>
               <div className="text-[8px] font-bold uppercase tracking-widest bg-farm-green text-white px-3 py-1.5 rounded-full shrink-0">
-                Eco-Friendly swap
+                Eco-Friendly & Herdshare
               </div>
             </div>
 
@@ -1246,24 +1245,27 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-white flex flex-col md:border-[12px] border-farm-brown selection:bg-farm-cream selection:text-farm-brown overflow-x-hidden">
-        <Navbar />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<HomePage onOrder={(p) => setSelectedProduct(p)} />} />
-            <Route path="/marketplace/:productId" element={<ProductDetailsPage />} />
-            <Route path="/about" element={<AboutUsPage />} />
-            <Route path="/vegetables" element={<VegetablesPage />} />
-          </Routes>
-        </main>
+      <CartProvider>
+        <div className="min-h-screen bg-white flex flex-col md:border-[12px] border-farm-brown selection:bg-farm-cream selection:text-farm-brown overflow-x-hidden">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<HomePage onOrder={(p) => setSelectedProduct(p)} />} />
+              <Route path="/marketplace/:productId" element={<ProductDetailsPage />} />
+              <Route path="/about" element={<AboutUsPage />} />
+              <Route path="/vegetables" element={<VegetablesPage />} />
+            </Routes>
+          </main>
 
-        <PurchaseModal 
-          product={selectedProduct} 
-          isOpen={selectedProduct !== null} 
-          onClose={() => setSelectedProduct(null)} 
-        />
-        <Footer />
-      </div>
+          <PurchaseModal 
+            product={selectedProduct} 
+            isOpen={selectedProduct !== null} 
+            onClose={() => setSelectedProduct(null)} 
+          />
+          <CartSidebar />
+          <Footer />
+        </div>
+      </CartProvider>
     </BrowserRouter>
   );
 }

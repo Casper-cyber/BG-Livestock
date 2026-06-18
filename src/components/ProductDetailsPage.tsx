@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { 
@@ -9,11 +9,16 @@ import {
   Leaf, 
   Heart,
   Droplets,
-  ShoppingCart
+  ShoppingCart,
+  Minus,
+  Plus
 } from 'lucide-react';
 import { PRODUCTS, VENMO_USER, PAYPAL_EMAIL } from '../constants';
+import { useCart } from '../context/CartContext';
 
 const ProductDetailsPage = () => {
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const product = PRODUCTS.find(p => p.id === productId);
@@ -129,12 +134,41 @@ const ProductDetailsPage = () => {
             </div>
 
             <div className="space-y-6 pt-6 border-t border-farm-brown/10">
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                {/* Quantity selector */}
+                <div className="flex items-center justify-between gap-4 bg-white rounded-xl px-4 py-3 border border-farm-brown/10 shrink-0">
+                  <span className="font-bold text-[10px] uppercase tracking-wider text-farm-brown/60">Qty:</span>
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))} 
+                      className="text-farm-brown hover:text-farm-green transition-colors w-7 h-7 flex items-center justify-center bg-farm-cream/30 hover:bg-farm-cream/60 rounded-full"
+                      title="Decrease"
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <span className="font-mono text-sm font-bold min-w-6 text-center">{quantity}</span>
+                    <button 
+                      onClick={() => setQuantity(quantity + 1)} 
+                      className="text-farm-brown hover:text-farm-green transition-colors w-7 h-7 flex items-center justify-center bg-farm-cream/30 hover:bg-farm-cream/60 rounded-full"
+                      title="Increase"
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+                </div>
+
                 <button 
-                  onClick={() => window.location.href = `/#products`} // Simple fallback or use state
-                  className="flex-1 bg-farm-brown text-farm-cream py-5 rounded-xl font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-farm-green transition-all shadow-xl flex items-center justify-center gap-3"
+                  onClick={() => addToCart({
+                    id: product.id,
+                    name: product.baseName + (product.variation ? ` (${product.variation})` : ''),
+                    price: product.numericPrice,
+                    unit: product.unit,
+                    category: product.category,
+                    image: product.image
+                  }, quantity)}
+                  className="flex-grow bg-farm-green text-white py-4.5 px-6 rounded-xl font-bold uppercase tracking-[0.15em] text-[10px] hover:bg-farm-green/95 active:scale-98 transition-all shadow-md flex items-center justify-center gap-3 cursor-pointer"
                 >
-                  <ShoppingCart size={16} /> Open Purchase Options
+                  <ShoppingCart size={16} /> Add to Shopping Cart
                 </button>
               </div>
               <div className="grid grid-cols-3 gap-4 text-center">

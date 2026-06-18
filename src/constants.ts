@@ -5,6 +5,7 @@ import tradMilkNoCream from './assets/images/trad_milk_no_cream_v2_1779111261103
 import heavyCream from './assets/images/heavy_cream_v2_1779111277669.png';
 import farmButter from './assets/images/farm_butter_v2_1779111294625.png';
 import pastureEggs from './assets/images/pasture_eggs_v2_final_1779111337671.png';
+import heavyCreamJarSpoon from './assets/images/heavy_cream_jar_spoon_1779108364576.png';
 
 export interface Product {
   id: string;
@@ -26,10 +27,10 @@ export const PAYPAL_EMAIL = "Info@beechgrovelivestock.com";
 export const PRODUCTS: Product[] = [
   {
     id: 'a2a2-milk-cream',
-    name: 'A2A2 Milk with Cream',
-    baseName: 'A2A2 Milk',
+    name: 'A2 Milk with cream',
+    baseName: 'A2 Milk',
     variation: 'with cream',
-    description: 'Rich, creamy raw A2A2 Jersey milk. For non-herdshare members, this product is sold as pet milk.',
+    description: 'Rich, creamy raw A2/A2 Jersey milk. For non-herdshare members, this product is sold as pet milk.',
     price: '$11',
     numericPrice: 11,
     unit: 'gallon',
@@ -38,11 +39,11 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'a2a2-milk-no-cream',
-    name: 'A2A2 Milk without Cream',
-    baseName: 'A2A2 Milk',
-    variation: 'without cream',
-    description: 'Fresh raw A2A2 Jersey milk with cream removed. For non-herdshare members, this product is sold as pet milk.',
-    price: '$8',
+    name: 'A2 Milk no cream',
+    baseName: 'A2 Milk',
+    variation: 'no cream',
+    description: 'Fresh raw A2/A2 Jersey milk with cream removed. For non-herdshare members, this product is sold as pet milk.',
+    price: '$8.00',
     numericPrice: 8,
     unit: 'gallon',
     image: a2a2MilkNoCream,
@@ -50,8 +51,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'traditional-milk-cream',
-    name: 'Traditional Milk with Cream',
-    baseName: 'Traditional Milk',
+    name: 'Milk with cream',
+    baseName: 'Milk',
     variation: 'with cream',
     description: 'High-quality traditional raw Jersey milk with natural cream top. For non-herdshare members, this product is sold as pet milk.',
     price: '$10',
@@ -62,11 +63,11 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'traditional-milk-no-cream',
-    name: 'Traditional Milk without Cream',
-    baseName: 'Traditional Milk',
-    variation: 'without cream',
+    name: 'Milk no cream',
+    baseName: 'Milk',
+    variation: 'no cream',
     description: 'Clean traditional raw Jersey milk with cream removed. For non-herdshare members, this product is sold as pet milk.',
-    price: '$7',
+    price: '$7.00',
     numericPrice: 7,
     unit: 'gallon',
     image: tradMilkNoCream,
@@ -95,9 +96,20 @@ export const PRODUCTS: Product[] = [
     category: 'dairy'
   },
   {
+    id: 'sour-cream',
+    name: 'Sour Cream',
+    baseName: 'Sour Cream',
+    description: 'Thick, tangy, and rich sour cream, handmade from our premium Jersey dairy.',
+    price: '$4',
+    numericPrice: 4,
+    unit: 'pint',
+    image: heavyCreamJarSpoon,
+    category: 'dairy'
+  },
+  {
     id: 'free-range-eggs',
-    name: 'Free-Range Eggs',
-    baseName: 'Free-Range Eggs',
+    name: 'Eggs',
+    baseName: 'Eggs',
     description: 'Fresh pasture-raised eggs collected daily from our happy hens.',
     price: '$4',
     numericPrice: 4,
