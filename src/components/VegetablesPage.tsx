@@ -11,6 +11,9 @@ import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
+import squashImg from '../assets/images/squash.jpg';
+import carrotsImg from '../assets/images/baby_carrots.jpg';
+import zucchiniImg from '../assets/images/zucchini.jpg';
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
@@ -48,7 +51,7 @@ const GARDEN_INVENTORY: GardenItem[] = [
     season: "In Season Now",
     imageNames: ["Squash"],
     isOrganic: false,
-    image: "https://images.unsplash.com/photo-1506484381205-f7945653044d?auto=format&fit=crop&w=600&q=80"
+    image: squashImg
   },
   {
     id: "baby-carrots",
@@ -60,7 +63,7 @@ const GARDEN_INVENTORY: GardenItem[] = [
     season: "In Season Now",
     imageNames: ["Baby Carrots"],
     isOrganic: false,
-    image: "https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80"
+    image: carrotsImg
   },
   {
     id: "bok-choy-large",
@@ -105,7 +108,7 @@ const GARDEN_INVENTORY: GardenItem[] = [
     season: "In Season Now",
     imageNames: ["Zucchini"],
     isOrganic: false,
-    image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?auto=format&fit=crop&w=600&q=80"
+    image: zucchiniImg
   }
 ];
 
