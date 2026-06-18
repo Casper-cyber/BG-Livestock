@@ -11,9 +11,9 @@ import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
-import image0 from "../assets/images/image_0.png";
-import image1 from "../assets/images/image_1.png";
-import image2 from "../assets/images/image_2.png";
+import image0 from "../assets/images/squash.jpg";
+import image1 from "../assets/images/baby_carrots.jpg";
+import image2 from "../assets/images/zucchini.jpg";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
