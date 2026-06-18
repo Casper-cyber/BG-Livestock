@@ -21,8 +21,9 @@ export interface Product {
 }
 
 export const VENMO_USER = "@BeechgroveLivestock";
-export const VENMO_PROFILE_URL = "https://account.venmo.com/u/Theresia-Anderson-2";
-export const PAYPAL_EMAIL = "Info@beechgrovelivestock.com";
+export const VENMO_PROFILE_URL = "https://venmo.com/code?user_id=3235034236452864664&created=1779551596";
+export const PAYPAL_MERCHANT_EMAIL = "Info@beechgrovelivestock.com";
+export const PAYPAL_EMAIL = PAYPAL_MERCHANT_EMAIL;
 
 export const PRODUCTS: Product[] = [
   {

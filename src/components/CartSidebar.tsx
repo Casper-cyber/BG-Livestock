@@ -13,7 +13,7 @@ import {
   Loader2,
   CheckCircle2
 } from 'lucide-react';
-import { VENMO_PROFILE_URL, PAYPAL_EMAIL } from '../constants';
+import { VENMO_PROFILE_URL, PAYPAL_EMAIL, PAYPAL_MERCHANT_EMAIL } from '../constants';
 import { useNavigate } from 'react-router-dom';
 
 export default function CartSidebar() {
@@ -54,6 +54,24 @@ export default function CartSidebar() {
     }
   };
 
+  const handleClickPayPal = () => {
+    const params = new URLSearchParams();
+    params.set('cmd', '_cart');
+    params.set('upload', '1');
+    params.set('business', PAYPAL_MERCHANT_EMAIL);
+    params.set('currency_code', 'USD');
+
+    cartItems.forEach((item, index) => {
+      const i = index + 1;
+      params.set(`item_name_${i}`, item.name);
+      params.set(`amount_${i}`, item.price.toFixed(2));
+      params.set(`quantity_${i}`, item.quantity.toString());
+    });
+
+    const payPalUrl = `https://www.paypal.com/cgi-bin/webscr?${params.toString()}`;
+    window.open(payPalUrl, '_blank', 'noopener,noreferrer');
+  };
+
   const executeFinalPayment = () => {
     if (!selectedPaymentType) return;
     
@@ -61,9 +79,7 @@ export default function CartSidebar() {
     if (selectedPaymentType === 'venmo') {
       window.open(VENMO_PROFILE_URL, '_blank');
     } else {
-      const itemDescription = cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ');
-      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(PAYPAL_EMAIL)}&item_name=${encodeURIComponent(itemDescription)}&amount=${cartTotal.toFixed(2)}&currency_code=USD`;
-      window.open(paypalUrl, '_blank');
+      handleClickPayPal();
     }
 
     // 2. Safely wipe the cart from state and localStorage now that handoff succeeded
