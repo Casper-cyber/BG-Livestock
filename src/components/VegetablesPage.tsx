@@ -11,7 +11,7 @@ import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
-import image0 from "../assets/images/squash.jpg";
+import image0 from "../assets/images/squash.png.jpg";
 import image1 from "../assets/images/baby_carrots.jpg";
 import image2 from "../assets/images/zucchini.jpg";
 
