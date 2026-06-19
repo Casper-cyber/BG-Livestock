@@ -120,6 +120,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
         body: JSON.stringify({
           _subject: "✅ Paid Order Confirmed - Beech Grove Livestock",
           _replyto: customerEmail, // Directs your email 'Reply' button straight to the customer
+          _cc: customerEmail, // ⭐ THIS ENABLES THE AUTOMATIC CUSTOMER COPY
           Customer_Email: customerEmail, // Displays safely as text in the data table
           Order_Status: "Payment Completed Successfully via " + (selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo'),
           Logistics_Mode: logistics === 'pickup' ? 'Farm Pickup' : 'Delivery',
@@ -257,17 +258,22 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
                     {`Proceed to Payment ($${cartTotal.toFixed(2)})`}
                   </button>
                 ) : (
-                  <button
-                    disabled={isSending}
-                    onClick={handlePaymentSuccess}
-                    className="w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 bg-[#2e7d32] hover:bg-[#1b5e20]"
-                  >
-                    {isSending ? (
-                      <Loader2 size={14} className="animate-spin" />
-                    ) : (
-                      `Confirm Paid & Complete Order (${selectedPaymentType.toUpperCase()})`
-                    )}
-                  </button>
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-red-600 animate-pulse">
+                      ⚠️ ACTION REQUIRED: Click below to finalize your order list!
+                    </p>
+                    <button
+                      disabled={isSending}
+                      onClick={handlePaymentSuccess}
+                      className="w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-lg hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 bg-[#2b7a2d] hover:bg-[#1e5a20] animate-pulse ring-4 ring-[#4caf50] ring-opacity-65"
+                    >
+                      {isSending ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        `Confirm Paid & Complete Order (${selectedPaymentType.toUpperCase()})`
+                      )}
+                    </button>
+                  </div>
                 )}
 
                 <button
