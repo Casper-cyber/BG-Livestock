@@ -93,44 +93,26 @@ FINANCIAL SUMMARY
 Total Estimated Cost: $${cartTotal.toFixed(2)}
 ==============================================`;
 
-      // Step A: Send payload to Formspree via AJAX
-      const response = await fetch('https://formspree.io/f/xkoadbgq', {
-        method: 'POST',
-        headers: {
+      // Step A: Send payload to FormSubmit via AJAX targeting our farm email address
+      const response = await fetch("https://formsubmit.co/ajax/Info@beechgrovelivestock.com", {
+        method: "POST",
+        headers: { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          email: customerEmail,
+          _subject: "New Order Invoice - Beech Grove Livestock",
+          email: customerEmail, // FormSubmit uses this to auto-reply to the customer
+          _replyto: customerEmail,
           payment_method: selectedPaymentType.toUpperCase(),
           logistics: `Mode: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}${date ? `, Preferred Date: ${date}` : ''}${notes ? `, Notes: ${notes}` : ''}`,
-          order_details: orderDetailsText
+          order_details: orderDetailsText, // Our beautiful text itemized list
+          _template: "table" // Automatically formats the email into a clean data table
         })
       });
 
       if (!response.ok) {
-        throw new Error(`Submission rejected by Formspree server (${response.status})`);
-      }
-
-      // Send copy to customer via FormSubmit (twin free call bypass)
-      try {
-        await fetch("https://formsubmit.co/ajax/" + customerEmail, {
-          method: "POST",
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            _subject: "Your Beech Grove Livestock Order Copy",
-            email: customerEmail,
-            payment_method: selectedPaymentType.toUpperCase(),
-            logistics: `Mode: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}${date ? `, Preferred Date: ${date}` : ''}${notes ? `, Notes: ${notes}` : ''}`,
-            order_details: orderDetailsText,
-            _template: "table"
-          })
-        });
-      } catch (formSubmitError) {
-        console.warn("Failed sending twin receipt copy to customer:", formSubmitError);
+        throw new Error(`Submission rejected by FormSubmit server (${response.status})`);
       }
 
       // Also trigger the local fallback logic so everything remains registered appropriately
