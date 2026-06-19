@@ -55,20 +55,8 @@ export default function CartSidebar() {
   };
 
   const handleClickPayPal = () => {
-    const params = new URLSearchParams();
-    params.set('cmd', '_cart');
-    params.set('upload', '1');
-    params.set('business', PAYPAL_MERCHANT_EMAIL);
-    params.set('currency_code', 'USD');
-
-    cartItems.forEach((item, index) => {
-      const i = index + 1;
-      params.set(`item_name_${i}`, item.name);
-      params.set(`amount_${i}`, item.price.toFixed(2));
-      params.set(`quantity_${i}`, item.quantity.toString());
-    });
-
-    const payPalUrl = `https://www.paypal.com/cgi-bin/webscr?${params.toString()}`;
+    const grandTotal = cartTotal.toFixed(2);
+    const payPalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=Info@beechgrovelivestock.com&currency_code=USD&amount=${grandTotal}&item_name=Farm%20Marketplace%20Order`;
     window.open(payPalUrl, '_blank', 'noopener,noreferrer');
   };
 
