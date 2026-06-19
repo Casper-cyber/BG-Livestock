@@ -40,18 +40,9 @@ export default function CartSidebar() {
 
   if (!isCartOpen) return null;
 
-  const handleCheckout = async (paymentType: 'venmo' | 'paypal') => {
-    setIsSending(true);
-    
-    // 1. Send the email receipt copy in the background
-    const success = await sendOrderEmail(logistics, date, notes, paymentType);
-    
-    setIsSending(false);
-    if (success) {
-      setSelectedPaymentType(paymentType);
-      setIsSuccess(true);
-      // Cart cache remains active and clearing/handoff is deferred to step 2 click!
-    }
+  const handleCheckout = (paymentType: 'venmo' | 'paypal') => {
+    setSelectedPaymentType(paymentType);
+    setIsSuccess(true);
   };
 
   const handleClickPayPal = () => {
@@ -60,23 +51,36 @@ export default function CartSidebar() {
     window.open(payPalUrl, '_blank', 'noopener,noreferrer');
   };
 
-  const executeFinalPayment = () => {
+  const executeFinalPayment = async () => {
     if (!selectedPaymentType) return;
-    
-    // 1. Direct secure handoff to the payment endpoint on click
-    if (selectedPaymentType === 'venmo') {
-      window.open(VENMO_PROFILE_URL, '_blank');
-    } else {
-      handleClickPayPal();
+    setIsSending(true);
+    try {
+      // Step A (Save Order First): Invoke existing order registration and notification routines
+      const success = await sendOrderEmail(logistics, date, notes, selectedPaymentType);
+
+      if (success) {
+        // Step B (Trigger Live Payment Handoff): Only AFTER order is successfully registered
+        if (selectedPaymentType === 'venmo') {
+          window.open(VENMO_PROFILE_URL, '_blank');
+        } else {
+          handleClickPayPal();
+        }
+
+        // 3. Safely wipe the cart from state and localStorage now that handoff succeeded
+        clearCart();
+
+        // 4. Close the panels and reset state
+        setIsSuccess(false);
+        setSelectedPaymentType(null);
+        setIsCartOpen(false);
+      } else {
+        console.error("Order registration failed.");
+      }
+    } catch (err) {
+      console.error("Error confirming order:", err);
+    } finally {
+      setIsSending(false);
     }
-
-    // 2. Safely wipe the cart from state and localStorage now that handoff succeeded
-    clearCart();
-
-    // 3. Close the panels and reset state
-    setIsSuccess(false);
-    setSelectedPaymentType(null);
-    setIsCartOpen(false);
   };
 
   return (
@@ -148,12 +152,17 @@ export default function CartSidebar() {
 
               <div className="w-full max-w-sm space-y-3 shrink-0">
                 <button
+                  disabled={isSending}
                   onClick={executeFinalPayment}
-                  className={`w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 ${
                     selectedPaymentType === 'venmo' ? 'bg-[#008CFF] hover:bg-[#007cd6]' : 'bg-[#FFC439] hover:bg-[#F2b82e] text-[#003087]'
                   }`}
                 >
-                  Proceed to Payment (${cartTotal.toFixed(2)})
+                  {isSending ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    `Proceed to Payment ($${cartTotal.toFixed(2)})`
+                  )}
                 </button>
 
                 <button
