@@ -34,6 +34,9 @@ export default function CartSidebar() {
   const [logistics, setLogistics] = useState<'pickup' | 'delivery'>('pickup');
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [submissionError, setSubmissionError] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedPaymentType, setSelectedPaymentType] = useState<'venmo' | 'paypal' | null>(null);
@@ -41,6 +44,17 @@ export default function CartSidebar() {
   if (!isCartOpen) return null;
 
   const handleCheckout = (paymentType: 'venmo' | 'paypal') => {
+    if (!customerEmail.trim()) {
+      setEmailError('Please enter your email address to receive your confirmation receipt copy.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+      setEmailError('Please enter a valid email address.');
+      return;
+    }
+    setEmailError('');
+    setSubmissionError('');
     setSelectedPaymentType(paymentType);
     setIsSuccess(true);
   };
@@ -54,31 +68,77 @@ export default function CartSidebar() {
   const executeFinalPayment = async () => {
     if (!selectedPaymentType) return;
     setIsSending(true);
+    setSubmissionError('');
     try {
-      // Step A (Save Order First): Invoke existing order registration and notification routines
-      const success = await sendOrderEmail(logistics, date, notes, selectedPaymentType);
+      // 1. Create clean formatted itemized manifest exactly as instructed
+      const itemizedManifest = cartItems
+        .map(item => `- ${item.name} (${item.category || 'N/A'}): ${item.quantity} x $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}`)
+        .join('\n');
+      
+      const orderDetailsText = `==============================================
+NEW FARM ORDER INVOICE
+==============================================
+Payment Method: ${selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo'}
+Logistics: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}${date ? ` (Date: ${date})` : ''}
+Notes: ${notes || 'None'}
 
-      if (success) {
-        // Step B (Trigger Live Payment Handoff): Only AFTER order is successfully registered
-        if (selectedPaymentType === 'venmo') {
-          window.open(VENMO_PROFILE_URL, '_blank');
-        } else {
-          handleClickPayPal();
-        }
+----------------------------------------------
+ITEMIZED CHECKLIST
+----------------------------------------------
+${itemizedManifest}
 
-        // 3. Safely wipe the cart from state and localStorage now that handoff succeeded
-        clearCart();
+----------------------------------------------
+FINANCIAL SUMMARY
+----------------------------------------------
+Total Estimated Cost: $${cartTotal.toFixed(2)}
+==============================================`;
 
-        // 4. Close the panels and reset state
-        setIsSuccess(false);
-        setSelectedPaymentType(null);
-        setIsCartOpen(false);
-      } else {
-        const error = new Error("Order registration and email delivery returned false.");
-        console.error("Email failed:", error);
+      // Step A: Send payload to Formspree via AJAX
+      const response = await fetch('https://formspree.io/f/xkoadbgq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          email: customerEmail,
+          payment_method: selectedPaymentType.toUpperCase(),
+          logistics: `Mode: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}${date ? `, Preferred Date: ${date}` : ''}${notes ? `, Notes: ${notes}` : ''}`,
+          order_details: orderDetailsText
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Submission rejected by server (${response.status})`);
       }
-    } catch (error) {
-      console.error("Email failed:", error);
+
+      // Also trigger the local fallback logic so everything remains registered appropriately
+      try {
+        await sendOrderEmail(logistics, date, notes, selectedPaymentType);
+      } catch (innerError) {
+        console.warn("Context email handler threw an error, continuing payment redirect:", innerError);
+      }
+
+      // Step B: Trigger payment redirection only AFTER successful Formspree submission
+      if (selectedPaymentType === 'venmo') {
+        window.open(VENMO_PROFILE_URL, '_blank');
+      } else {
+        handleClickPayPal();
+      }
+
+      // 3. Safely wipe the cart from state and localStorage now that handoff succeeded
+      clearCart();
+
+      // 4. Close the panels and reset state
+      setIsSuccess(false);
+      setSelectedPaymentType(null);
+      setIsCartOpen(false);
+      setCustomerEmail('');
+      setDate('');
+      setNotes('');
+    } catch (error: any) {
+      console.error("Payment registration failed:", error);
+      setSubmissionError(error?.message || "Secure submission to Formspree failed. Please try again.");
     } finally {
       setIsSending(false);
     }
@@ -132,17 +192,28 @@ export default function CartSidebar() {
               <CheckCircle2 size={56} className="text-farm-green mb-4 animate-bounce shrink-0" />
               <h3 className="text-2xl font-serif font-bold text-farm-brown mb-2 leading-tight">Order Forwarded!</h3>
               
+              {submissionError && (
+                <div className="bg-red-50 border border-red-200 text-red-800 text-xs rounded-xl p-4 my-2 w-full max-w-sm text-left shadow-xs space-y-1">
+                  <span className="text-[8px] font-bold uppercase tracking-widest text-red-600 bg-red-100 px-2.5 py-1 rounded-full inline-block">
+                    Submission Error
+                  </span>
+                  <p className="text-xs font-semibold leading-relaxed">
+                    {submissionError}
+                  </p>
+                </div>
+              )}
+
               <div className="bg-farm-cream/30 border border-farm-brown/10 rounded-xl p-5 my-4 w-full max-w-sm text-left shadow-xs space-y-3">
-                <span className="text-[8px] font-bold uppercase tracking-widest text-farm-green bg-farm-green/10 px-2.5 py-1 rounded-full inline-block">
+                <span className="text-[8px] font-bold uppercase tracking-widest text-[#4A2E1F] bg-farm-brown/5 px-2.5 py-1 rounded-full inline-block">
                   Step 1 of 2 Complete
                 </span>
                 <p className="text-xs text-farm-brown/80 leading-relaxed">
-                  Your order receipt copies have been registered and forwarded to Beechgrove Livestock successfully. 
+                  Your order details have been secured. Please complete the final checkout on the official {selectedPaymentType} payment portal to initiate fulfillment.
                 </p>
                 <div className="border-t border-dotted border-farm-brown/20 pt-3">
                   <div className="flex justify-between text-xs text-farm-brown mb-1">
-                    <span className="italic">Order Total:</span>
-                    <span className="font-bold text-farm-green">${cartTotal.toFixed(2)}</span>
+                     <span className="italic">Order Total:</span>
+                     <span className="font-bold text-farm-green">${cartTotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-farm-brown">
                     <span className="italic">Payment Via:</span>
@@ -295,6 +366,28 @@ export default function CartSidebar() {
 
                 {/* Logistics Input Form fields */}
                 <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-farm-brown/60 block">
+                      Email address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={customerEmail}
+                      onChange={(e) => {
+                        setCustomerEmail(e.target.value);
+                        if (emailError) setEmailError('');
+                      }}
+                      className="w-full bg-white border border-farm-brown/10 rounded-lg p-2.5 outline-none focus:border-farm-green transition-colors font-serif text-xs text-farm-brown"
+                      placeholder="you@example.com"
+                    />
+                    {emailError && (
+                      <p className="text-[10px] text-red-600 font-medium font-serif mt-1">
+                        ⚠️ {emailError}
+                      </p>
+                    )}
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-farm-brown/60 flex items-center gap-1.5">
                       <Calendar size={12} /> Preferred {logistics === 'pickup' ? 'Pickup' : 'Delivery'} Date
