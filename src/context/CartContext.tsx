@@ -431,6 +431,10 @@ Thank you for supporting Beachgrove Livestock!
               message: emailBody,
               message_html: emailHtml,
               to_email: FARM_EMAIL,
+              cc_email: FARM_EMAIL,
+              bcc_email: FARM_EMAIL,
+              cc: FARM_EMAIL,
+              bcc: FARM_EMAIL,
               logistics_preference: logistics === 'pickup' ? 'Farm Pickup' : 'Delivery',
               pickup_date: date || 'Not specified',
               notes: notes || 'None',
@@ -467,6 +471,7 @@ Thank you for supporting Beachgrove Livestock!
           body: JSON.stringify({
             from: 'onboarding@resend.dev',
             to: FARM_EMAIL,
+            cc: FARM_EMAIL,
             subject: subject,
             text: emailBody,
             html: emailHtml,
