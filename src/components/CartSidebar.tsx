@@ -40,6 +40,7 @@ export default function CartSidebar() {
   const [isSending, setIsSending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedPaymentType, setSelectedPaymentType] = useState<'venmo' | 'paypal' | null>(null);
+  const [paymentInitiated, setPaymentInitiated] = useState(false);
 
   if (!isCartOpen) return null;
 
@@ -56,6 +57,7 @@ export default function CartSidebar() {
     setEmailError('');
     setSubmissionError('');
     setSelectedPaymentType(paymentType);
+    setPaymentInitiated(false);
     setIsSuccess(true);
   };
 
@@ -65,7 +67,22 @@ export default function CartSidebar() {
     window.open(payPalUrl, '_blank', 'noopener,noreferrer');
   };
 
-  const executeFinalPayment = async () => {
+  const executeFinalPayment = () => {
+    if (!selectedPaymentType) return;
+    setSubmissionError('');
+    
+    // Step B: Trigger payment redirection only
+    if (selectedPaymentType === 'venmo') {
+      window.open(VENMO_PROFILE_URL, '_blank');
+    } else {
+      handleClickPayPal();
+    }
+    
+    // Transition state to awaiting confirmation
+    setPaymentInitiated(true);
+  };
+
+  const handlePaymentSuccess = async () => {
     if (!selectedPaymentType) return;
     setIsSending(true);
     setSubmissionError('');
@@ -93,21 +110,21 @@ FINANCIAL SUMMARY
 Total Estimated Cost: $${cartTotal.toFixed(2)}
 ==============================================`;
 
-      // Step A: Send payload to FormSubmit via AJAX targeting our farm email address
-      const response = await fetch("https://formsubmit.co/ajax/Info@beechgrovelivestock.com", {
+      // Step A: Send payload to FormSubmit via AJAX targeting our farm email address on successful payment translation callback
+      const response = await fetch("https://formsubmit.co/ajax/info@beechgrovelivestock.com", {
         method: "POST",
         headers: { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          _subject: "New Order Invoice - Beech Grove Livestock",
-          email: customerEmail, // FormSubmit uses this to auto-reply to the customer
-          _replyto: customerEmail,
-          payment_method: selectedPaymentType.toUpperCase(),
-          logistics: `Mode: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}${date ? `, Preferred Date: ${date}` : ''}${notes ? `, Notes: ${notes}` : ''}`,
-          order_details: orderDetailsText, // Our beautiful text itemized list
-          _template: "table" // Automatically formats the email into a clean data table
+          _subject: "✅ Paid Order Confirmed - Beech Grove Livestock",
+          _replyto: customerEmail, // Directs your email 'Reply' button straight to the customer
+          Customer_Email: customerEmail, // Displays safely as text in the data table
+          Order_Status: "Payment Completed Successfully via " + (selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo'),
+          Logistics_Mode: logistics === 'pickup' ? 'Farm Pickup' : 'Delivery',
+          Order_Details: "STATUS: Paid & Confirmed\n\n" + orderDetailsText,
+          _template: "table"
         })
       });
 
@@ -119,14 +136,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
       try {
         await sendOrderEmail(logistics, date, notes, selectedPaymentType);
       } catch (innerError) {
-        console.warn("Context email handler threw an error, continuing payment redirect:", innerError);
-      }
-
-      // Step B: Trigger payment redirection only AFTER successful Formspree submission
-      if (selectedPaymentType === 'venmo') {
-        window.open(VENMO_PROFILE_URL, '_blank');
-      } else {
-        handleClickPayPal();
+        console.warn("Context email handler threw an error, continuing payment success:", innerError);
       }
 
       // 3. Safely wipe the cart from state and localStorage now that handoff succeeded
@@ -135,17 +145,22 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
       // 4. Close the panels and reset state
       setIsSuccess(false);
       setSelectedPaymentType(null);
+      setPaymentInitiated(false);
       setIsCartOpen(false);
       setCustomerEmail('');
       setDate('');
       setNotes('');
     } catch (error: any) {
-      console.error("Payment registration failed:", error);
-      setSubmissionError(error?.message || "Secure submission to Formspree failed. Please try again.");
+      console.error("Payment confirmation failed:", error);
+      setSubmissionError(error?.message || "Secure submission to FormSubmit failed. Please try again.");
     } finally {
       setIsSending(false);
     }
   };
+
+  // Aliases for transaction callbacks
+  const onSuccess = handlePaymentSuccess;
+  const onApprove = handlePaymentSuccess;
 
   return (
     <AnimatePresence>
@@ -193,7 +208,9 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
           {isSuccess && selectedPaymentType && (
             <div className="absolute inset-0 z-50 bg-farm-white/98 flex flex-col items-center justify-center p-8 text-center backdrop-blur-md overflow-y-auto">
               <CheckCircle2 size={56} className="text-farm-green mb-4 animate-bounce shrink-0" />
-              <h3 className="text-2xl font-serif font-bold text-farm-brown mb-2 leading-tight">Order Forwarded!</h3>
+              <h3 className="text-2xl font-serif font-bold text-farm-brown mb-2 leading-tight">
+                {!paymentInitiated ? "Order Forwarded!" : "Confirm Your Order"}
+              </h3>
               
               {submissionError && (
                 <div className="bg-red-50 border border-red-200 text-red-800 text-xs rounded-xl p-4 my-2 w-full max-w-sm text-left shadow-xs space-y-1">
@@ -208,10 +225,13 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
 
               <div className="bg-farm-cream/30 border border-farm-brown/10 rounded-xl p-5 my-4 w-full max-w-sm text-left shadow-xs space-y-3">
                 <span className="text-[8px] font-bold uppercase tracking-widest text-[#4A2E1F] bg-farm-brown/5 px-2.5 py-1 rounded-full inline-block">
-                  Step 1 of 2 Complete
+                  {!paymentInitiated ? "Step 1 of 2 Complete" : "Step 2 of 2: Awaiting Confirmation"}
                 </span>
                 <p className="text-xs text-farm-brown/80 leading-relaxed">
-                  Your order details have been secured. Please complete the final checkout on the official {selectedPaymentType} payment portal to initiate fulfillment.
+                  {!paymentInitiated 
+                    ? `Your order details have been secured. Please complete the final checkout on the official ${selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo'} payment portal to initiate fulfillment.`
+                    : `We opened the official ${selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo'} portal in a new tab. Once you complete the transaction, click the button below to confirm and finalize your farm order.`
+                  }
                 </p>
                 <div className="border-t border-dotted border-farm-brown/20 pt-3">
                   <div className="flex justify-between text-xs text-farm-brown mb-1">
@@ -226,28 +246,42 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
               </div>
 
               <div className="w-full max-w-sm space-y-3 shrink-0">
-                <button
-                  disabled={isSending}
-                  onClick={executeFinalPayment}
-                  className={`w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 ${
-                    selectedPaymentType === 'venmo' ? 'bg-[#008CFF] hover:bg-[#007cd6]' : 'bg-[#FFC439] hover:bg-[#F2b82e] text-[#003087]'
-                  }`}
-                >
-                  {isSending ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : (
-                    `Proceed to Payment ($${cartTotal.toFixed(2)})`
-                  )}
-                </button>
+                {!paymentInitiated ? (
+                  <button
+                    disabled={isSending}
+                    onClick={executeFinalPayment}
+                    className={`w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 ${
+                      selectedPaymentType === 'venmo' ? 'bg-[#008CFF] hover:bg-[#007cd6]' : 'bg-[#FFC439] hover:bg-[#F2b82e] text-[#003087]'
+                    }`}
+                  >
+                    {`Proceed to Payment ($${cartTotal.toFixed(2)})`}
+                  </button>
+                ) : (
+                  <button
+                    disabled={isSending}
+                    onClick={handlePaymentSuccess}
+                    className="w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-md hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 bg-[#2e7d32] hover:bg-[#1b5e20]"
+                  >
+                    {isSending ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      `Confirm Paid & Complete Order (${selectedPaymentType.toUpperCase()})`
+                    )}
+                  </button>
+                )}
 
                 <button
                   onClick={() => {
-                    setIsSuccess(false);
-                    setSelectedPaymentType(null);
+                    if (paymentInitiated) {
+                      setPaymentInitiated(false);
+                    } else {
+                      setIsSuccess(false);
+                      setSelectedPaymentType(null);
+                    }
                   }}
                   className="w-full bg-white text-farm-brown hover:bg-farm-cream/30 border border-farm-brown/15 py-3 rounded-full font-bold uppercase tracking-widest text-[9px] transition-all cursor-pointer"
                 >
-                  Edit Order / Go Back
+                  {paymentInitiated ? "Go Back / Re-open Payment Details" : "Edit Order / Go Back"}
                 </button>
               </div>
 
