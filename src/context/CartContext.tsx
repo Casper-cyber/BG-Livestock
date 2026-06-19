@@ -484,13 +484,39 @@ Thank you for supporting Beachgrove Livestock!
 
     // =========================================================================
     // 3. SECURE FALLBACK: Return true to transition cleanly to the next payment step.
-    //    We can log the invoice to console in development.
+    //    Logs diagnostic instructions for live setup and saves invoice details.
     // =========================================================================
     try {
       console.log('Order registered successfully on client side:', subject, emailBody);
+      
+      if (!EMAILJS_SERVICE_ID && !EMAILJS_PUBLIC_KEY && !RESEND_API_KEY) {
+        console.warn(
+          `%c [EMAIL CONFIGURATION AUDIT ALERT] %c
+The sendOrderEmail function completed local tracking successfully, but DID NOT dispatch a live external email because keys are blank.
+
+To allow real-time emails to go live to ${FARM_EMAIL}, please configure one of these services in src/context/CartContext.tsx:
+
+1. EmailJS Setup (Easiest for Client-Only apps):
+   - Sign up for a free account at: https://www.emailjs.com/
+   - Under Account, copy your Public Key and set:
+     const EMAILJS_PUBLIC_KEY = "your_public_key";
+   - Under Email Services, add a service (e.g. Gmail) and set:
+     const EMAILJS_SERVICE_ID = "your_service_id";
+   - Under Email Templates, create a custom layout and set:
+     const EMAILJS_TEMPLATE_ID = "your_template_id";
+
+2. Resend API Setup (Server Proxy):
+   - Sign up at: https://resend.com/
+   - Retrieve your API Token and set:
+     const RESEND_API_KEY = "re_your_api_key_here";
+   - Note: Resend requires domain-level validation or using an onboarding sender address pattern.`,
+          'background: #ffc107; color: #000; font-weight: bold; padding: 4px; border-radius: 2px;',
+          'color: #d32f2f; font-weight: medium;'
+        );
+      }
       return true;
-    } catch (e) {
-      console.error("Unable to execute fallback", e);
+    } catch (error) {
+      console.error("Unable to execute fallback", error);
     }
 
     return false;

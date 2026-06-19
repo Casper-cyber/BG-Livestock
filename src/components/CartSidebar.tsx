@@ -74,10 +74,11 @@ export default function CartSidebar() {
         setSelectedPaymentType(null);
         setIsCartOpen(false);
       } else {
-        console.error("Order registration failed.");
+        const error = new Error("Order registration and email delivery returned false.");
+        console.error("Email failed:", error);
       }
-    } catch (err) {
-      console.error("Error confirming order:", err);
+    } catch (error) {
+      console.error("Email failed:", error);
     } finally {
       setIsSending(false);
     }
