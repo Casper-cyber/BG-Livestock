@@ -109,7 +109,28 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
       });
 
       if (!response.ok) {
-        throw new Error(`Submission rejected by server (${response.status})`);
+        throw new Error(`Submission rejected by Formspree server (${response.status})`);
+      }
+
+      // Send copy to customer via FormSubmit (twin free call bypass)
+      try {
+        await fetch("https://formsubmit.co/ajax/" + customerEmail, {
+          method: "POST",
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            _subject: "Your Beech Grove Livestock Order Copy",
+            email: customerEmail,
+            payment_method: selectedPaymentType.toUpperCase(),
+            logistics: `Mode: ${logistics === 'pickup' ? 'Farm Pickup' : 'Delivery'}${date ? `, Preferred Date: ${date}` : ''}${notes ? `, Notes: ${notes}` : ''}`,
+            order_details: orderDetailsText,
+            _template: "table"
+          })
+        });
+      } catch (formSubmitError) {
+        console.warn("Failed sending twin receipt copy to customer:", formSubmitError);
       }
 
       // Also trigger the local fallback logic so everything remains registered appropriately
@@ -372,6 +393,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
                     </label>
                     <input
                       type="email"
+                      name="email"
                       required
                       value={customerEmail}
                       onChange={(e) => {
