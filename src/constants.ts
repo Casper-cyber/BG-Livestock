@@ -109,10 +109,10 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'free-range-eggs',
-    name: 'Eggs',
-    baseName: 'Eggs',
+    name: 'Farm Fresh Free-Range eggs',
+    baseName: 'Farm Fresh Free-Range eggs',
     description: 'Fresh pasture-raised eggs collected daily from our happy hens.',
-    price: '$4',
+    price: '$4.00',
     numericPrice: 4,
     unit: 'dozen',
     image: pastureEggs,

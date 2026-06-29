@@ -13,6 +13,8 @@ import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
+import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
+import greenBeansImg from "../assets/images/grean_beans_1782767582906.jpg";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
@@ -22,6 +24,8 @@ const STATIC_IMAGES: Record<string, string> = {
   bok_choy: bokChoyImg,
   cabbage_head: cabbageImg,
   broccoli_head: broccoliImg,
+  cucumber: cucumberImg,
+  green_beans: greenBeansImg,
 };
 
 // Component for rendering product images with optional placeholders or base64 data

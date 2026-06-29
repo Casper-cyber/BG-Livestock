@@ -600,6 +600,9 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, onOrder }: ProductCardProps) => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const total = (product.numericPrice * quantity).toFixed(2);
 
   const handleCardClick = () => {
     navigate(`/marketplace/${product.id}`);
@@ -657,7 +660,7 @@ const ProductCard = ({ product, onOrder }: ProductCardProps) => {
             </p>
           </div>
 
-          <div className="mt-auto space-y-4 pt-4 border-t border-dotted border-farm-brown/20">
+          <div className="mt-auto space-y-4 pt-4 border-t border-dotted border-farm-brown/20" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-end">
               <div className="space-y-0.5">
                 <p className="text-[9px] uppercase font-bold tracking-[0.2em] opacity-40">Price per {product.unit}</p>
@@ -665,35 +668,63 @@ const ProductCard = ({ product, onOrder }: ProductCardProps) => {
                   {product.price}
                 </p>
               </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={handleOrder}
-                  className="bg-[#008CFF] text-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[#0074D4] transition-all shadow-md active:scale-95 flex items-center gap-1.5"
-                  title="Pay with Venmo"
+            </div>
+
+            {/* Quantity controls & Add to Cart exactly like vegetables page */}
+            <div className="p-4 bg-farm-cream/20 rounded-xl border border-farm-brown/10 space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setQuantity(q => Math.max(1, q - 1));
+                    }}
+                    className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all"
+                    title="Decrease quantity"
+                  >
+                    -
+                  </button>
+                  <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{quantity}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setQuantity(q => q + 1);
+                    }}
+                    className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all"
+                    title="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-2 border-t border-dotted border-farm-brown/10 text-xs">
+                <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Total Cost:</span>
+                <span className="text-base font-serif font-extrabold text-farm-green">${total}</span>
+              </div>
+
+              <div className="pt-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart({
+                      id: product.id,
+                      name: product.baseName + (product.variation ? ` (${product.variation})` : ''),
+                      price: product.numericPrice,
+                      unit: product.unit,
+                      category: product.category,
+                      image: product.image
+                    }, quantity);
+                  }}
+                  className="w-full bg-farm-green text-white py-3 px-4 rounded-lg font-bold uppercase tracking-[0.1em] text-[10px] shadow-sm hover:shadow-md hover:bg-farm-green/90 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  title={`Add ${quantity} x ${product.baseName} to Cart`}
                 >
-                  <svg viewBox="0 0 516 516" className="w-3 h-3 fill-current shrink-0">
-                    <path d="M385.16 105c11.1 18.3 16.08 37.17 16.08 61 0 76-64.87 174.7-117.52 244H163.5l-48.2-288.35 105.3-10 25.6 205.17c23.8-139 53.23-200 53.23-241.56 0-22.77-3.9-38.25-10-51z" />
-                  </svg>
-                  Venmo
-                </button>
-                <button 
-                  onClick={handleOrder}
-                  className="bg-[#FFC439] text-[#003087] px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-[#F2b82e] transition-all shadow-md active:scale-95 flex items-center gap-1.5"
-                  title="Pay with PayPal"
-                >
-                  <svg viewBox="0 0 16 16" className="w-3 h-3 fill-current shrink-0">
-                    <path d="M14.06 3.713c.12-1.071-.093-1.832-.702-2.526C12.628.356 11.312 0 9.626 0H4.734a.7.7 0 0 0-.691.59L2.005 13.509a.42.42 0 0 0 .415.486h2.756l-.202 1.28a.628.628 0 0 0 .62.726H8.14c.429 0 .793-.31.862-.731l.025-.13.48-3.043.03-.164.001-.007a.35.35 0 0 1 .348-.297h.38c1.266 0 2.425-.256 3.345-.91q.57-.403.993-1.005a4.94 4.94 0 0 0 .88-2.195c.242-1.246.13-2.356-.57-3.154a2.7 2.7 0 0 0-.76-.59l-.094-.061ZM6.543 8.82a.7.7 0 0 1 .321-.079H8.3c2.82 0 5.027-1.144 5.672-4.456l.003-.016q.326.186.548.438c.546.623.679 1.535.45 2.71-.272 1.397-.866 2.307-1.663 2.874-.802.57-1.842.815-3.043.815h-.38a.87.87 0 0 0-.863.734l-.03.164-.48 3.043-.024.13-.001.004a.35.35 0 0 1-.348.296H5.595a.106.106 0 0 1-.105-.123l.208-1.32z" />
-                  </svg>
-                  PayPal
+                  <ShoppingCart size={13} />
+                  Add to Cart
                 </button>
               </div>
             </div>
-            <button 
-              onClick={handleOrder}
-              className="w-full py-2.5 bg-farm-brown/5 text-[9px] font-bold uppercase tracking-[0.2em] text-farm-brown hover:bg-farm-brown hover:text-white transition-all rounded-lg flex items-center justify-center gap-2 border border-farm-brown/10"
-            >
-              Order Details & Options <ChevronRight size={12} />
-            </button>
           </div>
         </div>
         

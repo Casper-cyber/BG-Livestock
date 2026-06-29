@@ -102,7 +102,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Create direct readable list of items for text fallback
     const itemizedListPlain = cartItems
-      .map((item) => `- ${item.name} (${item.category.toUpperCase()}): ${item.quantity} x $${item.price.toFixed(2)} per ${item.unit} = $${(item.price * item.quantity).toFixed(2)}`)
+      .map((item) => {
+        let line = `- ${item.name} (${item.category.toUpperCase()}): ${item.quantity} x $${item.price.toFixed(2)} per ${item.unit} = $${(item.price * item.quantity).toFixed(2)}`;
+        if (item.category === 'dairy') {
+          line += `\n  ⚠️ NOTICE: Non-herd share dairy products are marked as Pet Use Only. Customer must bring a clean glass jar to swap or pay a $5 jar fee. Herd share is available.`;
+        }
+        return line;
+      })
       .join('\n');
     
     const emailBody = `

@@ -89,7 +89,13 @@ export default function CartSidebar() {
     try {
       // 1. Create clean formatted itemized manifest exactly as instructed
       const itemizedManifest = cartItems
-        .map(item => `- ${item.name} (${item.category || 'N/A'}): ${item.quantity} x $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}`)
+        .map(item => {
+          let line = `- ${item.name} (${item.category || 'N/A'}): ${item.quantity} x $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}`;
+          if (item.category === 'dairy') {
+            line += `\n  ⚠️ NOTICE: Non-herd share dairy products are marked as Pet Use Only. Customer must bring a clean glass jar to swap or pay a $5 jar fee. Herd share is available.`;
+          }
+          return line;
+        })
         .join('\n');
       
       const orderDetailsText = `==============================================
@@ -265,7 +271,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
                     <button
                       disabled={isSending}
                       onClick={handlePaymentSuccess}
-                      className="w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-lg hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 bg-[#2b7a2d] hover:bg-[#1e5a20] animate-pulse ring-4 ring-[#4caf50] ring-opacity-65"
+                      className="w-full text-white py-4 rounded-full font-bold uppercase tracking-widest text-[9px] shadow-lg hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 urgent-pulse"
                     >
                       {isSending ? (
                         <Loader2 size={14} className="animate-spin" />
