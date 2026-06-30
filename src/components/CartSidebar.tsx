@@ -116,28 +116,14 @@ FINANCIAL SUMMARY
 Total Estimated Cost: $${cartTotal.toFixed(2)}
 ==============================================`;
 
-      // Step A: Send payload to FormSubmit via AJAX targeting our farm email address on successful payment translation callback
-      const response = await fetch("https://formsubmit.co/ajax/info@beechgrovelivestock.com", {
-        method: "POST",
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          _subject: "✅ Paid Order Confirmed - Beech Grove Livestock",
-          _replyto: customerEmail, // Directs your email 'Reply' button straight to the customer
-          _cc: customerEmail, // ⭐ THIS ENABLES THE AUTOMATIC CUSTOMER COPY
-          Customer_Email: customerEmail, // Displays safely as text in the data table
-          Order_Status: "Payment Completed Successfully via " + (selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo'),
-          Logistics_Mode: logistics === 'pickup' ? 'Farm Pickup' : 'Delivery',
-          Order_Details: "STATUS: Paid & Confirmed\n\n" + orderDetailsText,
-          _template: "table"
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Submission rejected by FormSubmit server (${response.status})`);
-      }
+      // @ts-ignore - emailjs loaded globally via script tag in index.html
+      await window.emailjs.send("service_xoaxr7j", "template_x7yv1cx", {
+        name: customerEmail.split('@')[0],
+        customer_email: customerEmail,
+        order_items: itemizedManifest,
+        total: `$${cartTotal.toFixed(2)}`,
+        payment_method: selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo',
+      }, "IuKZCQTlU5y5Kgkis");
 
       // Also trigger the local fallback logic so everything remains registered appropriately
       try {
