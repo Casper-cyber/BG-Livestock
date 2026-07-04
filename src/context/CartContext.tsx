@@ -1,14 +1,109 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import a2a2MilkWithCream from '../assets/images/a2a2_milk_with_cream_v2_1779111209106.png';
+import a2a2MilkNoCream from '../assets/images/a2a2_milk_no_cream_v2_1779111227828.png';
+import tradMilkWithCream from '../assets/images/trad_milk_with_cream_v2_1779111244806.png';
+import tradMilkNoCream from '../assets/images/trad_milk_no_cream_v2_1779111261103.png';
+import heavyCream from '../assets/images/heavy_cream_v2_1779111277669.png';
+import farmButter from '../assets/images/farm_butter_v2_1779111294625.png';
+import pastureEggs from '../assets/images/pasture_eggs_v2_final_1779111337671.png';
+import heavyCreamJarSpoon from '../assets/images/heavy_cream_jar_spoon_1779108364576.png';
+
+import spinach1 from "../assets/images/spinach_1.png";
+import spinach2 from "../assets/images/spinach_2.png";
+import lettuceImg from "../assets/images/lettuce.png";
+import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
+import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
+import cabbageImg from "../assets/images/cabbagehead.jpeg";
+import broccoliImg from "../assets/images/broccolihead.jpeg";
+import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
+import greenBeansImg from "../assets/images/grean_beans_1782767582906.jpg";
+
+import { PRODUCTS } from '../constants';
 
 export interface CartItem {
   id: string;
   name: string;
-  price: number; // numeric price
+  category: 'dairy' | 'eggs' | 'vegetables';
+  price: number;
   unit: string;
   quantity: number;
   image?: string;
-  category: 'dairy' | 'eggs' | 'vegetables';
+  imageUrl?: string;
 }
+
+// Map spreadsheet items or categories to their corresponding high-quality static images
+export function getProductImage(item: { id: string, category: string, image_url?: string }) {
+  if (item.image_url) return item.image_url;
+  
+  const id = item.id.toLowerCase().trim();
+  
+  // Specific static image mapping
+  if (id === 'a2_milk_cream' || id === 'a2-milk-cream') return a2a2MilkWithCream;
+  if (id === 'a2_milk_no_cream' || id === 'a2-milk-no-cream') return a2a2MilkNoCream;
+  if (id === 'milk_cream' || id === 'traditional-milk-cream') return tradMilkWithCream;
+  if (id === 'milk_no_cream' || id === 'traditional-milk-no-cream') return tradMilkNoCream;
+  if (id === 'heavy_cream' || id === 'heavy-cream') return heavyCream;
+  if (id === 'butter') return farmButter;
+  if (id === 'sour_cream') return heavyCreamJarSpoon;
+  if (id === 'eggs' || id === 'free-range-eggs') return pastureEggs;
+  
+  // Vegetables static mapping
+  if (id === 'spinach' || id.includes('spinach')) return spinach1;
+  if (id === 'lettuce') return lettuceImg;
+  if (id === 'bok_choy_large' || id === 'bok_choy') return bokChoyImg;
+  if (id === 'cabbage' || id === 'cabbage-head' || id === 'cabbage_head' || id === 'napa_cabbage' || id === 'napa-cabbage') {
+    if (id.includes('napa')) return napaCabbageImg;
+    return cabbageImg;
+  }
+  if (id === 'broccoli' || id === 'broccoli-head' || id === 'broccoli_head') return broccoliImg;
+  if (id === 'cucumbers' || id === 'cucumber') return cucumberImg;
+  if (id === 'green_beans' || id === 'green-beans') return greenBeansImg;
+  
+  // High quality default category fallbacks if not explicitly found
+  const cat = item.category.toLowerCase();
+  if (cat === 'dairy') {
+    return a2a2MilkWithCream; 
+  } else if (cat === 'poultry' || cat === 'eggs') {
+    return pastureEggs;
+  } else if (cat === 'vegetables' || cat === 'garden' || cat === 'vegetable') {
+    return lettuceImg; 
+  }
+  
+  return '';
+}
+
+const FALLBACK_PRODUCTS = [
+  ...PRODUCTS.map(p => ({
+    id: p.id,
+    name: p.name,
+    category: p.category === 'eggs' ? 'Poultry' : 'Dairy',
+    price: p.price,
+    numericPrice: p.numericPrice,
+    unit: p.unit,
+    notes: p.description,
+    image: p.image
+  })),
+  {
+    id: "yellow-squash",
+    name: "Yellow Straight Neck Squash",
+    category: "Vegetables",
+    price: "$0.50",
+    numericPrice: 0.5,
+    unit: "each",
+    notes: "Tender, thin-skinned yellow summer squash harvested fresh in the morning.",
+    image: lettuceImg
+  },
+  {
+    id: "cabbage-head",
+    name: "Cabbage",
+    category: "Vegetables",
+    price: "$2.00",
+    numericPrice: 2.0,
+    unit: "head",
+    notes: "Crisp and firm green cabbage, packed with fresh flavor and harvested daily.",
+    image: cabbageImg
+  }
+];
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -21,6 +116,7 @@ interface CartContextType {
   isCartOpen: boolean;
   setIsCartOpen: (isOpen: boolean) => void;
   sendOrderEmail: (logistics: 'pickup' | 'delivery', date: string, notes: string, paymentType: 'venmo' | 'paypal') => Promise<boolean>;
+  products: any[];
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,6 +124,96 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [products, setProducts] = useState<any[]>(FALLBACK_PRODUCTS);
+
+  // Fetch live products from Google Sheets CSV
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://docs.google.com/spreadsheets/d/1imOwmZVDdg5tIAPDtxsz9NqVAv3DTCmmhPMV0fevU1g/gviz/tq?tqx=out:csv");
+        if (!response.ok) {
+          throw new Error("Failed to fetch Google Sheet");
+        }
+        const csvText = await response.text();
+        const lines = csvText.split(/\r?\n/);
+        if (lines.length < 2) return;
+        
+        // Parse header row
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+        
+        const idIdx = headers.indexOf('id');
+        const nameIdx = headers.indexOf('name');
+        const catIdx = headers.indexOf('category');
+        const priceIdx = headers.indexOf('price');
+        const unitIdx = headers.indexOf('unit');
+        const notesIdx = headers.indexOf('notes');
+        const imgUrlIdx = headers.findIndex(h => h.includes('image_url') || h.includes('image'));
+
+        const parsedItems: any[] = [];
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          
+          const fields: string[] = [];
+          let currentField = '';
+          let inQuotes = false;
+          for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              fields.push(currentField.trim());
+              currentField = '';
+            } else {
+              currentField += char;
+            }
+          }
+          fields.push(currentField.trim());
+          
+          const cleanFields = fields.map(f => f.replace(/^"|"$/g, '').trim());
+          
+          if (cleanFields.length < Math.max(idIdx, nameIdx, catIdx, priceIdx, unitIdx) + 1) continue;
+          
+          let rawId = cleanFields[idIdx] || '';
+          let id = rawId;
+          
+          // Fix spelling handling to ensure the ID key `cabbage` matches properly regardless of historical spreadsheet typos
+          if (id.toLowerCase().replace(/_|-/g, '').includes('cabbage') || id.toLowerCase().replace(/_|-/g, '').includes('cabage')) {
+            id = 'cabbage-head';
+          }
+          
+          const name = cleanFields[nameIdx] || '';
+          const category = cleanFields[catIdx] || '';
+          const price = cleanFields[priceIdx] || '';
+          const unit = cleanFields[unitIdx] || '';
+          const notes = cleanFields[notesIdx] || '';
+          const imageUrl = imgUrlIdx !== -1 ? cleanFields[imgUrlIdx] : '';
+          
+          const numericPrice = parseFloat(price.replace(/[^0-9.]/g, '')) || 0.0;
+          
+          parsedItems.push({
+            id,
+            name,
+            category,
+            price,
+            numericPrice,
+            unit,
+            notes,
+            imageUrl,
+            image: getProductImage({ id, category, image_url: imageUrl })
+          });
+        }
+        
+        if (parsedItems.length > 0) {
+          setProducts(parsedItems);
+        }
+      } catch (err) {
+        console.error("Error fetching or parsing products CSV from Google Sheets", err);
+      }
+    };
+    
+    fetchProducts();
+  }, []);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -546,6 +732,7 @@ To allow real-time emails to go live to ${FARM_EMAIL}, please configure one of t
         isCartOpen,
         setIsCartOpen,
         sendOrderEmail,
+        products,
       }}
     >
       {children}

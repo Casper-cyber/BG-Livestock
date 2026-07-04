@@ -341,8 +341,22 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
 };
 
 const VegetablesOrderInquiry = () => {
-  const { addToCart } = useCart();
-  const availableItems = GARDEN_INVENTORY.filter(item => item.status === "available");
+  const { products, addToCart } = useCart();
+  const vegetableProducts = products.filter(p => p.category === 'Vegetables' || p.category.toLowerCase() === 'vegetables');
+  const availableItems = vegetableProducts.length > 0
+    ? vegetableProducts.map(p => ({
+        id: p.id,
+        name: p.name,
+        status: "available" as const,
+        price: p.price || "$0.00",
+        unit: p.unit || "unit",
+        description: p.notes || "Freshly harvested from our kitchen garden.",
+        image: p.image,
+        imageUrl: p.imageUrl,
+        isOrganic: true
+      }))
+    : GARDEN_INVENTORY.filter(item => item.status === "available");
+
   const [selectedItemId, setSelectedItemId] = useState(availableItems[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
   const [logistics, setLogistics] = useState<'pickup' | 'delivery'>('pickup');
@@ -551,6 +565,22 @@ const VegetablesOrderInquiry = () => {
 };
 
 export default function VegetablesPage() {
+  const { products } = useCart();
+  const vegetableProducts = products.filter(p => p.category === 'Vegetables' || p.category.toLowerCase() === 'vegetables');
+  const items = vegetableProducts.length > 0
+    ? vegetableProducts.map(p => ({
+        id: p.id,
+        name: p.name,
+        status: "available" as const,
+        price: p.price || "$0.00",
+        unit: p.unit || "unit",
+        description: p.notes || "Freshly harvested from our kitchen garden.",
+        image: p.image,
+        imageUrl: p.imageUrl,
+        isOrganic: true
+      }))
+    : GARDEN_INVENTORY;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -586,7 +616,7 @@ export default function VegetablesPage() {
 
         {/* Grid of Crops */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {GARDEN_INVENTORY.map((item, index) => (
+          {items.map((item, index) => (
             <VegetableCard key={item.id} item={item} index={index} />
           ))}
         </div>
