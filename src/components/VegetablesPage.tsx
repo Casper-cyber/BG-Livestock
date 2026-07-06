@@ -15,7 +15,7 @@ import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
 import babyCarrotsImg from "../assets/images/regenerated_image_1783371013143.png";
 import squashImg from "../assets/images/squash.jpg";
 import zucchiniImg from "../assets/images/zucchini.jpg";
-import greenBeansImg from "../assets/images/greenbeans.jpg";
+import greenBeansImg from "../assets/images/green-beans.jpg";
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
   spinach_2: spinach2,
