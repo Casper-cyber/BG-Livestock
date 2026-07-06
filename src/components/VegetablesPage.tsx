@@ -13,9 +13,9 @@ import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
 import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
 import babyCarrotsImg from "../assets/images/regenerated_image_1783371013143.png";
-const squashImg = "https://upload.wikimedia.org/wikipedia/commons/9/9c/Yellow_squash_DSC01080.jpg";
-const zucchiniImg = "https://upload.wikimedia.org/wikipedia/commons/4/43/Zucchini_-_rpe.jpg";
-const greenBeansImg = "https://upload.wikimedia.org/wikipedia/commons/0/0c/GreenBeans.jpg";
+const squashImg = "https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop";
+const zucchiniImg = "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop";
+const greenBeansImg = "https://images.unsplash.com/photo-1592394533824-9440e5d68530?q=80&w=600&auto=format&fit=crop";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
