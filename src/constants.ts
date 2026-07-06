@@ -1,10 +1,10 @@
-import a2a2MilkWithCream from './assets/images/a2a2_milk_with_cream_v2_1779111209106.png';
-import a2a2MilkNoCream from './assets/images/a2a2_milk_no_cream_v2_1779111227828.png';
+import a2a2MilkWithCream from './assets/images/regenerated_image_1783370381138.png';
+import a2a2MilkNoCream from './assets/images/regenerated_image_1783370382399.png';
 import tradMilkWithCream from './assets/images/trad_milk_with_cream_v2_1779111244806.png';
 import tradMilkNoCream from './assets/images/trad_milk_no_cream_v2_1779111261103.png';
 import heavyCream from './assets/images/heavy_cream_v2_1779111277669.png';
-import farmButter from './assets/images/farm_butter_v2_1779111294625.png';
-import pastureEggs from './assets/images/pasture_eggs_v2_final_1779111337671.png';
+import farmButter from './assets/images/regenerated_image_1783370665295.png';
+import pastureEggs from './assets/images/regenerated_image_1783369211113.jpg';
 import heavyCreamJarSpoon from './assets/images/heavy_cream_jar_spoon_1779108364576.png';
 
 export interface Product {

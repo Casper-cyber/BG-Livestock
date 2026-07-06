@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import a2a2MilkWithCream from '../assets/images/a2a2_milk_with_cream_v2_1779111209106.png';
-import a2a2MilkNoCream from '../assets/images/a2a2_milk_no_cream_v2_1779111227828.png';
+import a2a2MilkWithCream from '../assets/images/regenerated_image_1783370381138.png';
+import a2a2MilkNoCream from '../assets/images/regenerated_image_1783370382399.png';
 import tradMilkWithCream from '../assets/images/trad_milk_with_cream_v2_1779111244806.png';
 import tradMilkNoCream from '../assets/images/trad_milk_no_cream_v2_1779111261103.png';
 import heavyCream from '../assets/images/heavy_cream_v2_1779111277669.png';
-import farmButter from '../assets/images/farm_butter_v2_1779111294625.png';
-import pastureEggs from '../assets/images/pasture_eggs_v2_final_1779111337671.png';
+import farmButter from '../assets/images/regenerated_image_1783370665295.png';
+import pastureEggs from '../assets/images/regenerated_image_1783369211113.jpg';
 import heavyCreamJarSpoon from '../assets/images/heavy_cream_jar_spoon_1779108364576.png';
 
 import spinach1 from "../assets/images/spinach_1.png";
@@ -16,7 +16,8 @@ import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
 import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
-import greenBeansImg from "../assets/images/grean_beans_1782767582906.jpg";
+import babyCarrotsImg from "../assets/images/regenerated_image_1783371013143.png";
+const greenBeansImg = "https://images.unsplash.com/photo-1592394533824-9440e5d68530?q=80&w=600&auto=format&fit=crop";
 
 import { PRODUCTS } from '../constants';
 
@@ -40,7 +41,7 @@ export function getProductImage(item: { id: string, category: string, image_url?
     return 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
   }
   if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
-    return 'https://images.unsplash.com/photo-1447175008436-054170c2e979?q=80&w=600&auto=format&fit=crop';
+    return babyCarrotsImg;
   }
   if (id === 'zucchini') {
     return 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
