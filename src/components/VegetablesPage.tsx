@@ -13,8 +13,9 @@ import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
 import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
 import babyCarrotsImg from "../assets/images/regenerated_image_1783371013143.png";
-
-const greenBeansImg = "https://images.unsplash.com/photo-1592394533824-9440e5d68530?q=80&w=600&auto=format&fit=crop";
+const squashImg = "https://upload.wikimedia.org/wikipedia/commons/9/9c/Yellow_squash_DSC01080.jpg";
+const zucchiniImg = "https://upload.wikimedia.org/wikipedia/commons/4/43/Zucchini_-_rpe.jpg";
+const greenBeansImg = "https://upload.wikimedia.org/wikipedia/commons/0/0c/GreenBeans.jpg";
 
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
@@ -27,6 +28,8 @@ const STATIC_IMAGES: Record<string, string> = {
   cucumber: cucumberImg,
   baby_carrots: babyCarrotsImg,
   green_beans: greenBeansImg,
+  squash: squashImg,
+  zucchini: zucchiniImg,
 };
 
 export interface GardenItem {
@@ -138,6 +141,20 @@ export const GARDEN_INVENTORY: GardenItem[] = [
     isOrganic: false,
   }
 ];
+
+// Override specific image references to use the statically imported assets
+const squashItem = GARDEN_INVENTORY.find(item => item.id === "yellow-squash");
+if (squashItem) {
+  squashItem.image = squashImg;
+}
+const zucchiniItem = GARDEN_INVENTORY.find(item => item.id === "zucchini");
+if (zucchiniItem) {
+  zucchiniItem.image = zucchiniImg;
+}
+const greenBeansItem = GARDEN_INVENTORY.find(item => item.id === "green-beans");
+if (greenBeansItem) {
+  greenBeansItem.image = greenBeansImg;
+}
 
 const CropImageContainer = ({ item }: { item: GardenItem }) => {
   const [imageError, setImageError] = useState(false);
@@ -395,11 +412,13 @@ const VegetablesOrderInquiry = () => {
           const id = p.id.toLowerCase().trim();
           let image = p.image || p.imageUrl;
           if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-            image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
+            image = squashImg;
           } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
             image = babyCarrotsImg;
           } else if (id === 'zucchini') {
-            image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
+            image = zucchiniImg;
+          } else if (id === 'green-beans' || id === 'green_beans') {
+            image = greenBeansImg;
           }
           return {
             id: p.id,
@@ -417,11 +436,13 @@ const VegetablesOrderInquiry = () => {
         const id = item.id.toLowerCase().trim();
         let image = item.image;
         if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-          image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
+          image = squashImg;
         } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
           image = babyCarrotsImg;
         } else if (id === 'zucchini') {
-          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
+          image = zucchiniImg;
+        } else if (id === 'green-beans' || id === 'green_beans') {
+          image = greenBeansImg;
         }
         return {
           ...item,

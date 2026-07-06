@@ -4,7 +4,7 @@ import tradMilkWithCream from './assets/images/trad_milk_with_cream_v2_177911124
 import tradMilkNoCream from './assets/images/trad_milk_no_cream_v2_1779111261103.png';
 import heavyCream from './assets/images/heavy_cream_v2_1779111277669.png';
 import farmButter from './assets/images/regenerated_image_1783370665295.png';
-import pastureEggs from './assets/images/regenerated_image_1783369211113.jpg';
+import pastureEggs from './assets/images/regenerated_image_1783371547140.png';
 import heavyCreamJarSpoon from './assets/images/heavy_cream_jar_spoon_1779108364576.png';
 
 export interface Product {
