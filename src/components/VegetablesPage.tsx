@@ -160,13 +160,13 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
           referrerPolicy="no-referrer"
         />
         {item.isSoldOut && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[1px] z-10 pointer-events-none">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/15 backdrop-blur-[1px] z-10 pointer-events-none">
             <div className="bg-amber-400 border border-amber-500 shadow-md transform -rotate-3 px-5 py-2.5 rounded-sm flex flex-col items-center justify-center max-w-[80%]">
               <span className="font-serif font-extrabold text-sm md:text-base tracking-wider text-[#4A2E1F] leading-none select-none">
-                SOLD OUT
+                SOLD OUT!
               </span>
               <span className="font-sans font-bold text-[8px] uppercase tracking-widest text-[#4A2E1F]/60 mt-1 select-none">
-                Out of Stock
+                Out of Season
               </span>
             </div>
           </div>
@@ -201,13 +201,13 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
       )}
 
       {item.isSoldOut && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[1px] z-10 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/15 backdrop-blur-[1px] z-10 pointer-events-none">
           <div className="bg-amber-400 border border-amber-500 shadow-md transform -rotate-3 px-5 py-2.5 rounded-sm flex flex-col items-center justify-center max-w-[80%]">
             <span className="font-serif font-extrabold text-sm md:text-base tracking-wider text-[#4A2E1F] leading-none select-none">
-              SOLD OUT
+              SOLD OUT!
             </span>
             <span className="font-sans font-bold text-[8px] uppercase tracking-widest text-[#4A2E1F]/60 mt-1 select-none">
-              Out of Stock
+              Out of Season
             </span>
           </div>
         </div>
@@ -392,11 +392,11 @@ const VegetablesOrderInquiry = () => {
           const id = p.id.toLowerCase().trim();
           let image = p.image || p.imageUrl;
           if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-            image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+            image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
           } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
-            image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+            image = 'https://images.unsplash.com/photo-1447175008436-054170c2e979?q=80&w=600&auto=format&fit=crop';
           } else if (id === 'zucchini') {
-            image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+            image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
           }
           return {
             id: p.id,
@@ -414,11 +414,11 @@ const VegetablesOrderInquiry = () => {
         const id = item.id.toLowerCase().trim();
         let image = item.image;
         if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-          image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
         } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
-          image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1447175008436-054170c2e979?q=80&w=600&auto=format&fit=crop';
         } else if (id === 'zucchini') {
-          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
         }
         return {
           ...item,
@@ -641,11 +641,11 @@ export default function VegetablesPage() {
         const id = p.id.toLowerCase().trim();
         let image = p.image || p.imageUrl;
         if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-          image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
         } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
-          image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1447175008436-054170c2e979?q=80&w=600&auto=format&fit=crop';
         } else if (id === 'zucchini') {
-          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
         }
         return {
           id: p.id,
@@ -664,11 +664,11 @@ export default function VegetablesPage() {
         const id = item.id.toLowerCase().trim();
         let image = item.image;
         if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-          image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
         } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
-          image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1447175008436-054170c2e979?q=80&w=600&auto=format&fit=crop';
         } else if (id === 'zucchini') {
-          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
         }
         return {
           ...item,

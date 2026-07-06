@@ -37,13 +37,13 @@ export function getProductImage(item: { id: string, category: string, image_url?
 
   // Hardcoded high-quality image overrides for core vegetables
   if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-    return 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+    return 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
   }
   if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
-    return 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+    return 'https://images.unsplash.com/photo-1447175008436-054170c2e979?q=80&w=600&auto=format&fit=crop';
   }
   if (id === 'zucchini') {
-    return 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+    return 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
   }
 
   if (item.image_url) return item.image_url;

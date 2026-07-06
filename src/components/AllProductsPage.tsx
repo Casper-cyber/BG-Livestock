@@ -8,6 +8,19 @@ const ProductImage = ({ item }: { item: any }) => {
   const [imageError, setImageError] = useState(false);
   const src = item.image || item.imageUrl;
 
+  const overlay = item.isSoldOut ? (
+    <div className="absolute inset-0 flex items-center justify-center bg-black/15 backdrop-blur-[1px] z-10 pointer-events-none">
+      <div className="bg-amber-400 border border-amber-500 shadow-md transform -rotate-3 px-5 py-2.5 rounded-sm flex flex-col items-center justify-center max-w-[80%]">
+        <span className="font-serif font-extrabold text-sm md:text-base tracking-wider text-[#4A2E1F] leading-none select-none">
+          SOLD OUT!
+        </span>
+        <span className="font-sans font-bold text-[8px] uppercase tracking-widest text-[#4A2E1F]/60 mt-1 select-none">
+          Out of Season
+        </span>
+      </div>
+    </div>
+  ) : null;
+
   if (src && !imageError) {
     return (
       <div className="relative aspect-[16/10] bg-farm-cream/30 rounded-lg overflow-hidden border border-farm-brown/10 mb-4 group">
@@ -18,6 +31,7 @@ const ProductImage = ({ item }: { item: any }) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           referrerPolicy="no-referrer"
         />
+        {overlay}
       </div>
     );
   }
@@ -40,6 +54,7 @@ const ProductImage = ({ item }: { item: any }) => {
       <span className="text-[8px] uppercase tracking-widest text-farm-brown/40 mt-1 bg-farm-cream px-2 py-0.5 rounded-full">
         Photograph Placeholder
       </span>
+      {overlay}
     </div>
   );
 };
