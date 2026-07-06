@@ -16,7 +16,6 @@ import babyCarrotsImg from "../assets/images/regenerated_image_1783371013143.png
 const squashImg = "https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop";
 const zucchiniImg = "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop";
 const greenBeansImg = "https://images.unsplash.com/photo-1592394533824-9440e5d68530?q=80&w=600&auto=format&fit=crop";
-
 const STATIC_IMAGES: Record<string, string> = {
   spinach_1: spinach1,
   spinach_2: spinach2,
