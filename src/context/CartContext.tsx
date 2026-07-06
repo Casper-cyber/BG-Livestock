@@ -33,9 +33,20 @@ export interface CartItem {
 
 // Map spreadsheet items or categories to their corresponding high-quality static images
 export function getProductImage(item: { id: string, category: string, image_url?: string }) {
-  if (item.image_url) return item.image_url;
-  
   const id = item.id.toLowerCase().trim();
+
+  // Hardcoded high-quality image overrides for core vegetables
+  if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
+    return 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+  }
+  if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
+    return 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+  }
+  if (id === 'zucchini') {
+    return 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+  }
+
+  if (item.image_url) return item.image_url;
   
   // Specific static image mapping
   if (id === 'a2_milk_cream' || id === 'a2-milk-cream') return a2a2MilkWithCream;
@@ -81,7 +92,8 @@ const FALLBACK_PRODUCTS = [
     numericPrice: p.numericPrice,
     unit: p.unit,
     notes: p.description,
-    image: p.image
+    image: p.image,
+    isSoldOut: !p.price || p.price.trim() === '' || p.price.trim() === '0' || p.numericPrice === 0
   })),
   {
     id: "yellow-squash",
@@ -91,7 +103,8 @@ const FALLBACK_PRODUCTS = [
     numericPrice: 0.5,
     unit: "each",
     notes: "Tender, thin-skinned yellow summer squash harvested fresh in the morning.",
-    image: lettuceImg
+    image: lettuceImg,
+    isSoldOut: false
   },
   {
     id: "cabbage-head",
@@ -101,7 +114,8 @@ const FALLBACK_PRODUCTS = [
     numericPrice: 2.0,
     unit: "head",
     notes: "Crisp and firm green cabbage, packed with fresh flavor and harvested daily.",
-    image: cabbageImg
+    image: cabbageImg,
+    isSoldOut: false
   }
 ];
 
@@ -189,7 +203,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const notes = cleanFields[notesIdx] || '';
           const imageUrl = imgUrlIdx !== -1 ? cleanFields[imgUrlIdx] : '';
           
-          const numericPrice = parseFloat(price.replace(/[^0-9.]/g, '')) || 0.0;
+          const cleanPrice = price.trim();
+          const numericPriceVal = parseFloat(cleanPrice.replace(/[^0-9.]/g, ''));
+          
+          const isSoldOut = !cleanPrice || 
+                            cleanPrice === '' || 
+                            cleanPrice === '0' || 
+                            cleanPrice.toLowerCase().includes('sold out') || 
+                            cleanPrice.toLowerCase().includes('out of stock') || 
+                            isNaN(numericPriceVal) || 
+                            numericPriceVal === 0;
+          
+          const numericPrice = isSoldOut ? 0.0 : (numericPriceVal || 0.0);
           
           parsedItems.push({
             id,
@@ -197,6 +222,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             category,
             price,
             numericPrice,
+            isSoldOut,
             unit,
             notes,
             imageUrl,
@@ -233,6 +259,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [cartItems]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>, quantity = 1) => {
+    const foundProd = products.find(p => p.id === item.id);
+    if (foundProd && foundProd.isSoldOut) {
+      console.warn(`Item ${item.name} is sold out and cannot be added to cart.`);
+      return;
+    }
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.id === item.id);
       if (existingItem) {
@@ -254,6 +285,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (quantity <= 0) {
       removeFromCart(id);
       return;
+    }
+    const foundProd = products.find(p => p.id === id);
+    if (foundProd && foundProd.isSoldOut) {
+      const existing = cartItems.find(i => i.id === id);
+      if (existing && quantity > existing.quantity) {
+        console.warn(`Cannot increase quantity of sold out item: ${id}`);
+        return;
+      }
     }
     setCartItems((prevItems) =>
       prevItems.map((i) => (i.id === id ? { ...i, quantity } : i))

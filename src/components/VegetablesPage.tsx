@@ -38,6 +38,7 @@ export interface GardenItem {
   isOrganic?: boolean;
   imageUrl?: string;
   image?: string;
+  isSoldOut?: boolean;
 }
 
 // Easily editable garden inventory list containing the requested live Spinach and Lettuce structures
@@ -158,6 +159,18 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           referrerPolicy="no-referrer"
         />
+        {item.isSoldOut && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[1px] z-10 pointer-events-none">
+            <div className="bg-amber-400 border border-amber-500 shadow-md transform -rotate-3 px-5 py-2.5 rounded-sm flex flex-col items-center justify-center max-w-[80%]">
+              <span className="font-serif font-extrabold text-sm md:text-base tracking-wider text-[#4A2E1F] leading-none select-none">
+                SOLD OUT
+              </span>
+              <span className="font-sans font-bold text-[8px] uppercase tracking-widest text-[#4A2E1F]/60 mt-1 select-none">
+                Out of Stock
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -184,6 +197,19 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
           <p className="text-[8px] text-farm-green/70 font-sans mt-2 max-w-[85%] leading-normal">
             To display: Upload <code className="bg-white/95 px-1.5 py-0.5 rounded text-farm-brown font-mono font-bold">{urlSafeName}.png</code> into <code className="bg-white/95 px-1.5 py-0.5 rounded text-farm-brown font-mono font-bold">/src/assets/images/</code>
           </p>
+        </div>
+      )}
+
+      {item.isSoldOut && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[1px] z-10 pointer-events-none">
+          <div className="bg-amber-400 border border-amber-500 shadow-md transform -rotate-3 px-5 py-2.5 rounded-sm flex flex-col items-center justify-center max-w-[80%]">
+            <span className="font-serif font-extrabold text-sm md:text-base tracking-wider text-[#4A2E1F] leading-none select-none">
+              SOLD OUT
+            </span>
+            <span className="font-sans font-bold text-[8px] uppercase tracking-widest text-[#4A2E1F]/60 mt-1 select-none">
+              Out of Stock
+            </span>
+          </div>
         </div>
       )}
 
@@ -214,7 +240,8 @@ const CropImageContainer = ({ item }: { item: GardenItem }) => {
 const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index: number }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const isAvail = item.status === "available";
+  const isItemSoldOut = item.isSoldOut === true;
+  const isAvail = item.status === "available" && !isItemSoldOut;
   const isOrganic = item.isOrganic !== false;
 
   const priceVal = item.price ? parseFloat(item.price.replace('$', '')) : 0;
@@ -231,9 +258,15 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
       <div>
         {/* Status Badge */}
         <div className="flex justify-between items-start mb-4">
-          <span className={`text-[8px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${isAvail ? 'bg-farm-green text-white shadow-sm' : 'bg-farm-brown/10 text-farm-brown/60'}`}>
-            {isAvail ? "In Season Now" : "Planted"}
-          </span>
+          {isItemSoldOut ? (
+            <span className="text-[8px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-red-50 text-red-600 border border-red-200/50 shadow-sm">
+              SOLD OUT
+            </span>
+          ) : (
+            <span className={`text-[8px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${isAvail ? 'bg-farm-green text-white shadow-sm' : 'bg-farm-brown/10 text-farm-brown/60'}`}>
+              {isAvail ? "In Season Now" : "Planted"}
+            </span>
+          )}
         </div>
 
         {/* Crop Image Slot with Placeholder State */}
@@ -262,7 +295,16 @@ const VegetableCard = ({ item, index }: { key?: string; item: GardenItem; index:
 
       <div>
         {/* Payment Integration Area */}
-        {isAvail ? (
+        {isItemSoldOut ? (
+          <div className="mt-4 p-4 bg-red-50/50 rounded-xl border border-red-200/50 text-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-600 block">
+              SOLD OUT
+            </span>
+            <span className="text-[10px] font-serif italic text-red-500 block mt-1">
+              Out of Season
+            </span>
+          </div>
+        ) : isAvail ? (
           <div className="mt-4 p-4 bg-farm-cream/20 rounded-xl border border-farm-brown/10 space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
@@ -344,18 +386,45 @@ const VegetablesOrderInquiry = () => {
   const { products, addToCart } = useCart();
   const vegetableProducts = products.filter(p => p.category === 'Vegetables' || p.category.toLowerCase() === 'vegetables');
   const availableItems = vegetableProducts.length > 0
-    ? vegetableProducts.map(p => ({
-        id: p.id,
-        name: p.name,
-        status: "available" as const,
-        price: p.price || "$0.00",
-        unit: p.unit || "unit",
-        description: p.notes || "Freshly harvested from our kitchen garden.",
-        image: p.image,
-        imageUrl: p.imageUrl,
-        isOrganic: true
-      }))
-    : GARDEN_INVENTORY.filter(item => item.status === "available");
+    ? vegetableProducts
+        .filter(p => !p.isSoldOut)
+        .map(p => {
+          const id = p.id.toLowerCase().trim();
+          let image = p.image || p.imageUrl;
+          if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
+            image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+          } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
+            image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+          } else if (id === 'zucchini') {
+            image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+          }
+          return {
+            id: p.id,
+            name: p.name,
+            status: "available" as const,
+            price: p.price || "$0.00",
+            unit: p.unit || "unit",
+            description: p.notes || "Freshly harvested from our kitchen garden.",
+            image,
+            imageUrl: p.imageUrl,
+            isOrganic: true
+          };
+        })
+    : GARDEN_INVENTORY.filter(item => item.status === "available" && !item.isSoldOut).map(item => {
+        const id = item.id.toLowerCase().trim();
+        let image = item.image;
+        if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
+          image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+        } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
+          image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+        } else if (id === 'zucchini') {
+          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+        }
+        return {
+          ...item,
+          image
+        };
+      });
 
   const [selectedItemId, setSelectedItemId] = useState(availableItems[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
@@ -568,18 +637,45 @@ export default function VegetablesPage() {
   const { products } = useCart();
   const vegetableProducts = products.filter(p => p.category === 'Vegetables' || p.category.toLowerCase() === 'vegetables');
   const items = vegetableProducts.length > 0
-    ? vegetableProducts.map(p => ({
-        id: p.id,
-        name: p.name,
-        status: "available" as const,
-        price: p.price || "$0.00",
-        unit: p.unit || "unit",
-        description: p.notes || "Freshly harvested from our kitchen garden.",
-        image: p.image,
-        imageUrl: p.imageUrl,
-        isOrganic: true
-      }))
-    : GARDEN_INVENTORY;
+    ? vegetableProducts.map(p => {
+        const id = p.id.toLowerCase().trim();
+        let image = p.image || p.imageUrl;
+        if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
+          image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+        } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
+          image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+        } else if (id === 'zucchini') {
+          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+        }
+        return {
+          id: p.id,
+          name: p.name,
+          status: "available" as const,
+          price: p.price || "$0.00",
+          unit: p.unit || "unit",
+          description: p.notes || "Freshly harvested from our kitchen garden.",
+          image,
+          imageUrl: p.imageUrl,
+          isOrganic: true,
+          isSoldOut: p.isSoldOut === true
+        };
+      })
+    : GARDEN_INVENTORY.map(item => {
+        const id = item.id.toLowerCase().trim();
+        let image = item.image;
+        if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
+          image = 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=600';
+        } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
+          image = 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&q=80&w=600';
+        } else if (id === 'zucchini') {
+          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=600';
+        }
+        return {
+          ...item,
+          image,
+          isSoldOut: item.isSoldOut === true
+        };
+      });
 
   return (
     <motion.div

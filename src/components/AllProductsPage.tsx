@@ -124,44 +124,62 @@ export default function AllProductsPage() {
                   </div>
 
                   <div className="mt-auto space-y-3 pt-4 border-t border-dotted border-farm-brown/10">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => decrementQuantity(p.id)}
-                          className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
-                        >
-                          <Minus size={10} />
-                        </button>
-                        <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{qty}</span>
-                        <button
-                          onClick={() => incrementQuantity(p.id)}
-                          className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
-                        >
-                          <Plus size={10} />
-                        </button>
+                    {p.isSoldOut ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-xs opacity-0 pointer-events-none select-none">
+                          <span className="font-bold text-[9px]">Quantity:</span>
+                          <span className="font-mono text-sm">1</span>
+                        </div>
+                        <div className="flex justify-between items-center pt-1 text-xs opacity-0 pointer-events-none select-none">
+                          <span className="font-bold text-[9px]">Subtotal:</span>
+                          <span className="text-sm font-serif font-bold">$0.00</span>
+                        </div>
+                        <div className="w-full bg-red-50 text-red-600 border border-red-200/60 py-2.5 rounded-lg font-bold uppercase tracking-wider text-[9px] text-center select-none font-sans">
+                          SOLD OUT
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => decrementQuantity(p.id)}
+                              className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
+                            >
+                              <Minus size={10} />
+                            </button>
+                            <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{qty}</span>
+                            <button
+                              onClick={() => incrementQuantity(p.id)}
+                              className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
+                            >
+                              <Plus size={10} />
+                            </button>
+                          </div>
+                        </div>
 
-                    <div className="flex justify-between items-center pt-1 text-xs">
-                      <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Subtotal:</span>
-                      <span className="text-sm font-serif font-bold text-farm-green">${unitTotal}</span>
-                    </div>
+                        <div className="flex justify-between items-center pt-1 text-xs">
+                          <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Subtotal:</span>
+                          <span className="text-sm font-serif font-bold text-farm-green">${unitTotal}</span>
+                        </div>
 
-                    <button
-                      onClick={() => addToCart({
-                        id: p.id,
-                        name: p.name,
-                        price: p.numericPrice,
-                        unit: p.unit,
-                        category: 'dairy',
-                        image: p.image
-                      }, qty)}
-                      className="w-full bg-farm-green hover:bg-farm-green/90 text-white py-2.5 px-4 rounded-lg font-bold uppercase tracking-wider text-[9px] shadow-sm hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <ShoppingCart size={11} />
-                      Add to Cart
-                    </button>
+                        <button
+                          onClick={() => addToCart({
+                            id: p.id,
+                            name: p.name,
+                            price: p.numericPrice,
+                            unit: p.unit,
+                            category: 'dairy',
+                            image: p.image
+                          }, qty)}
+                          className="w-full bg-farm-green hover:bg-farm-green/90 text-white py-2.5 px-4 rounded-lg font-bold uppercase tracking-wider text-[9px] shadow-sm hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                          <ShoppingCart size={11} />
+                          Add to Cart
+                        </button>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               );
@@ -214,44 +232,62 @@ export default function AllProductsPage() {
                   </div>
 
                   <div className="mt-auto space-y-3 pt-4 border-t border-dotted border-farm-brown/10">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => decrementQuantity(p.id)}
-                          className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
-                        >
-                          <Minus size={10} />
-                        </button>
-                        <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{qty}</span>
-                        <button
-                          onClick={() => incrementQuantity(p.id)}
-                          className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
-                        >
-                          <Plus size={10} />
-                        </button>
+                    {p.isSoldOut ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-xs opacity-0 pointer-events-none select-none">
+                          <span className="font-bold text-[9px]">Quantity:</span>
+                          <span className="font-mono text-sm">1</span>
+                        </div>
+                        <div className="flex justify-between items-center pt-1 text-xs opacity-0 pointer-events-none select-none">
+                          <span className="font-bold text-[9px]">Subtotal:</span>
+                          <span className="text-sm font-serif font-bold">$0.00</span>
+                        </div>
+                        <div className="w-full bg-red-50 text-red-600 border border-red-200/60 py-2.5 rounded-lg font-bold uppercase tracking-wider text-[9px] text-center select-none font-sans">
+                          SOLD OUT
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => decrementQuantity(p.id)}
+                              className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
+                            >
+                              <Minus size={10} />
+                            </button>
+                            <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{qty}</span>
+                            <button
+                              onClick={() => incrementQuantity(p.id)}
+                              className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
+                            >
+                              <Plus size={10} />
+                            </button>
+                          </div>
+                        </div>
 
-                    <div className="flex justify-between items-center pt-1 text-xs">
-                      <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Subtotal:</span>
-                      <span className="text-sm font-serif font-bold text-farm-green">${unitTotal}</span>
-                    </div>
+                        <div className="flex justify-between items-center pt-1 text-xs">
+                          <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Subtotal:</span>
+                          <span className="text-sm font-serif font-bold text-farm-green">${unitTotal}</span>
+                        </div>
 
-                    <button
-                      onClick={() => addToCart({
-                        id: p.id,
-                        name: p.name,
-                        price: p.numericPrice,
-                        unit: p.unit,
-                        category: 'eggs',
-                        image: p.image
-                      }, qty)}
-                      className="w-full bg-farm-green hover:bg-farm-green/90 text-white py-2.5 px-4 rounded-lg font-bold uppercase tracking-wider text-[9px] shadow-sm hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <ShoppingCart size={11} />
-                      Add to Cart
-                    </button>
+                        <button
+                          onClick={() => addToCart({
+                            id: p.id,
+                            name: p.name,
+                            price: p.numericPrice,
+                            unit: p.unit,
+                            category: 'eggs',
+                            image: p.image
+                          }, qty)}
+                          className="w-full bg-farm-green hover:bg-farm-green/90 text-white py-2.5 px-4 rounded-lg font-bold uppercase tracking-wider text-[9px] shadow-sm hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                          <ShoppingCart size={11} />
+                          Add to Cart
+                        </button>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               );
@@ -287,9 +323,15 @@ export default function AllProductsPage() {
                 >
                   <div>
                     <div className="flex justify-between items-start mb-3">
-                      <span className={`text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border bg-farm-green/10 text-farm-green border-farm-green/20`}>
-                        In Season Now
-                      </span>
+                      {v.isSoldOut ? (
+                        <span className="text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border bg-red-50 text-red-600 border-red-200/50">
+                          Sold Out
+                        </span>
+                      ) : (
+                        <span className={`text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border bg-farm-green/10 text-farm-green border-farm-green/20`}>
+                          In Season Now
+                        </span>
+                      )}
                       {isOrganic && (
                         <span className="text-[7px] font-bold uppercase tracking-widest bg-farm-cream text-farm-brown border border-farm-brown/15 px-2 py-0.5 rounded-full">
                           Organic
@@ -318,44 +360,62 @@ export default function AllProductsPage() {
                   </div>
 
                   <div className="mt-auto space-y-3 pt-4 border-t border-dotted border-farm-brown/10">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => decrementQuantity(v.id)}
-                          className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
-                        >
-                          <Minus size={10} />
-                        </button>
-                        <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{qty}</span>
-                        <button
-                          onClick={() => incrementQuantity(v.id)}
-                          className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
-                        >
-                          <Plus size={10} />
-                        </button>
+                    {v.isSoldOut ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-xs opacity-0 pointer-events-none select-none">
+                          <span className="font-bold text-[9px]">Quantity:</span>
+                          <span className="font-mono text-sm">1</span>
+                        </div>
+                        <div className="flex justify-between items-center pt-1 text-xs opacity-0 pointer-events-none select-none">
+                          <span className="font-bold text-[9px]">Subtotal:</span>
+                          <span className="text-sm font-serif font-bold">$0.00</span>
+                        </div>
+                        <div className="w-full bg-red-50 text-red-600 border border-red-200/60 py-2.5 rounded-lg font-bold uppercase tracking-wider text-[9px] text-center select-none font-sans">
+                          SOLD OUT
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-farm-brown/60 uppercase tracking-wider text-[9px]">Quantity:</span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => decrementQuantity(v.id)}
+                              className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
+                            >
+                              <Minus size={10} />
+                            </button>
+                            <span className="font-mono text-sm font-bold text-farm-brown w-5 text-center">{qty}</span>
+                            <button
+                              onClick={() => incrementQuantity(v.id)}
+                              className="w-6 h-6 rounded bg-white hover:bg-farm-cream flex items-center justify-center font-bold text-farm-brown text-xs border border-farm-brown/10 active:scale-95 transition-all cursor-pointer"
+                            >
+                              <Plus size={10} />
+                            </button>
+                          </div>
+                        </div>
 
-                    <div className="flex justify-between items-center pt-1 text-xs">
-                      <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Subtotal:</span>
-                      <span className="text-sm font-serif font-bold text-farm-green">${unitTotal}</span>
-                    </div>
+                        <div className="flex justify-between items-center pt-1 text-xs">
+                          <span className="font-bold text-farm-brown/40 uppercase tracking-wider text-[9px]">Subtotal:</span>
+                          <span className="text-sm font-serif font-bold text-farm-green">${unitTotal}</span>
+                        </div>
 
-                    <button
-                      onClick={() => addToCart({
-                        id: v.id,
-                        name: v.name,
-                        price: v.numericPrice,
-                        unit: v.unit || 'each',
-                        category: 'vegetables',
-                        image: v.image
-                      }, qty)}
-                      className="w-full bg-farm-green hover:bg-farm-green/90 text-white py-2.5 px-4 rounded-lg font-bold uppercase tracking-wider text-[9px] shadow-sm hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <ShoppingCart size={11} />
-                      Add to Cart
-                    </button>
+                        <button
+                          onClick={() => addToCart({
+                            id: v.id,
+                            name: v.name,
+                            price: v.numericPrice,
+                            unit: v.unit || 'each',
+                            category: 'vegetables',
+                            image: v.image
+                          }, qty)}
+                          className="w-full bg-farm-green hover:bg-farm-green/90 text-white py-2.5 px-4 rounded-lg font-bold uppercase tracking-wider text-[9px] shadow-sm hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                          <ShoppingCart size={11} />
+                          Add to Cart
+                        </button>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               );

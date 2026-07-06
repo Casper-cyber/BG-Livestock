@@ -26,7 +26,8 @@ export default function CartSidebar() {
     cartTotal,
     cartCount,
     sendOrderEmail,
-    clearCart
+    clearCart,
+    products
   } = useCart();
 
   const navigate = useNavigate();
@@ -316,57 +317,68 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-farm-brown/50 border-b border-farm-brown/10 pb-1">Products Checklist</h4>
                   <div className="divide-y divide-farm-brown/10">
-                    {cartItems.map((item) => (
-                      <div key={item.id} className="py-4 flex gap-4 first:pt-0">
-                        {item.image ? (
-                          <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 border border-farm-brown/10">
-                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                          </div>
-                        ) : (
-                          <div className="w-16 h-16 rounded-lg bg-farm-cream/40 border border-farm-brown/10 shrink-0 flex items-center justify-center text-farm-green">
-                            <ShoppingBag size={20} />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[8px] font-bold uppercase tracking-wider text-farm-green">{item.category}</span>
-                          <h5 className="font-serif text-sm font-bold text-farm-brown truncate">{item.name}</h5>
-                          <p className="text-[10px] text-farm-brown/50 italic font-serif">
-                            ${item.price.toFixed(2)} / {item.unit}
-                          </p>
-                          
-                          {/* Item Actions */}
-                          <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-2.5 bg-white/60 rounded-lg px-2 py-1 border border-farm-brown/10">
+                    {cartItems.map((item) => {
+                      const foundProd = products.find(p => p.id === item.id);
+                      const isItemSoldOut = foundProd ? foundProd.isSoldOut : false;
+
+                      return (
+                        <div key={item.id} className="py-4 flex gap-4 first:pt-0">
+                          {item.image ? (
+                            <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 border border-farm-brown/10">
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-16 h-16 rounded-lg bg-farm-cream/40 border border-farm-brown/10 shrink-0 flex items-center justify-center text-farm-green">
+                              <ShoppingBag size={20} />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[8px] font-bold uppercase tracking-wider text-farm-green">{item.category}</span>
+                            <h5 className="font-serif text-sm font-bold text-farm-brown truncate">{item.name}</h5>
+                            <p className="text-[10px] text-farm-brown/50 italic font-serif">
+                              ${item.price.toFixed(2)} / {item.unit}
+                            </p>
+                            
+                            {/* Item Actions */}
+                            <div className="flex items-center justify-between mt-2">
+                              {isItemSoldOut ? (
+                                <span className="text-[9px] font-extrabold uppercase tracking-widest text-red-600 bg-red-50 border border-red-200/50 px-2.5 py-1 rounded-md">
+                                  SOLD OUT
+                                </span>
+                              ) : (
+                                <div className="flex items-center gap-2.5 bg-white/60 rounded-lg px-2 py-1 border border-farm-brown/10">
+                                  <button
+                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                    className="text-farm-brown hover:text-farm-green transition-colors"
+                                    title="Decrease quantity"
+                                  >
+                                    <Minus size={12} />
+                                  </button>
+                                  <span className="font-mono text-xs font-bold text-farm-brown min-w-4 text-center">
+                                    {item.quantity}
+                                  </span>
+                                  <button
+                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                    className="text-farm-brown hover:text-farm-green transition-colors"
+                                    title="Increase quantity"
+                                  >
+                                    <Plus size={12} />
+                                  </button>
+                                </div>
+                              )}
+                              
                               <button
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                className="text-farm-brown hover:text-farm-green transition-colors"
-                                title="Decrease quantity"
+                                onClick={() => removeFromCart(item.id)}
+                                className="text-red-600 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors"
+                                title="Delete item"
                               >
-                                <Minus size={12} />
-                              </button>
-                              <span className="font-mono text-xs font-bold text-farm-brown min-w-4 text-center">
-                                {item.quantity}
-                              </span>
-                              <button
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="text-farm-brown hover:text-farm-green transition-colors"
-                                title="Increase quantity"
-                              >
-                                <Plus size={12} />
+                                <Trash2 size={14} />
                               </button>
                             </div>
-                            
-                            <button
-                              onClick={() => removeFromCart(item.id)}
-                              className="text-red-600 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors"
-                              title="Delete item"
-                            >
-                              <Trash2 size={14} />
-                            </button>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
