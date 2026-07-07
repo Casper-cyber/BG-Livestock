@@ -665,11 +665,11 @@ export default function VegetablesPage() {
         const id = p.id.toLowerCase().trim();
         let image = p.image || p.imageUrl;
         if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-          image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
+        image = squashImg;
         } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
           image = babyCarrotsImg;
         } else if (id === 'zucchini') {
-          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
+        image = zucchiniImg;
         }
         return {
           id: p.id,
@@ -688,11 +688,11 @@ export default function VegetablesPage() {
         const id = item.id.toLowerCase().trim();
         let image = item.image;
         if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-          image = 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
+        image = squashImg;
         } else if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
           image = babyCarrotsImg;
         } else if (id === 'zucchini') {
-          image = 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
+        image = zucchiniImg;
         }
         return {
           ...item,
