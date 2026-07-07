@@ -121,7 +121,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
       await window.emailjs.send("service_xoaxr7j", "template_x7yv1cx", {
         name: customerEmail.split('@')[0],
         customer_email: customerEmail,
-        order_items: itemizedManifest,
+        order_items: orderDetailsText,
         total: `$${cartTotal.toFixed(2)}`,
         payment_method: selectedPaymentType === 'paypal' ? 'PayPal' : 'Venmo',
       }, "IuKZCQTlU5y5Kgkis");
