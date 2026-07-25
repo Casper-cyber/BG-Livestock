@@ -56,7 +56,7 @@ export function getProductImage(item: { id: string, category: string, image_url?
   if (id === 'okra') return okraImg;
   if (id === 'roma_tomatoes' || id === 'roma-tomatoes') return romaTomatoesImg;
   if (id === 'tomatoes' || id === 'tomato') return tomatoesImg;
-  if (item.image_url) return item.image_url;
+  if (id === 'butter_crunch_lettuce' || id === 'butter-crunch-lettuce') return butterCrunchLettuceImg;
   
   // Specific static image mapping
   if (id === 'a2_milk_cream' || id === 'a2-milk-cream') return a2a2MilkWithCream;
