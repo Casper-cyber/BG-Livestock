@@ -56,8 +56,6 @@ export function getProductImage(item: { id: string, category: string, image_url?
   if (id === 'okra') return okraImg;
   if (id === 'roma_tomatoes' || id === 'roma-tomatoes') return romaTomatoesImg;
   if (id === 'tomatoes' || id === 'tomato') return tomatoesImg;
-  if (id === 'lettuce') return butterCrunchLettuceImg;
-
   if (item.image_url) return item.image_url;
   
   // Specific static image mapping
@@ -115,7 +113,7 @@ const FALLBACK_PRODUCTS = [
     numericPrice: 0.5,
     unit: "each",
     notes: "Tender, thin-skinned yellow summer squash harvested fresh in the morning.",
-    image: lettuceImg,
+    image: squashImg,
     isSoldOut: false
   },
   {
