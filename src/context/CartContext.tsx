@@ -17,7 +17,14 @@ import cabbageImg from "../assets/images/cabbagehead.jpeg";
 import broccoliImg from "../assets/images/broccolihead.jpeg";
 import cucumberImg from "../assets/images/cucumber_1782767554700.jpg";
 import babyCarrotsImg from "../assets/images/regenerated_image_1783371013143.png";
-const greenBeansImg = "https://images.unsplash.com/photo-1592394533824-9440e5d68530?q=80&w=600&auto=format&fit=crop";
+import squashImg from "../assets/images/squash.jpg";
+import zucchiniImg from "../assets/images/zucchini.jpg";
+import greenBeansImg from "../assets/images/green-beans.jpg";
+import cornImg from "../assets/images/corn.png";
+import okraImg from "../assets/images/okra.png";
+import romaTomatoesImg from "../assets/images/roma-tomatoes.png";
+import tomatoesImg from "../assets/images/tomatoes.png";
+import butterCrunchLettuceImg from "../assets/images/butter-crunch-lettuce.png";
 
 import { PRODUCTS } from '../constants';
 
