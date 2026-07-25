@@ -10,7 +10,7 @@ import heavyCreamJarSpoon from '../assets/images/heavy_cream_jar_spoon_177910836
 
 import spinach1 from "../assets/images/spinach_1.png";
 import spinach2 from "../assets/images/spinach_2.png";
-import lettuceImg from "../assets/images/lettuce.png";
+import butterCrunchLettuceImg from "../assets/images/butter_crunch_lettuce.png";
 import napaCabbageImg from "../assets/images/napa_cabbage_1779969044139.png";
 import bokChoyImg from "../assets/images/bok_choy_1779969066595.png";
 import cabbageImg from "../assets/images/cabbagehead.jpeg";
