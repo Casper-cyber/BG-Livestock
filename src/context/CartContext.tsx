@@ -24,7 +24,6 @@ import cornImg from "../assets/images/corn.png";
 import okraImg from "../assets/images/okra.png";
 import romaTomatoesImg from "../assets/images/roma_tomatoes.png";
 import tomatoesImg from "../assets/images/tomatoes.png";
-import butterCrunchLettuceImg from "../assets/images/butter-crunch-lettuce.png";
 
 import { PRODUCTS } from '../constants';
 
