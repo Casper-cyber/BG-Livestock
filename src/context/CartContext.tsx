@@ -45,14 +45,19 @@ export function getProductImage(item: { id: string, category: string, image_url?
 
   // Hardcoded high-quality image overrides for core vegetables
   if (id === 'squash' || id === 'yellow-squash' || id === 'yellow_squash') {
-    return 'https://images.unsplash.com/photo-1506450043132-72f13f1d244c?q=80&w=600&auto=format&fit=crop';
+    return squashImg;
   }
   if (id === 'baby_carrots' || id === 'baby-carrots' || id === 'baby_carrot' || id === 'carrots' || id === 'carrot') {
     return babyCarrotsImg;
   }
   if (id === 'zucchini') {
-    return 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=600&auto=format&fit=crop';
+    return zucchiniImg;
   }
+  if (id === 'corn' || id === 'sweet_corn' || id === 'sweet-corn') return cornImg;
+  if (id === 'okra') return okraImg;
+  if (id === 'roma_tomatoes' || id === 'roma-tomatoes') return romaTomatoesImg;
+  if (id === 'tomatoes' || id === 'tomato') return tomatoesImg;
+  if (id === 'lettuce') return butterCrunchLettuceImg;
 
   if (item.image_url) return item.image_url;
   
