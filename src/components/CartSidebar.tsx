@@ -35,6 +35,7 @@ export default function CartSidebar() {
   const [logistics, setLogistics] = useState<'pickup' | 'delivery'>('pickup');
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [submissionError, setSubmissionError] = useState('');
@@ -46,6 +47,10 @@ export default function CartSidebar() {
   if (!isCartOpen) return null;
 
   const handleCheckout = (paymentType: 'venmo' | 'paypal') => {
+    if (!customerName.trim()) {
+      setEmailError('Please enter your full name so we know who the order belongs to.');
+      return;
+    }
     if (!customerEmail.trim()) {
       setEmailError('Please enter your email address to receive your confirmation receipt copy.');
       return;
@@ -119,7 +124,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
 
       // @ts-ignore - emailjs loaded globally via script tag in index.html
       await window.emailjs.send("service_xoaxr7j", "template_x7yv1cx", {
-        name: customerEmail.split('@')[0],
+        name: customerName.split('@')[0],
         customer_email: customerEmail,
         order_items: orderDetailsText,
         total: `$${cartTotal.toFixed(2)}`,
@@ -141,6 +146,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
       setSelectedPaymentType(null);
       setPaymentInitiated(false);
       setIsCartOpen(false);
+      setCustomerName('');
       setCustomerEmail('');
       setDate('');
       setNotes('');
@@ -413,6 +419,23 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
 
                 {/* Logistics Input Form fields */}
                 <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-farm-brown/60 block">
+                      Full name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="customerName"
+                      required
+                      value={customerName}
+                      onChange={(e) => {
+                        setCustomerName(e.target.value);
+                        if (emailError) setEmailError('');
+                      }}
+                      className="w-full bg-white border border-farm-brown/10 rounded-lg p-2.5 outline-none focus:border-farm-green transition-colors font-serif text-xs text-farm-brown"
+                      placeholder="Jane Smith"
+                    />
+                  </div>
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-farm-brown/60 block">
                       Email address <span className="text-red-500">*</span>
