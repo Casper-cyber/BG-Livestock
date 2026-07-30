@@ -124,7 +124,7 @@ Total Estimated Cost: $${cartTotal.toFixed(2)}
 
       // @ts-ignore - emailjs loaded globally via script tag in index.html
       await window.emailjs.send("service_xoaxr7j", "template_x7yv1cx", {
-        name: customerName.split('@')[0],
+        name: customerName,
         customer_email: customerEmail,
         order_items: orderDetailsText,
         total: `$${cartTotal.toFixed(2)}`,
